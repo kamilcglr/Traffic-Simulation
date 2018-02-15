@@ -30,7 +30,7 @@ namespace Simulateur_0._0._2
         public int dernieroccupe = 0;
         int point_critique = 400;
         int distance_entre_vehicule = 30;
-
+        
         Random rand = new Random();
 
         public MainWindow()
@@ -42,6 +42,7 @@ namespace Simulateur_0._0._2
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
+            float s = (float)colonne1.ActualWidth;
             float vitessemax = (float)choix_vitessemax.Value;
             float acceleration = (float)choix_acceleration.Value ;
             
@@ -160,8 +161,11 @@ namespace Simulateur_0._0._2
                     Canvas.SetTop(temp, temp._yposition);
                 }
             }
+            nb_voitures_1.Content = "Ligne 1 : " + cars.Count.ToString();
+            nb_voitures_2.Content = "Ligne 1 : " + cars2.Count.ToString();
+
         }
-        
+
         public void start(object sender, RoutedEventArgs e)
         { 
             timer1.Start();

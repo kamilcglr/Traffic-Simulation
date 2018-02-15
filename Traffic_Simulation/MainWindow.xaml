@@ -21,6 +21,8 @@
         <Canvas x:Name="affichage" HorizontalAlignment="Left"  Height="{Binding ElementName=grille, Path=ActualHeight}" Margin="0" VerticalAlignment="Center" Width="{Binding ElementName=colonne1, Path=ActualWidth}" Grid.ColumnSpan="2" />
         <Button x:Name="Bouton_frein" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="49,195,0,0" VerticalAlignment="Top" Width="75" Click="Bouton_frein_Click" ClickMode="Release" />
         <Slider x:Name="Choix_nombrevoitures" Grid.Column="1" HorizontalAlignment="Left" Margin="10,256,0,0" VerticalAlignment="Top" Height="29" Width="145" SmallChange="1" Maximum="50" ValueChanged="Choix_nombrevoitures_ValueChanged" Value="11"/>
+        <Label x:Name="nb_voitures_1" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Margin="10,321,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="nb_voitures_2" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Margin="10,370,0,0" VerticalAlignment="Top"/>
 
 
 
