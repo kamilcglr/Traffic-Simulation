@@ -28,10 +28,8 @@ namespace Simulateur_0._0._2
         static List<Voiture> cars2 = new List<Voiture>();
         public int positionL2 = 0;
         public int positionL1 = 100;
-        public bool ligneoccupee = false;
-        public int dernieroccupe = 0;
-        int point_critique = 400;
-        int distance_entre_vehicule = 30;
+        int point_critique = 600;
+        int distance_entre_vehicule = 20;
 
         Random rand = new Random();
 
@@ -44,7 +42,6 @@ namespace Simulateur_0._0._2
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            float s = (float)colonne1.ActualWidth;
             Avance_ligne1();
             Avance_ligne2();
             Retour_vehicules();
@@ -56,27 +53,29 @@ namespace Simulateur_0._0._2
 
         public void Avance_ligne1()
         {
-            float vitessemax = (float)choix_vitessemax.Value;
-            float acceleration = (float)choix_acceleration.Value;
+            distance_entre_vehicule = (int)choix_distance_entrre_vehicules.Value;
 
+            double vitessemax = choix_vitessemax.Value;
+            double acceleration = choix_acceleration.Value;
+            double deceleration = choix_deceleration.Value;
             for (int i = 0; i < cars.Count; i++)
             {
                 if (i == 0) // Pour la première voiture on la fait avancer dans tous les cas
                 {
-                    Canvas.SetLeft(cars[0], cars[0].Move(vitessemax, acceleration));
+                    Canvas.SetLeft(cars[0], cars[0].Move(vitessemax, acceleration,deceleration));
                     Canvas.SetTop(cars[0], cars[0]._yposition);
                 }
                 else // Pour les autre on vérifie devant pour freiner ou avancer
                 {
-                    if ((cars[i]._xposition < cars[i - 1]._xposition - distance_entre_vehicule))
+                    if ((cars[i]._xposition) < (cars[i - 1]._xposition - distance_entre_vehicule))
                     {
-                        Canvas.SetLeft(cars[i], cars[i].Move(vitessemax, acceleration));
+                        Canvas.SetLeft(cars[i], cars[i].Move(vitessemax, acceleration, deceleration));
                         Canvas.SetTop(cars[i], cars[i]._yposition);
                     }
                     else
                     {
                         cars[i]._frein = true;
-                        Canvas.SetLeft(cars[i], cars[i].Move(vitessemax, acceleration));
+                        Canvas.SetLeft(cars[i], cars[i].Move(vitessemax, acceleration, deceleration));
                         Canvas.SetTop(cars[i], cars[i]._yposition);
                         cars[i]._frein = false;
                     }
@@ -85,42 +84,33 @@ namespace Simulateur_0._0._2
         }
         public void Avance_ligne2()
         {
-            float vitessemax = (float)choix_vitessemax.Value;
-            float acceleration = (float)choix_acceleration.Value;
+            distance_entre_vehicule = (int)choix_distance_entrre_vehicules.Value;
+
+            double vitessemax = choix_vitessemax.Value;
+            double acceleration = choix_acceleration.Value;
+            double deceleration = choix_deceleration.Value;
 
             for (int i = 0; i < cars2.Count; i++)
             {
                 if (i == 0)
                 {
-                    if (cars2[0]._xposition <= point_critique - 50)
+                    if (cars2[0]._xposition <= point_critique - 100)
                     {
-                        Canvas.SetLeft(cars2[0], cars2[0].Move(vitessemax, acceleration));
+                        Canvas.SetLeft(cars2[0], cars2[0].Move(vitessemax, acceleration, deceleration));
                         Canvas.SetTop(cars2[0], cars2[0]._yposition);
                     }
                     else
                     {
-                        int position = Depassement(cars2[0]._xposition);
+                        int position = Champ_libre(cars2[0]._xposition);
                         if (position != -1)
                         {
-                            Voiture temp = cars2[0];
-                            cars2.RemoveAt(0);
-                            if (position + 1 > cars.Count) //Si on dépasse la valeur 
-                            {
-                                cars.Add(temp);
-                            }
-                            else
-                            {
-                                cars.Insert(position + 1, temp);
-                            }
-                            //On affiche cette voiture et on la fait avancer
-                            cars[position + 1]._yposition = positionL1;
-                            Canvas.SetLeft(cars[position + 1], cars[position + 1].Move(vitessemax, acceleration));
-                            Canvas.SetTop(cars[position + 1], cars[position + 1]._yposition);
+                            Changement_ligne(position, 0);
+
                         }
                         else
                         {
                             cars2[0]._frein = true;
-                            Canvas.SetLeft(cars2[0], cars2[0].Move(vitessemax, acceleration));
+                            Canvas.SetLeft(cars2[0], cars2[0].Move(vitessemax, acceleration, deceleration));
                             Canvas.SetTop(cars2[0], cars2[0]._yposition);
                             cars2[0]._frein = false;
                         }
@@ -128,45 +118,32 @@ namespace Simulateur_0._0._2
                 }
                 else //On fait avancer les autres voitures en  véfrifant devant
                 {
-                    if (cars2[i]._xposition <= point_critique - 50)
+                    if (cars2[i]._xposition <= point_critique - 200)
                     {
                         if ((cars2[i]._xposition < cars2[i - 1]._xposition - distance_entre_vehicule))
                         {
-                            Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration));
+                            Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration, deceleration));
                             Canvas.SetTop(cars2[i], cars2[i]._yposition);
                         }
                         else
                         {
                             cars2[i]._frein = true;
-                            Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration));
+                            Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration, deceleration));
                             Canvas.SetTop(cars2[i], cars2[i]._yposition);
                             cars2[i]._frein = false;
                         }
                     }
                     else
                     {
-                        int position = Depassement(cars2[i]._xposition);
+                        int position = Champ_libre(cars2[i]._xposition);
                         if (position != -1)
                         {
-                            Voiture temp = cars2[i];
-                            cars2.RemoveAt(i);
-                            if (position + 1 > cars.Count) //Si on dépasse la valeur 
-                            {
-                                cars.Add(temp);
-                            }
-                            else
-                            {
-                                cars.Insert(position + 1, temp);
-                            }
-                            //On affiche cette voiture et on la fait avancer
-                            cars[position + 1]._yposition = positionL1;
-                            Canvas.SetLeft(cars[position + 1], cars[position + 1].Move(vitessemax, acceleration));
-                            Canvas.SetTop(cars[position + 1], cars[position + 1]._yposition);
+                            Changement_ligne(position, i);
                         }
                         else
                         {
                             cars2[i]._frein = true;
-                            Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration));
+                            Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration, deceleration));
                             Canvas.SetTop(cars2[i], cars2[i]._yposition);
                             cars2[i]._frein = false;
                         }
@@ -176,45 +153,69 @@ namespace Simulateur_0._0._2
         }
 
 
-        public int Depassement(float _xposition)
+        public int Champ_libre(double _xposition)
         {
-            int autorise_depassement = -1;
+            distance_entre_vehicule = (int)choix_distance_entrre_vehicules.Value;
+
+            int autorise_Champ_libre = -1;
             for (int i = 0; i < cars.Count; i++)
             {
-                if ((cars[i]._xposition >= _xposition - 10) && (cars[i]._xposition <= _xposition + 10))
+                if ((cars[i]._xposition >= _xposition - distance_entre_vehicule) && (cars[i]._xposition <= _xposition + distance_entre_vehicule))
                 {
-                    autorise_depassement = -1;
+                    autorise_Champ_libre = -1;
                     break;
                 }
                 else
                 {
-                    autorise_depassement = i;
+                    autorise_Champ_libre = i;
                 }
             }
-            if (autorise_depassement != -1)
+            if (autorise_Champ_libre != -1)
             {
                 for (int i = cars.Count - 1; i != 0; i--)
                 {
                     if ((cars[i]._xposition < _xposition))
                     {
-                        autorise_depassement = 0;
+                        autorise_Champ_libre = 0;
                     }
                     else
                     {
-                        autorise_depassement = i;
+                        autorise_Champ_libre = i;
                         break;
                     }
 
                 }
             }
-
-            return autorise_depassement;
+            return autorise_Champ_libre;
         }
+        public void Changement_ligne(int position, int i)
+        {
+            distance_entre_vehicule = (int)choix_distance_entrre_vehicules.Value;
 
+            double vitessemax = choix_vitessemax.Value;
+            double acceleration = choix_acceleration.Value;
+            double deceleration = choix_deceleration.Value;
+
+            Voiture temp = cars2[i];
+            cars2.RemoveAt(i);
+            if (position + 1 > cars.Count) //Si on dépasse la valeur 
+            {
+                cars.Add(temp);
+            }
+            else
+            {
+                cars.Insert(position + 1, temp);
+            }
+            //On affiche cette voiture et on la fait avancer
+            cars[position + 1]._yposition = positionL1;
+            Canvas.SetLeft(cars[position + 1], cars[position + 1].Move(vitessemax, acceleration, deceleration));
+            Canvas.SetTop(cars[position + 1], cars[position + 1]._yposition);
+        }
         public void Retour_vehicules()
         {
-            float vitessemax = (float)choix_vitessemax.Value;
-            float acceleration = (float)choix_acceleration.Value;
+            double vitessemax = choix_vitessemax.Value;
+            double acceleration = choix_acceleration.Value;
+            double deceleration = choix_deceleration.Value;
 
             //----------------- Retour de voitures au début ---------------------------------------------
             if (cars[0]._xposition >= colonne1.ActualWidth)
@@ -222,17 +223,18 @@ namespace Simulateur_0._0._2
                 Voiture temp = cars[0];
                 cars.RemoveAt(0);
                 temp._xposition = 0;
+                temp._vitesse = vitessemax;
                 if (temp._lane == 2)
                 {
                     temp._yposition = positionL2;
                     cars2.Add(temp);
-                    Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration));
+                    Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
                     Canvas.SetTop(temp, temp._yposition);
                 }
                 else
                 {
                     cars.Add(temp);
-                    Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration));
+                    Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
                     Canvas.SetTop(temp, temp._yposition);
                 }
             }
@@ -254,8 +256,6 @@ namespace Simulateur_0._0._2
 
         }
 
-
-       
         private void choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             vitessemax_choix_affichage.Content = "Vitesse max : " + Math.Round(choix_vitessemax.Value, 3).ToString();
@@ -280,42 +280,48 @@ namespace Simulateur_0._0._2
 
         private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
+            
             if (cars.Count < Choix_nombrevoitures.Value)
             {
 
-                int i = (int)Choix_nombrevoitures.Value / 3; //Un tiers des voitures de ce côté
+                int i = (int)Choix_nombrevoitures.Value /2 ; //Un tiers des voitures de ce côté
                 while (i != 0)
                 {
-
+                    
                     Voiture voiture = new Voiture();
-                    /*if (rand.Next(100) > 40)
+                    if (rand.Next(100) < 10)
                     {
-                        voiture._lane = 1;
-                        voiture._yposition = 0;
-                        cars.Add(voiture);
+                        voiture._vehiculelent = true;
+
+                        Uri relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
+                        voiture.Source = new BitmapImage(relativeUri);
                     }
-                    else
-                    {
-                        voiture._lane = 2;
-                        voiture._yposition = 100;
-                        cars2.Add(voiture);
-                    }*/
+                    
+                   
                     voiture._lane = 2;
+                    voiture._vitesse = choix_vitessemax.Value;
                     voiture._yposition = positionL2;
+                    //voiture._xposition = distance_entre_vehicule *i;
                     cars2.Add(voiture);
                     affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture._xposition);
                     Canvas.SetTop(voiture, voiture._yposition);
                     i--;
                 }
-                int j = (int)Choix_nombrevoitures.Value - (int)(Choix_nombrevoitures.Value / 3);
+                int j = (int)Choix_nombrevoitures.Value - (int)(Choix_nombrevoitures.Value / 2);
                 while (j != 0)
                 {
                     Voiture voiture = new Voiture();
+                    if (rand.Next(100) < 10)
+                    {
+                        voiture._vehiculelent = true;
+                        Uri relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
+                        voiture.Source = new BitmapImage(relativeUri);
+                    }
                     voiture._lane = 1;
-                    voiture._vitesse = (float)choix_vitessemax.Value / 2; //TEST
+                    voiture._vitesse = choix_vitessemax.Value;
                     voiture._yposition = positionL1;
+                    //voiture._xposition = distance_entre_vehicule * j;
                     cars.Add(voiture);
                     affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture._xposition);
@@ -327,7 +333,7 @@ namespace Simulateur_0._0._2
             {//TODO
                 timer1.Stop();
                 int i = cars.Count - 1;
-                while (i > (int)Choix_nombrevoitures.Value - (int)(Choix_nombrevoitures.Value / 3))
+                while (i > (int)Choix_nombrevoitures.Value - (int)(Choix_nombrevoitures.Value / 2))
                 {
 
                     affichage.Children.Remove(cars[i]);
@@ -336,7 +342,7 @@ namespace Simulateur_0._0._2
 
                 }
                 int j = cars2.Count - 1;
-                while (j > (int)Choix_nombrevoitures.Value / 3)
+                while (j > (int)Choix_nombrevoitures.Value / 2)
                 {
                     affichage.Children.Remove(cars2[j]);
                     cars2.RemoveAt(j);
@@ -348,5 +354,14 @@ namespace Simulateur_0._0._2
 
         }
 
+        private void choix_distance_entrre_vehicules_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Distance_securite_affichage.Content = "Distance entre veh : " + choix_distance_entrre_vehicules.ToString();
+        }
+
+        private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Deceleration_choix_affichage.Content = "Deceleration : " + Math.Round(choix_deceleration.Value, 3).ToString();
+        }
     }
 }

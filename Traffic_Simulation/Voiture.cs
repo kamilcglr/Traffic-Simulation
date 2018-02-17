@@ -9,13 +9,15 @@ namespace Simulateur_0._0._2
 {   
     class Voiture : System.Windows.Controls.Image
     {
-        public float _xposition;
-        public float _yposition;
+        public double _xposition;
+        public double _yposition;
 
-        public float _vitesse;
-        public float _vitessemax;
+        public double _vitesse;
+        public double _vitessemax;
+        public double _deceleration;
+        public double _acceleration;
 
-        public float _acceleration;
+        public bool _vehiculelent;
         public bool _frein= false;
 
         public int _lane;
@@ -28,29 +30,36 @@ namespace Simulateur_0._0._2
             this.Width = 16;
             this._xposition = 0;
             this._yposition = 0;
-            this._vitesse = 0;
+            this._vitesse = 1;
             this._vitessemax = 0;
             this._acceleration = 0;
             this._lane = 1;
+            this._vehiculelent = false;
     }
-        public float Move(float vmax, float a)
+        public double Move(double _vitessemax, double _acceleration, double _deceleration)
         {
             if (_frein)
             {
-                _vitesse = (float ) (_vitesse / 1.5);
-                _xposition += _vitesse;
+                _vitesse = _vitesse/_deceleration;
+                _xposition =_xposition + _vitesse;
             }
             else
-            {
-                if (_vitesse < 1)
+            {   if (_vitesse < 1)
+                    {
+                        _vitesse += 0.25;
+                    }
+                if(_vehiculelent)
                 {
-                    _vitesse = 1;
+                    if (_vitesse <= _vitessemax-0.5)
+                    {
+                        _vitesse = _vitesse * _acceleration;
+                    }
                 }
-                if ((_vitesse < vmax))
+                else 
                 {
-                    _vitesse = _vitesse * a;
+                    _vitesse = _vitesse * _acceleration;
                 }
-                _xposition += _vitesse;
+                _xposition = _xposition + _vitesse;
             }
             return _xposition;
 
