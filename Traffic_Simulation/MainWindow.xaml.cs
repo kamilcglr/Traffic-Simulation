@@ -26,6 +26,8 @@ namespace Simulateur_0._0._2
 
         static List<Voiture> cars = new List<Voiture>();
         static List<Voiture> cars2 = new List<Voiture>();
+        public int positionL2 = 0;
+        public int positionL1 = 100;
         public bool ligneoccupee = false;
         public int dernieroccupe = 0;
         int point_critique = 400;
@@ -37,7 +39,7 @@ namespace Simulateur_0._0._2
         {
             InitializeComponent();
             timer1.Tick += new EventHandler(timer1_Tick);
-            timer1.Interval = TimeSpan.FromMilliseconds(20);
+            timer1.Interval = TimeSpan.FromMilliseconds(10);
             
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -135,7 +137,7 @@ namespace Simulateur_0._0._2
                          cars.Insert(dernieroccupe + 1, temp);
                     }
                     //On affiche cette voiture et on la fait avancer
-                    cars[dernieroccupe + 1]._yposition = 0;
+                    cars[dernieroccupe + 1]._yposition = positionL1;
                     Canvas.SetLeft(cars[dernieroccupe + 1], cars[dernieroccupe + 1].Move(vitessemax, acceleration));
                     Canvas.SetTop(cars[dernieroccupe + 1], cars[dernieroccupe + 1]._yposition);
                 }
@@ -149,7 +151,7 @@ namespace Simulateur_0._0._2
                 temp._xposition = 0;
                 if (temp._lane == 2)
                 {
-                    temp._yposition = 100;
+                    temp._yposition = positionL2;
                     cars2.Add(temp);
                     Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration));
                     Canvas.SetTop(temp, temp._yposition);
@@ -209,11 +211,10 @@ namespace Simulateur_0._0._2
             if (cars.Count < Choix_nombrevoitures.Value)
             {
                 
-                int i = (int) Choix_nombrevoitures.Value/3;
+                int i = (int) Choix_nombrevoitures.Value/3; //Un tiers des voitures de ce côté
                 while (i !=0) {
                    
                     Voiture voiture = new Voiture();
-
                     /*if (rand.Next(100) > 40)
                     {
                         voiture._lane = 1;
@@ -227,7 +228,7 @@ namespace Simulateur_0._0._2
                         cars2.Add(voiture);
                     }*/
                     voiture._lane = 2;
-                    voiture._yposition = 100;
+                    voiture._yposition = positionL2;
                     cars2.Add(voiture);
                     affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture._xposition);
@@ -240,7 +241,7 @@ namespace Simulateur_0._0._2
                     Voiture voiture = new Voiture();
                     voiture._lane = 1;
                     voiture._vitesse = (float) choix_vitessemax.Value/2; //TEST
-                    voiture._yposition = 0;
+                    voiture._yposition = positionL1;
                     cars.Add(voiture);
                     affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture._xposition);
