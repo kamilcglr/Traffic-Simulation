@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Simulateur_0._0._2"
         mc:Ignorable="d"
         Title="MainWindow" Height="720" Width="1200" WindowStartupLocation="CenterScreen">
+
     <Grid x:Name="grille">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="colonne1" Width="1028*"/>

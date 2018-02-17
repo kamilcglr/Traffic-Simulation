@@ -21,8 +21,9 @@ namespace Simulateur_0._0._2
         public int _lane;
 
         public Voiture()//constructeur
-        {   
-            this.Source = new BitmapImage(new Uri("C:/Users/Kamil/source/repos/Traffic-Simulation/Traffic_Simulation/Images/car.png"));
+        {
+            Uri relativeUri = new Uri("Images/car.png", UriKind.Relative);
+            this.Source = new BitmapImage(relativeUri);
             this.Height = 16;
             this.Width = 16;
             this._xposition = 0;
