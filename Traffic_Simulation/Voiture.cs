@@ -32,8 +32,6 @@ namespace Simulateur_0._0._2
             this._vitessemax = 0;
             this._acceleration = 0;
             this._lane = 1;
-            
-
     }
         public float Move(float vmax, float a)
         {
