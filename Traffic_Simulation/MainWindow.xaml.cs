@@ -224,6 +224,15 @@ namespace Simulateur_0._0._2
                 cars.RemoveAt(0);
                 temp._xposition = 0;
                 temp._vitesse = vitessemax;
+                temp._vehiculelent = false;
+                Uri relativeUri = new Uri("Images/car.png", UriKind.Relative);
+                temp.Source = new BitmapImage(relativeUri);
+                if (rand.Next(100) < 30)
+                {
+                    temp._vehiculelent = true;
+                    Uri relativeUri2 = new Uri("Images/automobile.png", UriKind.Relative);
+                    temp.Source = new BitmapImage(relativeUri2);
+                }
                 if (temp._lane == 2)
                 {
                     temp._yposition = positionL2;
