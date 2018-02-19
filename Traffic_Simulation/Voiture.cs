@@ -40,24 +40,32 @@ namespace Simulateur_0._0._2
         {
             if (_frein)
             {
-                _vitesse = _vitesse/_deceleration;
-                _xposition =_xposition + _vitesse;
+                _vitesse -= _deceleration;
+
+                if (_vitesse > 0)
+                {
+                    _xposition =_xposition + _vitesse;
+                }
+                else
+                {
+                    _vitesse = 0;
+                }
             }
             else
-            {   if (_vitesse < 1)
-                    {
-                        _vitesse += 0.25;
-                    }
+            {  
                 if(_vehiculelent)
                 {
-                    if (_vitesse <= _vitessemax-0.5)
+                    if (_vitesse <= _vitessemax-0.1)
                     {
-                        _vitesse = _vitesse * _acceleration;
+                        _vitesse += _acceleration;
                     }
                 }
                 else 
                 {
-                    _vitesse = _vitesse * _acceleration;
+                    if(_vitesse <= _vitessemax)
+                    {
+                        _vitesse +=  _acceleration;
+                    }
                 }
                 _xposition = _xposition + _vitesse;
             }

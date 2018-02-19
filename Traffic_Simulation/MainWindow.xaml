@@ -4,33 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Simulateur_0._0._2"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1200" WindowStartupLocation="CenterScreen">
+        mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" AllowsTransparency="True">
 
     <Grid x:Name="grille">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="colonne1" Width="1028*"/>
             <ColumnDefinition x:Name="colonne2" Width="165*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="Start" Content="Start" Grid.Column="1" Margin="0,10,0,0" VerticalAlignment="Top" Width="50" HorizontalAlignment="Center" Click="start" Height="20"/>
-        <Label x:Name="vitessemax_choix_affichage" Content="Vitesse max" Grid.Column="1" Margin="0,79,0,0" VerticalAlignment="Top" Height="26" Width="149" FontSize="8" FontFamily="Roboto" HorizontalAlignment="Center"/>
-        <Label x:Name="accelerationmax_choix_affichage" Content="Accélération max" Grid.Column="1" HorizontalAlignment="Center" Margin="0,128,0,0" VerticalAlignment="Top" Height="26" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}"/>
-        <Button x:Name="Ajout_voiture" Content="Ajouter une voiture" Grid.Column="1" HorizontalAlignment="Center" Margin="0,33,0,0" VerticalAlignment="Top" Width="100" Background="{x:Null}" Height="35" FontSize="10" Click="Ajout_voiture_Click"/>
-        <Slider x:Name="choix_vitessemax" Grid.Column="1" HorizontalAlignment="Center" Margin="0,105,0,0" VerticalAlignment="Top" Height="22" Width="75" HorizontalContentAlignment="Center" ValueChanged="choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="5" Value="1"/>
-        <Slider x:Name="choix_acceleration" Grid.Column="1" HorizontalAlignment="Center" Margin="0,152,0,0" VerticalAlignment="Top" Width="75" Height="20" ValueChanged="choix_acceleration_ValueChanged" Maximum="1.25" Value="1.001" Minimum="1"/>
-
-        <Canvas x:Name="affichage" HorizontalAlignment="Left"  Height="{Binding ElementName=grille, Path=ActualHeight}" Margin="0" VerticalAlignment="Center" Width="{Binding ElementName=colonne1, Path=ActualWidth}" Grid.ColumnSpan="2" />
-        <Button x:Name="Bouton_frein" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="45,189,0,0" VerticalAlignment="Top" Width="75" Click="Bouton_frein_Click" ClickMode="Release" />
-        <Slider x:Name="Choix_nombrevoitures" Grid.Column="1" HorizontalAlignment="Left" Margin="10,251,0,0" VerticalAlignment="Top" Height="29" Width="145" SmallChange="1" Maximum="35" ValueChanged="Choix_nombrevoitures_ValueChanged" Value="15" LargeChange="0"/>
-        <Label x:Name="nb_voitures_1" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Margin="10,599,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="nb_voitures_2" Content="Label" Grid.Column="1" HorizontalAlignment="Left" Margin="10,648,0,0" VerticalAlignment="Top"/>
-         <Label x:Name="Distance_securite_affichage" Content="Distance entre véhicules" Grid.Column="1" Margin="10,333,6.333,0" VerticalAlignment="Top" Height="26" Width="149" FontSize="8" FontFamily="Roboto" HorizontalAlignment="Center"/>
-        <Label x:Name="Deceleration_choix_affichage" Content="Deceleration" Grid.Column="1" Margin="10,278,6.333,0" VerticalAlignment="Top" Height="26" Width="149" FontSize="8" FontFamily="Roboto" HorizontalAlignment="Center"/>
-        <Slider x:Name="choix_deceleration" Grid.Column="1" HorizontalAlignment="Center" Margin="0,304,0,0" VerticalAlignment="Top" Height="29" Width="145" Maximum="3" Minimum="1" Value="2" ValueChanged="choix_deceleration_ValueChanged"/>
-        <Slider x:Name="choix_distance_entrre_vehicules" Grid.Column="1" HorizontalAlignment="Center" Margin="10,356,10.333,0" VerticalAlignment="Top" Height="29" Width="145" Maximum="100" Value="25" ValueChanged="choix_distance_entrre_vehicules_ValueChanged"/>
-        <Slider Grid.Column="1" HorizontalAlignment="Center" Margin="0,404,0,0" VerticalAlignment="Top" Height="29" Width="145"/>
-       
-
-
-    </Grid>
+        <Button x:Name="Start" Content="Start" Grid.Column="1" Margin="67,4,68,0" VerticalAlignment="Top" Width="30" HorizontalAlignment="Center" Click="start" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
+            <Button.Background>
+                <ImageBrush ImageSource="Images/play-button-sing(1).png"/>
+            </Button.Background>
+        </Button>
+        <Canvas x:Name="affichage" HorizontalAlignment="Left"  Height="{Binding ElementName=grille, Path=ActualHeight}" Margin="0" VerticalAlignment="Center" Width="{Binding ElementName=colonne1, Path=ActualWidth}" >
+            <Border x:Name="Bordure" BorderBrush="#FFFFAE42" BorderThickness="1" HorizontalAlignment="Left" Height="712" VerticalAlignment="Center" Width="1027" Background="#FFE6E8E6" Canvas.Left="4" Canvas.Top="4"/>
+        </Canvas>
+        <Label x:Name="Nombrevehicules_choix_affichage" Content="Nombre de véhicules :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,37,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
+        <Label x:Name="proportion_voiegauche_choix_affichage" Content="Proportion véhicules file de gauche :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,69,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
+        <Label x:Name="densitecamion_choix_affichage" Content="Densité camion :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,100,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
+        <Label x:Name="vitessemax_choix_affichage" Content="Vitesse max :" Grid.Column="1" HorizontalAlignment="Center" Margin="9,191,8,0" VerticalAlignment="Top" Height="20" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
+        <Label x:Name="nb_voitures_1" Content="Label" HorizontalAlignment="Left" Margin="942,607,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="nb_voitures_2" Content="Label" HorizontalAlignment="Left" Margin="942,656,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="Deceleration_choix_affichage" Content="Deceleration max :" Grid.Column="1" Margin="10,232,6,0" VerticalAlignment="Top" Height="18" Width="150" FontSize="8" FontFamily="Roboto" HorizontalAlignment="Center" Background="{x:Null}" Foreground="#FFE6E8E6"/>
+        <Label x:Name="accelerationmax_choix_affichage" Content="Accélération max :" Grid.Column="1" HorizontalAlignment="Center" Margin="8,159,8,0" VerticalAlignment="Top" Height="21" Width="150" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
+        <Label x:Name="Distance_securite_affichage" Content="Distance entre véhicules :" Grid.Column="1" Margin="10,277,7,0" VerticalAlignment="Top" Height="26" Width="149" FontSize="8" FontFamily="Roboto" HorizontalAlignment="Center" Foreground="#FFE6E8E6"/>
+        <Slider x:Name="choix_distance_entre_vehicules" Grid.Column="1" HorizontalAlignment="Center" Margin="0,296,0,0" VerticalAlignment="Top" Height="19" Width="146" Maximum="100" Value="25" ValueChanged="choix_distance_entre_vehicules_ValueChanged"/>
+        <Slider x:Name="Choix_nombrevoitures" Grid.Column="1" HorizontalAlignment="Center" Margin="10,54,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="35" ValueChanged="Choix_nombrevoitures_ValueChanged" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" Value="15"/>
+<Slider x:Name="Choix_proportion_voituregauche" Grid.Column="1" HorizontalAlignment="Center" Margin="10,86,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="100" ValueChanged="Choix_proportion_voituregauche_ValueChanged" Value="30" LargeChange="10" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}"/>
+        <Slider x:Name="choix_deceleration" Grid.Column="1" HorizontalAlignment="Center" Margin="10,250,10,0" VerticalAlignment="Top" Height="29" Width="146" Maximum="1" Value="0.05" ValueChanged="choix_deceleration_ValueChanged" SmallChange="0.01"/>
+        <Slider x:Name="choix_acceleration" Grid.Column="1" HorizontalAlignment="Center" Margin="10,174,10,0" VerticalAlignment="Top" Height="20" ValueChanged="choix_acceleration_ValueChanged" Maximum="0.05" Value="0.025" SmallChange="0.001" Width="146"/>
+        <Slider x:Name="Choix_densitecamion" Grid.Column="1" HorizontalAlignment="Center" Margin="10,117,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="100" ValueChanged="Choix_densitecamion_ValueChanged" Value="10" LargeChange="0" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}"/>
+        <Button x:Name="Bouton_frein" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="52,486,0,0" VerticalAlignment="Top" Width="74" Click="Bouton_frein_Click" ClickMode="Release" />
+        <Slider x:Name="choix_vitessemax" Grid.Column="1" HorizontalAlignment="Center" Margin="10,209,10,0" VerticalAlignment="Top" Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="5" Value="1"/>
+</Grid>
 </Window>
