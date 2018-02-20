@@ -56,7 +56,10 @@ namespace Simulateur_0._0._2
         private void timer2_Tick(object sender, EventArgs e)
         {
             Avance_ligne2();
-
+            if ((cars.Count + cars2.Count) != (int)Choix_nombrevoitures.Value)
+            {
+                Remplissage_voies();
+            }
         }
 
         public void Avance_ligne1()
@@ -226,7 +229,6 @@ namespace Simulateur_0._0._2
             double acceleration = choix_acceleration.Value;
             double deceleration = choix_deceleration.Value;
 
-            //----------------- Retour de voitures au début ---------------------------------------------
             if (cars[0]._xposition >= Bordure.ActualWidth - 16)
             {
                 Voiture temp = cars[0];
@@ -236,7 +238,15 @@ namespace Simulateur_0._0._2
                 temp._vehiculelent = false;
                 Uri relativeUri = new Uri("Images/car.png", UriKind.Relative);
                 temp.Source = new BitmapImage(relativeUri);
-                if (rand.Next(100) < 30)
+                if (rand.Next(100) < Choix_proportion_voituregauche.Value)
+                {
+                    temp._lane = 2;
+                }
+                else
+                {
+                    temp._lane = 1;
+                }
+                if (rand.Next(100) < Choix_densitecamion.Value)
                 {
                     temp._vehiculelent = true;
                     Uri relativeUri2 = new Uri("Images/automobile.png", UriKind.Relative);
@@ -257,35 +267,98 @@ namespace Simulateur_0._0._2
                 }
             }
         }
+       
         public void Remplissage_voies()
         {
             bool relance_timers = false;
-            //Si les timers sont actifs (bouton start déjà appuyé) on devra relancer les timers
+            //Si les timers sont actifs (bouton start déjà appuyé une fois) on arrete les timers et on devra relancer les timers  à la fin
             if (timer1.IsEnabled || timer2.IsEnabled)
             {
                 timer1.Stop();
                 timer2.Stop();
                 relance_timers = true;
             }
-
+            
             distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
-
-            //Creation des proportions
-            int nbvoitures_voiegauche = (int)(Choix_nombrevoitures.Value *( Choix_proportion_voituregauche.Value / 100)) ;
-            int nbvoitures_voiedroite = (int)Choix_nombrevoitures.Value - nbvoitures_voiegauche;
             int densite_camion = (int)Choix_densitecamion.Value;
 
             nbvoitures = cars.Count + cars2.Count;
 
-            //On verifie si le nombre de voitures est plus élevé ou plus faible que les valeurs précédentes
-            //Si le nombre de voiture a augmenté, on ajoute le nombre de voiture nécéssaires voitures nécéssaires
-            if (nbvoitures < Choix_nombrevoitures.Value)
+            int nbajout = (int)Choix_nombrevoitures.Value - nbvoitures;
+            int nbajout_voiegauche = nbajout * (int)(Choix_proportion_voituregauche.Value/100) ;
+            int nbajout_voiedroite= nbajout - nbajout_voiegauche;
+
+            if (nbajout > 0)
             {
-                int i = nbvoitures_voiegauche;
+                //Proportion en plus dans la voie gauche
+                int i = nbajout_voiegauche;
                 while (i != 0)
                 {
                     Voiture voiture = new Voiture();
-                    if (rand.Next(100) < densite_camion)
+                    voiture._lane = 2;
+                    voiture._vitesse = choix_vitessemax.Value;
+                    voiture._yposition = positionL2;
+                    voiture._xposition = distance_entre_vehicule * 2 * i;//A VOIR
+                    cars2.Add(voiture);
+                    affichage.Children.Add(voiture);
+                    Canvas.SetLeft(voiture, voiture._xposition);
+                    Canvas.SetTop(voiture, voiture._yposition);
+                    i--;
+                }
+                int j = nbajout_voiedroite;
+                while (j != 0)
+                {
+                    Voiture voiture = new Voiture();
+                    voiture._lane = 1;
+                    voiture._vitesse = choix_vitessemax.Value;
+                    voiture._yposition = positionL1;
+                    voiture._xposition = j * distance_entre_vehicule * 2 + Choix_nombrevoitures.Value;
+                    cars.Add(voiture);
+                    affichage.Children.Add(voiture);
+                    Canvas.SetLeft(voiture, voiture._xposition);
+                    Canvas.SetTop(voiture, voiture._yposition);
+                    j--;
+                }
+            }
+            //Sinon, le nombre de voitures a baissé, ...
+            else
+            {
+                for (int i = 0; i > nbajout_voiegauche; i--)
+                {
+                    affichage.Children.Remove(cars2[cars.Count - 1]);
+                    cars2.RemoveAt(cars2.Count - 1);
+                }
+                for (int i = 0; i > nbajout_voiedroite; i--)
+                {
+                        affichage.Children.Remove(cars[cars.Count - 1]);
+                        cars.RemoveAt(cars.Count - 1);
+                }
+            }
+      
+            if (relance_timers)
+            {
+                timer1.Start();
+                timer2.Start();
+            }
+
+        }
+
+ //UI ELEMENTS
+        public void start(object sender, RoutedEventArgs e)
+        {
+            if (chargement)
+            {
+                int nbvoitures_voiegauche = (int)(Choix_nombrevoitures.Value * (Choix_proportion_voituregauche.Value / 100));
+                int nbvoitures_voiedroite = (int)Choix_nombrevoitures.Value - nbvoitures_voiegauche;
+                int densite_camion = (int)Choix_densitecamion.Value;
+                distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
+
+                int i = nbvoitures_voiegauche;
+                while (i != 0)
+                {
+
+                    Voiture voiture = new Voiture();
+                    if ((rand.Next(100) < densite_camion) && chargement) //Pas besoin de faire la densité de camion pour les autres cas
                     {
                         voiture._vehiculelent = true;
                         Uri relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
@@ -305,7 +378,7 @@ namespace Simulateur_0._0._2
                 while (j != 0)
                 {
                     Voiture voiture = new Voiture();
-                    if (rand.Next(100) < densite_camion)
+                    if ((rand.Next(100) < densite_camion) && chargement) //Pas besoin de faire la densité de camion pour les autres cas
                     {
                         voiture._vehiculelent = true;
                         Uri relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
@@ -321,39 +394,6 @@ namespace Simulateur_0._0._2
                     Canvas.SetTop(voiture, voiture._yposition);
                     j--;
                 }
-            }
-            //Sinon, le nombre de voitures a baissé, ...
-            else
-            {
-                int i = cars.Count-1;
-                while (i > nbvoitures_voiedroite)
-                {
-                    affichage.Children.Remove(cars[i]);
-                    cars.RemoveAt(i);
-                    i--;
-                }
-                int j = cars2.Count-1;
-                while (j > nbvoitures_voiedroite)
-                {
-                    affichage.Children.Remove(cars2[j]);
-                    cars2.RemoveAt(j);
-                    j--;
-                }
-            }
-            if (relance_timers)
-            {
-                timer1.Start();
-                timer2.Start();
-            }
-
-        }
-
- //UI ELEMENTS
-        public void start(object sender, RoutedEventArgs e)
-        {
-            if (chargement)
-            {
-                Remplissage_voies();
                 chargement = false;
             }
             timer1.Start();
@@ -384,27 +424,14 @@ namespace Simulateur_0._0._2
             }
         }
 
-        private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!chargement)
-            {
-                Remplissage_voies();
-            }            
-            Nombrevehicules_choix_affichage.Content = "Nombre de véhicules : " + Choix_nombrevoitures.Value.ToString("F0");
-        }
-
         private void Choix_proportion_voituregauche_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (!chargement)
-            {
-                Remplissage_voies();
-            }
             proportion_voiegauche_choix_affichage.Content = "Proportion véhicules file de gauche" +  Choix_proportion_voituregauche.Value.ToString("F0") + " %";
         }
 
         private void choix_distance_entre_vehicules_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Distance_securite_affichage.Content = "Distance entre veh : " + choix_distance_entre_vehicules.Value.ToString();
+            Distance_securite_affichage.Content = "Distance entre veh : " + choix_distance_entre_vehicules.Value.ToString("F0");
         }
 
         private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -414,12 +441,15 @@ namespace Simulateur_0._0._2
 
         private void Choix_densitecamion_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (!chargement)
-            {
-                Remplissage_voies();
-            }
-            densitecamion_choix_affichage.Content = "Proportion de camions " + Choix_densitecamion.Value.ToString() + " %";
+           
+            densitecamion_choix_affichage.Content = "Proportion de camions " + Choix_densitecamion.Value.ToString("F0") + " %";
 
+        }
+        
+       
+        private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            Nombrevehicules_choix_affichage.Content = "Nombre de véhicules : " + Choix_nombrevoitures.Value.ToString("F0");
         }
     }
 }
