@@ -23,8 +23,8 @@ namespace Simulateur_0._0._2
         {
             var relativeUri = new Uri("Images/car.png", UriKind.Relative);
             Source = new BitmapImage(relativeUri);
-            Height = 16;
             Width = 16;
+            Height = 6;
             Xposition = 0;
             Yposition = 0;
             Vitesse = 1;

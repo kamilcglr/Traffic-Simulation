@@ -11,7 +11,7 @@
             <ColumnDefinition x:Name="Colonne1" Width="1028*"/>
             <ColumnDefinition x:Name="Colonne2" Width="165*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="Start" Grid.Column="1" Margin="67,4,68,0" VerticalAlignment="Top" Width="30" HorizontalAlignment="Center" Click="start" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
+        <Button x:Name="BoutonStart" Grid.Column="1" Margin="67,4,68,0" VerticalAlignment="Top" Width="30" HorizontalAlignment="Center" Click="Start" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
             <Button.Background>
                 <ImageBrush ImageSource="Images/play-button-sing(1).png"/>
             </Button.Background>
