@@ -6,18 +6,18 @@ namespace Simulateur_0._0._2
 {
     internal class Voiture : Image
     {
-        public double _acceleration;
-        public double _deceleration;
-        public bool _frein = false;
+        public double Acceleration;
+        public double Deceleration;
+        public bool Frein = false;
 
-        public int _lane;
+        public int Lane;
 
-        public bool _vehiculelent;
+        public bool Vehiculelent;
 
-        public double _vitesse;
-        public double _vitessemax;
-        public double _xposition;
-        public double _yposition;
+        public double Vitesse;
+        public double Vitessemax;
+        public double Xposition;
+        public double Yposition;
 
         public Voiture() //constructeur
         {
@@ -25,41 +25,41 @@ namespace Simulateur_0._0._2
             Source = new BitmapImage(relativeUri);
             Height = 16;
             Width = 16;
-            _xposition = 0;
-            _yposition = 0;
-            _vitesse = 1;
-            _vitessemax = 0;
-            _acceleration = 0;
-            _lane = 1;
-            _vehiculelent = false;
+            Xposition = 0;
+            Yposition = 0;
+            Vitesse = 1;
+            Vitessemax = 0;
+            Acceleration = 0;
+            Lane = 1;
+            Vehiculelent = false;
         }
 
-        public double Move(double _vitessemax, double _acceleration, double _deceleration)
+        public double Move(double vitessemax, double acceleration, double deceleration)
         {
-            if (_frein)
+            if (Frein)
             {
-                _vitesse -= _deceleration;
+                Vitesse -= deceleration;
 
-                if (_vitesse > 0)
-                    _xposition = _xposition + _vitesse;
+                if (Vitesse > 0)
+                    Xposition = Xposition + Vitesse;
                 else
-                    _vitesse = 0;
+                    Vitesse = 0;
             }
             else
             {
-                if (_vehiculelent)
+                if (Vehiculelent)
                 {
-                    if (_vitesse <= _vitessemax - 0.1) _vitesse += _acceleration;
+                    if (Vitesse <= vitessemax - 0.1) Vitesse += acceleration;
                 }
                 else
                 {
-                    if (_vitesse <= _vitessemax) _vitesse += _acceleration;
+                    if (Vitesse <= vitessemax) Vitesse += acceleration;
                 }
 
-                _xposition = _xposition + _vitesse;
+                Xposition = Xposition + Vitesse;
             }
 
-            return _xposition;
+            return Xposition;
         }
     }
 }
