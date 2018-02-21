@@ -17,9 +17,9 @@ namespace Simulateur_0._0._2
         public bool Chargement = true;
         private int _distanceEntreVehicule = 20;
         public int Nbvoitures;
-        private readonly int _pointCritique = 600;
-        public int PositionL1 = 500;
-        public int PositionL2 = 700;
+        private readonly int _pointCritique = 800;
+        public int PositionL1 = 540;
+        public int PositionL2 = 570;
 
         private readonly Random _rand = new Random();
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
