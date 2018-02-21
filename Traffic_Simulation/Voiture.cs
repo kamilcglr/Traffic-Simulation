@@ -38,7 +38,7 @@ namespace Simulateur_0._0._2
         {
             if (Frein)
             {
-                Vitesse -= deceleration;
+                Vitesse = Vitesse/ deceleration;
 
                 if (Vitesse > 0)
                     Xposition = Xposition + Vitesse;

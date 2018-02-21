@@ -29,9 +29,9 @@ namespace Simulateur_0._0._2
         {
             InitializeComponent();
             _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(10);
+            _timer1.Interval = TimeSpan.FromMilliseconds(20);
             _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(10);
+            _timer2.Interval = TimeSpan.FromMilliseconds(20);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -52,8 +52,8 @@ namespace Simulateur_0._0._2
         {
             _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
-            var vitessemax = ChoixVitessemax.Value;
-            var acceleration = ChoixAcceleration.Value;
+            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
+            var acceleration =  -0.002* Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
             for (var i = 0; i < Cars.Count; i++)
                 if (i == 0) // Pour la première voiture on la fait avancer dans tous les cas
@@ -83,8 +83,8 @@ namespace Simulateur_0._0._2
             _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
             double distancePtcritique = 100;
-            var vitessemax = ChoixVitessemax.Value;
-            var acceleration = ChoixAcceleration.Value;
+            var vitessemax = ((ChoixVitessemax.Value/3.6)* 0.02) / 0.25;
+            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
 
             for (var i = 0; i < Cars2.Count; i++)
@@ -182,8 +182,8 @@ namespace Simulateur_0._0._2
         {
             _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
-            var vitessemax = ChoixVitessemax.Value;
-            var acceleration = ChoixAcceleration.Value;
+            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
+            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
 
             Voiture temp = Cars2[i];
@@ -200,8 +200,8 @@ namespace Simulateur_0._0._2
 
         public void Retour_vehicules()
         {
-            var vitessemax = ChoixVitessemax.Value;
-            var acceleration = ChoixAcceleration.Value;
+            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
+            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
 
             if (Cars[0].Xposition >= Bordure.ActualWidth - 16)
@@ -270,7 +270,7 @@ namespace Simulateur_0._0._2
                     var voiture = new Voiture
                     {
                         Lane = 2,
-                        Vitesse = ChoixVitessemax.Value,
+                        Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL2,
                         Xposition = _distanceEntreVehicule * 2 * i //A VOIR
                     };
@@ -287,7 +287,7 @@ namespace Simulateur_0._0._2
                     Voiture voiture = new Voiture
                     {
                         Lane = 1,
-                        Vitesse = ChoixVitessemax.Value,
+                        Vitesse =  ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL1,
                         Xposition = j * _distanceEntreVehicule * 2 + ChoixNombrevoitures.Value
                     };
@@ -341,7 +341,7 @@ namespace Simulateur_0._0._2
                         Ajoutcamion(voiture);
                     }
                     voiture.Lane = 2;
-                    voiture.Vitesse = ChoixVitessemax.Value;
+                    voiture.Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
                     voiture.Yposition = PositionL2;
                     voiture.Xposition = _distanceEntreVehicule * 2 * i;
                     Cars2.Add(voiture);
@@ -361,7 +361,7 @@ namespace Simulateur_0._0._2
                         Ajoutcamion(voiture);
                     }
                     voiture.Lane = 1;
-                    voiture.Vitesse = ChoixVitessemax.Value;
+                    voiture.Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
                     voiture.Yposition = PositionL1;
                     voiture.Xposition = j * _distanceEntreVehicule * 2 + ChoixNombrevoitures.Value;
                     Cars.Add(voiture);
@@ -388,12 +388,14 @@ namespace Simulateur_0._0._2
         }
         private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3);
+            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3) +"km/h";
         }
 
-        private void choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            AccelerationmaxChoixAffichage.Content = "Accélération max : " + Math.Round(ChoixAcceleration.Value, 3);
+            //Acceleration renvoyée en pixel/20ms2
+            //On exprime va afficher ici le 0 à 100
+            AccelerationmaxChoixAffichage.Content = "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 3) +"s";
         }
 
         private void Bouton_frein_Click(object sender, RoutedEventArgs e)
