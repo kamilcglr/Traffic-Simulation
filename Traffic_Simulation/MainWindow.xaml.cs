@@ -1,84 +1,69 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-
 
 namespace Simulateur_0._0._2
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
+    ///     Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        System.Windows.Threading.DispatcherTimer timer1 = new System.Windows.Threading.DispatcherTimer();
-        System.Windows.Threading.DispatcherTimer timer2 = new System.Windows.Threading.DispatcherTimer();
+        private static readonly List<Voiture> cars = new List<Voiture>();
+        private static readonly List<Voiture> cars2 = new List<Voiture>();
         public bool chargement = true;
-
-        static List<Voiture> cars = new List<Voiture>();
-        static List<Voiture> cars2 = new List<Voiture>();
-        public int nbvoitures=0;
-        public int positionL2 = 0;
+        private int distance_entre_vehicule = 20;
+        public int nbvoitures;
+        private readonly int point_critique = 600;
         public int positionL1 = 100;
-        int point_critique = 600;
-        int distance_entre_vehicule = 20;
+        public int positionL2 = 0;
 
-        Random rand = new Random();
+        private readonly Random rand = new Random();
+        private readonly DispatcherTimer timer1 = new DispatcherTimer();
+        private readonly DispatcherTimer timer2 = new DispatcherTimer();
 
         public MainWindow()
         {
             InitializeComponent();
-            timer1.Tick += new EventHandler(timer1_Tick);
+            timer1.Tick += timer1_Tick;
             timer1.Interval = TimeSpan.FromMilliseconds(10);
-            timer2.Tick += new EventHandler(timer2_Tick);
+            timer2.Tick += timer2_Tick;
             timer2.Interval = TimeSpan.FromMilliseconds(10);
-
-
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             Avance_ligne1();
             Retour_vehicules();
-            nb_voitures_1.Content = "Ligne 1 : " + cars.Count.ToString();
-            nb_voitures_2.Content = "Ligne 1 : " + cars2.Count.ToString();
+            nb_voitures_1.Content = "Ligne 1 : " + cars.Count;
+            nb_voitures_2.Content = "Ligne 1 : " + cars2.Count;
         }
+
         private void timer2_Tick(object sender, EventArgs e)
         {
             Avance_ligne2();
-            if ((cars.Count + cars2.Count) != (int)Choix_nombrevoitures.Value)
-            {
-                Remplissage_voies();
-            }
+            if (cars.Count + cars2.Count != (int) Choix_nombrevoitures.Value) Remplissage_voies();
         }
 
         public void Avance_ligne1()
         {
-            distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
+            distance_entre_vehicule = (int) choix_distance_entre_vehicules.Value;
 
-            double vitessemax = choix_vitessemax.Value;
-            double acceleration = choix_acceleration.Value;
-            double deceleration = choix_deceleration.Value;
-            for (int i = 0; i < cars.Count; i++)
-            {
+            var vitessemax = choix_vitessemax.Value;
+            var acceleration = choix_acceleration.Value;
+            var deceleration = choix_deceleration.Value;
+            for (var i = 0; i < cars.Count; i++)
                 if (i == 0) // Pour la première voiture on la fait avancer dans tous les cas
                 {
-                    Canvas.SetLeft(cars[0], cars[0].Move(vitessemax, acceleration,deceleration));
+                    Canvas.SetLeft(cars[0], cars[0].Move(vitessemax, acceleration, deceleration));
                     Canvas.SetTop(cars[0], cars[0]._yposition);
                 }
                 else // Pour les autre on vérifie devant pour freiner ou avancer
                 {
-                    if ((cars[i]._xposition) < (cars[i - 1]._xposition - distance_entre_vehicule))
+                    if (cars[i]._xposition < cars[i - 1]._xposition - distance_entre_vehicule)
                     {
                         Canvas.SetLeft(cars[i], cars[i].Move(vitessemax, acceleration, deceleration));
                         Canvas.SetTop(cars[i], cars[i]._yposition);
@@ -91,19 +76,18 @@ namespace Simulateur_0._0._2
                         cars[i]._frein = false;
                     }
                 }
-            }
         }
+
         public void Avance_ligne2()
         {
-            distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
+            distance_entre_vehicule = (int) choix_distance_entre_vehicules.Value;
 
-            double distance_ptcritique = 200;
-            double vitessemax = choix_vitessemax.Value;
-            double acceleration = choix_acceleration.Value;
-            double deceleration = choix_deceleration.Value;
+            double distance_ptcritique = 100;
+            var vitessemax = choix_vitessemax.Value;
+            var acceleration = choix_acceleration.Value;
+            var deceleration = choix_deceleration.Value;
 
-            for (int i = 0; i < cars2.Count; i++)
-            {
+            for (var i = 0; i < cars2.Count; i++)
                 if (i == 0)
                 {
                     if (cars2[0]._xposition <= point_critique - distance_ptcritique)
@@ -113,11 +97,10 @@ namespace Simulateur_0._0._2
                     }
                     else
                     {
-                        int position = Champ_libre(cars2[0]._xposition);
+                        var position = Champ_libre(cars2[0]._xposition);
                         if (position != -1)
                         {
                             Changement_ligne(position, 0);
-
                         }
                         else
                         {
@@ -132,7 +115,7 @@ namespace Simulateur_0._0._2
                 {
                     if (cars2[i]._xposition <= point_critique - distance_ptcritique)
                     {
-                        if ((cars2[i]._xposition < cars2[i - 1]._xposition - distance_entre_vehicule))
+                        if (cars2[i]._xposition < cars2[i - 1]._xposition - distance_entre_vehicule)
                         {
                             Canvas.SetLeft(cars2[i], cars2[i].Move(vitessemax, acceleration, deceleration));
                             Canvas.SetTop(cars2[i], cars2[i]._yposition);
@@ -147,7 +130,7 @@ namespace Simulateur_0._0._2
                     }
                     else
                     {
-                        int position = Champ_libre(cars2[i]._xposition);
+                        var position = Champ_libre(cars2[i]._xposition);
                         if (position != -1)
                         {
                             Changement_ligne(position, i);
@@ -161,18 +144,17 @@ namespace Simulateur_0._0._2
                         }
                     }
                 }
-            }
         }
 
 
         public int Champ_libre(double _xposition)
         {
-            distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
+            distance_entre_vehicule = (int) choix_distance_entre_vehicules.Value;
 
-            int autorise_Champ_libre = -1;
-            for (int i = 0; i < cars.Count; i++)
-            {
-                if ((cars[i]._xposition >= _xposition - distance_entre_vehicule) && (cars[i]._xposition <= _xposition + distance_entre_vehicule))
+            var autorise_Champ_libre = -1;
+            for (var i = 0; i < cars.Count; i++)
+                if (cars[i]._xposition >= _xposition - distance_entre_vehicule &&
+                    cars[i]._xposition <= _xposition + distance_entre_vehicule)
                 {
                     autorise_Champ_libre = -1;
                     break;
@@ -181,12 +163,10 @@ namespace Simulateur_0._0._2
                 {
                     autorise_Champ_libre = i;
                 }
-            }
+
             if (autorise_Champ_libre != -1)
-            {
-                for (int i = cars.Count - 1; i != 0; i--)
-                {
-                    if ((cars[i]._xposition < _xposition))
+                for (var i = cars.Count - 1; i != 0; i--)
+                    if (cars[i]._xposition < _xposition)
                     {
                         autorise_Champ_libre = 0;
                     }
@@ -196,38 +176,34 @@ namespace Simulateur_0._0._2
                         break;
                     }
 
-                }
-            }
             return autorise_Champ_libre;
         }
+
         public void Changement_ligne(int position, int i)
         {
-            distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
+            distance_entre_vehicule = (int) choix_distance_entre_vehicules.Value;
 
-            double vitessemax = choix_vitessemax.Value;
-            double acceleration = choix_acceleration.Value;
-            double deceleration = choix_deceleration.Value;
+            var vitessemax = choix_vitessemax.Value;
+            var acceleration = choix_acceleration.Value;
+            var deceleration = choix_deceleration.Value;
 
             Voiture temp = cars2[i];
             cars2.RemoveAt(i);
             if (position + 1 > cars.Count) //Si on dépasse la valeur 
-            {
                 cars.Add(temp);
-            }
             else
-            {
                 cars.Insert(position + 1, temp);
-            }
             //On affiche cette voiture et on la fait avancer
             cars[position + 1]._yposition = positionL1;
             Canvas.SetLeft(cars[position + 1], cars[position + 1].Move(vitessemax, acceleration, deceleration));
             Canvas.SetTop(cars[position + 1], cars[position + 1]._yposition);
         }
+
         public void Retour_vehicules()
         {
-            double vitessemax = choix_vitessemax.Value;
-            double acceleration = choix_acceleration.Value;
-            double deceleration = choix_deceleration.Value;
+            var vitessemax = choix_vitessemax.Value;
+            var acceleration = choix_acceleration.Value;
+            var deceleration = choix_deceleration.Value;
 
             if (cars[0]._xposition >= Bordure.ActualWidth - 16)
             {
@@ -236,22 +212,19 @@ namespace Simulateur_0._0._2
                 temp._xposition = 0;
                 temp._vitesse = vitessemax;
                 temp._vehiculelent = false;
-                Uri relativeUri = new Uri("Images/car.png", UriKind.Relative);
+                var relativeUri = new Uri("Images/car.png", UriKind.Relative);
                 temp.Source = new BitmapImage(relativeUri);
                 if (rand.Next(100) < Choix_proportion_voituregauche.Value)
-                {
                     temp._lane = 2;
-                }
                 else
-                {
                     temp._lane = 1;
-                }
                 if (rand.Next(100) < Choix_densitecamion.Value)
                 {
                     temp._vehiculelent = true;
-                    Uri relativeUri2 = new Uri("Images/automobile.png", UriKind.Relative);
+                    var relativeUri2 = new Uri("Images/automobile.png", UriKind.Relative);
                     temp.Source = new BitmapImage(relativeUri2);
                 }
+
                 if (temp._lane == 2)
                 {
                     temp._yposition = positionL2;
@@ -267,10 +240,10 @@ namespace Simulateur_0._0._2
                 }
             }
         }
-       
+
         public void Remplissage_voies()
         {
-            bool relance_timers = false;
+            var relance_timers = false;
             //Si les timers sont actifs (bouton start déjà appuyé une fois) on arrete les timers et on devra relancer les timers  à la fin
             if (timer1.IsEnabled || timer2.IsEnabled)
             {
@@ -278,34 +251,35 @@ namespace Simulateur_0._0._2
                 timer2.Stop();
                 relance_timers = true;
             }
-            
-            distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
-            int densite_camion = (int)Choix_densitecamion.Value;
+
+            distance_entre_vehicule = (int) choix_distance_entre_vehicules.Value;
+            var densite_camion = (int) Choix_densitecamion.Value;
 
             nbvoitures = cars.Count + cars2.Count;
 
-            int nbajout = (int)Choix_nombrevoitures.Value - nbvoitures;
-            int nbajout_voiegauche = nbajout * (int)(Choix_proportion_voituregauche.Value/100) ;
-            int nbajout_voiedroite= nbajout - nbajout_voiegauche;
+            var nbajout = (int) Choix_nombrevoitures.Value - nbvoitures;
+            var nbajout_voiegauche = nbajout * (int) (Choix_proportion_voituregauche.Value / 100);
+            var nbajout_voiedroite = nbajout - nbajout_voiegauche;
 
             if (nbajout > 0)
             {
                 //Proportion en plus dans la voie gauche
-                int i = nbajout_voiegauche;
+                var i = nbajout_voiegauche;
                 while (i != 0)
                 {
-                    Voiture voiture = new Voiture();
+                    var voiture = new Voiture();
                     voiture._lane = 2;
                     voiture._vitesse = choix_vitessemax.Value;
                     voiture._yposition = positionL2;
-                    voiture._xposition = distance_entre_vehicule * 2 * i;//A VOIR
+                    voiture._xposition = distance_entre_vehicule * 2 * i; //A VOIR
                     cars2.Add(voiture);
                     affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture._xposition);
                     Canvas.SetTop(voiture, voiture._yposition);
                     i--;
                 }
-                int j = nbajout_voiedroite;
+
+                var j = nbajout_voiedroite;
                 while (j != 0)
                 {
                     Voiture voiture = new Voiture();
@@ -323,47 +297,49 @@ namespace Simulateur_0._0._2
             //Sinon, le nombre de voitures a baissé, ...
             else
             {
-                for (int i = 0; i > nbajout_voiegauche; i--)
+                for (var i = 0; i > nbajout_voiegauche; i--)
                 {
                     affichage.Children.Remove(cars2[cars.Count - 1]);
                     cars2.RemoveAt(cars2.Count - 1);
                 }
-                for (int i = 0; i > nbajout_voiedroite; i--)
+
+                for (var i = 0; i > nbajout_voiedroite; i--)
                 {
-                        affichage.Children.Remove(cars[cars.Count - 1]);
-                        cars.RemoveAt(cars.Count - 1);
+                    affichage.Children.Remove(cars[cars.Count - 1]);
+                    cars.RemoveAt(cars.Count - 1);
                 }
             }
-      
+
             if (relance_timers)
             {
                 timer1.Start();
                 timer2.Start();
             }
-
         }
 
- //UI ELEMENTS
+        //UI ELEMENTS
         public void start(object sender, RoutedEventArgs e)
         {
             if (chargement)
             {
-                int nbvoitures_voiegauche = (int)(Choix_nombrevoitures.Value * (Choix_proportion_voituregauche.Value / 100));
-                int nbvoitures_voiedroite = (int)Choix_nombrevoitures.Value - nbvoitures_voiegauche;
-                int densite_camion = (int)Choix_densitecamion.Value;
-                distance_entre_vehicule = (int)choix_distance_entre_vehicules.Value;
+                var nbvoitures_voiegauche =
+                    (int) (Choix_nombrevoitures.Value * (Choix_proportion_voituregauche.Value / 100));
+                var nbvoitures_voiedroite = (int) Choix_nombrevoitures.Value - nbvoitures_voiegauche;
+                var densite_camion = (int) Choix_densitecamion.Value;
+                distance_entre_vehicule = (int) choix_distance_entre_vehicules.Value;
 
-                int i = nbvoitures_voiegauche;
+                var i = nbvoitures_voiegauche;
                 while (i != 0)
                 {
-
                     Voiture voiture = new Voiture();
-                    if ((rand.Next(100) < densite_camion) && chargement) //Pas besoin de faire la densité de camion pour les autres cas
+                    if (rand.Next(100) < densite_camion && chargement
+                    ) //Pas besoin de faire la densité de camion pour les autres cas
                     {
                         voiture._vehiculelent = true;
-                        Uri relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
+                        var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
                         voiture.Source = new BitmapImage(relativeUri);
                     }
+
                     voiture._lane = 2;
                     voiture._vitesse = choix_vitessemax.Value;
                     voiture._yposition = positionL2;
@@ -374,16 +350,19 @@ namespace Simulateur_0._0._2
                     Canvas.SetTop(voiture, voiture._yposition);
                     i--;
                 }
-                int j = nbvoitures_voiedroite;
+
+                var j = nbvoitures_voiedroite;
                 while (j != 0)
                 {
                     Voiture voiture = new Voiture();
-                    if ((rand.Next(100) < densite_camion) && chargement) //Pas besoin de faire la densité de camion pour les autres cas
+                    if (rand.Next(100) < densite_camion && chargement
+                    ) //Pas besoin de faire la densité de camion pour les autres cas
                     {
                         voiture._vehiculelent = true;
-                        Uri relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
+                        var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
                         voiture.Source = new BitmapImage(relativeUri);
                     }
+
                     voiture._lane = 1;
                     voiture._vitesse = choix_vitessemax.Value;
                     voiture._yposition = positionL1;
@@ -394,62 +373,62 @@ namespace Simulateur_0._0._2
                     Canvas.SetTop(voiture, voiture._yposition);
                     j--;
                 }
+
                 chargement = false;
             }
+
             timer1.Start();
             timer2.Start();
         }
 
         private void choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            vitessemax_choix_affichage.Content = "Vitesse max : " + Math.Round(choix_vitessemax.Value, 3).ToString();
+            vitessemax_choix_affichage.Content = "Vitesse max : " + Math.Round(choix_vitessemax.Value, 3);
         }
 
         private void choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
-            accelerationmax_choix_affichage.Content = "Accélération max : " + Math.Round(choix_acceleration.Value, 3).ToString();
+            accelerationmax_choix_affichage.Content = "Accélération max : " + Math.Round(choix_acceleration.Value, 3);
         }
 
         private void Bouton_frein_Click(object sender, RoutedEventArgs e)
         {
-
             if (cars[0]._frein == false)
-            {
                 cars[0]._frein = true;
-            }
             else
-            {
                 cars[0]._frein = false;
-            }
         }
 
-        private void Choix_proportion_voituregauche_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Choix_proportion_voituregauche_ValueChanged(object sender,
+            RoutedPropertyChangedEventArgs<double> e)
         {
-            proportion_voiegauche_choix_affichage.Content = "Proportion véhicules file de gauche" +  Choix_proportion_voituregauche.Value.ToString("F0") + " %";
+            proportion_voiegauche_choix_affichage.Content = "Proportion véhicules file de gauche" +
+                                                            Choix_proportion_voituregauche.Value.ToString("F0") + " %";
         }
 
-        private void choix_distance_entre_vehicules_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void choix_distance_entre_vehicules_ValueChanged(object sender,
+            RoutedPropertyChangedEventArgs<double> e)
         {
-            Distance_securite_affichage.Content = "Distance entre veh : " + choix_distance_entre_vehicules.Value.ToString("F0");
+            Distance_securite_affichage.Content =
+                "Distance entre veh : " + choix_distance_entre_vehicules.Value.ToString("F0");
         }
 
         private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Deceleration_choix_affichage.Content = "Deceleration : " + Math.Round(choix_deceleration.Value, 3).ToString();
+            Deceleration_choix_affichage.Content = "Deceleration : " + Math.Round(choix_deceleration.Value, 3);
         }
 
         private void Choix_densitecamion_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-           
-            densitecamion_choix_affichage.Content = "Proportion de camions " + Choix_densitecamion.Value.ToString("F0") + " %";
-
+            densitecamion_choix_affichage.Content =
+                "Proportion de camions " + Choix_densitecamion.Value.ToString("F0") + " %";
         }
-        
-       
+
+
         private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            Nombrevehicules_choix_affichage.Content = "Nombre de véhicules : " + Choix_nombrevoitures.Value.ToString("F0");
+            Nombrevehicules_choix_affichage.Content =
+                "Nombre de véhicules : " + Choix_nombrevoitures.Value.ToString("F0");
         }
     }
 }
