@@ -46,7 +46,7 @@ namespace Simulateur_0._0._2
         private void timer3_Tick(object sender, EventArgs e)
         {
             Gaugetest.Value = Vitessemoyenne();
-
+            //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
         }
 
         private void timer1_Tick(object sender, EventArgs e)
