@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -43,7 +45,7 @@ namespace Simulateur_0._0._2
         private void timer2_Tick(object sender, EventArgs e)
         {
             Avance_ligne2();
-            if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) Remplissage_voies();
+            if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
             NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
             NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
         }
@@ -241,7 +243,7 @@ namespace Simulateur_0._0._2
             }
         }
 
-        public void Remplissage_voies()
+        public void ModificationNbVehicules()
         {
             var relanceTimers = false;
             //Si les timers sont actifs (bouton start déjà appuyé une fois) on arrete les timers et on devra relancer les timers  à la fin
@@ -258,7 +260,8 @@ namespace Simulateur_0._0._2
             Nbvoitures = Cars.Count + Cars2.Count;
 
             var nbajout = (int) ChoixNombrevoitures.Value - Nbvoitures;
-            var nbajoutVoiegauche = nbajout * (int) (ChoixProportionVoituregauche.Value / 100);
+            //Arrondit pour respecter le choix de proportion de chaque côté
+            var nbajoutVoiegauche =  (int) Math.Round(nbajout *  (ChoixProportionVoituregauche.Value / 100), 0);
             var nbajoutVoiedroite = nbajout - nbajoutVoiegauche;
 
             if (nbajout > 0)
@@ -267,12 +270,13 @@ namespace Simulateur_0._0._2
                 var i = nbajoutVoiegauche;
                 while (i != 0)
                 {
+                    double positionDernier = Cars2.Last().Xposition;
                     var voiture = new Voiture
                     {
                         Lane = 2,
                         Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL2,
-                        Xposition = _distanceEntreVehicule * 2 * i //A VOIR
+                        Xposition = positionDernier - 3*_distanceEntreVehicule //A VOIR
                     };
                     Cars2.Add(voiture);
                     Affichage.Children.Add(voiture);
@@ -284,12 +288,13 @@ namespace Simulateur_0._0._2
                 var j = nbajoutVoiedroite;
                 while (j != 0)
                 {
+                    double positionDernier = Cars.Last().Xposition;
                     Voiture voiture = new Voiture
                     {
                         Lane = 1,
                         Vitesse =  ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL1,
-                        Xposition = j * _distanceEntreVehicule * 2 + ChoixNombrevoitures.Value
+                        Xposition = positionDernier - 3*_distanceEntreVehicule
                     };
                     Cars.Add(voiture);
                     Affichage.Children.Add(voiture);
@@ -370,7 +375,6 @@ namespace Simulateur_0._0._2
                     Canvas.SetBottom(voiture, voiture.Yposition);
                     j--;
                 }
-
                 Chargement = false;
             }
 
