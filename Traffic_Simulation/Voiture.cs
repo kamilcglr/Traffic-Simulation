@@ -21,10 +21,10 @@ namespace Simulateur_0._0._2
 
         public Voiture() //constructeur
         {
-            var relativeUri = new Uri("Images/car.png", UriKind.Relative);
+            var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
             Source = new BitmapImage(relativeUri);
             Width = 16;
-            Height = 6;
+            Height = 10;
             Xposition = 0;
             Yposition = 0;
             Vitesse = 1;

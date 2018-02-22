@@ -63,7 +63,7 @@ namespace Simulateur_0._0._2
                 }
                 else // Pour les autre on vérifie devant pour freiner ou avancer
                 {
-                    if (Cars[i].Xposition < Cars[i - 1].Xposition - _distanceEntreVehicule)
+                    if (Cars[i].Xposition + Cars[i].Width < Cars[i - 1].Xposition - _distanceEntreVehicule)
                     {
                         Canvas.SetLeft(Cars[i], Cars[i].Move(vitessemax, acceleration, deceleration));
                         Canvas.SetBottom(Cars[i], Cars[i].Yposition);
@@ -115,7 +115,7 @@ namespace Simulateur_0._0._2
                 {
                     if (Cars2[i].Xposition <= _pointCritique - distancePtcritique)
                     {
-                        if (Cars2[i].Xposition < Cars2[i - 1].Xposition - _distanceEntreVehicule)
+                        if (Cars2[i].Xposition + Cars2[i].Width < Cars2[i - 1].Xposition - _distanceEntreVehicule)
                         {
                             Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
                             Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
@@ -211,7 +211,7 @@ namespace Simulateur_0._0._2
                 temp.Xposition = 0;
                 temp.Vitesse = vitessemax;
                 temp.Vehiculelent = false;
-                var relativeUri = new Uri("Images/car.png", UriKind.Relative);
+                var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
                 temp.Source = new BitmapImage(relativeUri);
                 if (_rand.Next(100) < ChoixProportionVoituregauche.Value)
                     temp.Lane = 2;
