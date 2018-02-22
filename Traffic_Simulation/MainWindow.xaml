@@ -4,7 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Simulateur_0._0._2"
-        mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" AllowsTransparency="True">
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" 
+    mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" AllowsTransparency="True">
 
     <Grid x:Name="Grille">
         <Grid.ColumnDefinitions>
@@ -16,6 +17,7 @@
                 <ImageBrush ImageSource="Images/play-button-sing(1).png"/>
             </Button.Background>
         </Button>
+
         <Canvas x:Name="Affichage" HorizontalAlignment="Left"  Height="{Binding ElementName=Grille, Path=ActualHeight}" Margin="0" VerticalAlignment="Center" Width="{Binding ElementName=Colonne1, Path=ActualWidth}" >
             <Border x:Name="Bordure" BorderBrush="#FFFFAE42" BorderThickness="1" HorizontalAlignment="Left" Height="712" VerticalAlignment="Center" Width="1027" Canvas.Left="4" Canvas.Top="4">
                 <Border.Background>
@@ -24,6 +26,7 @@
 
             </Border>
         </Canvas>
+        
         <Label x:Name="NombrevehiculesChoixAffichage" Content="Nombre de véhicules :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,37,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
         <Label x:Name="ProportionVoiegaucheChoixAffichage" Content="Proportion véhicules file de gauche :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,69,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
         <Label x:Name="DensitecamionChoixAffichage" Content="Densité camion :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,100,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
@@ -41,5 +44,6 @@
         <Slider x:Name="ChoixDensitecamion" Grid.Column="1" HorizontalAlignment="Center" Margin="10,117,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="100" ValueChanged="Choix_densitecamion_ValueChanged" Value="10" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" LargeChange="0"/>
         <Button x:Name="BoutonFrein" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="52,486,0,0" VerticalAlignment="Top" Width="74" Click="Bouton_frein_Click" ClickMode="Release" />
         <Slider x:Name="ChoixVitessemax" Grid.Column="1" HorizontalAlignment="Center" Margin="10,209,10,0" VerticalAlignment="Top" Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="130" Value="90" SmallChange="1"/>
+        <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="52,617,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>

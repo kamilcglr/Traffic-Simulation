@@ -27,6 +27,8 @@ namespace Simulateur_0._0._2
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
         private readonly DispatcherTimer _timer2 = new DispatcherTimer();
 
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -308,7 +310,7 @@ namespace Simulateur_0._0._2
             {
                 for (var i = 0; i > nbajoutVoiegauche; i--)
                 {
-                    Affichage.Children.Remove(Cars2[Cars.Count - 1]);
+                    Affichage.Children.Remove(Cars2[Cars2.Count - 1]);
                     Cars2.RemoveAt(Cars2.Count - 1);
                 }
 
@@ -404,10 +406,10 @@ namespace Simulateur_0._0._2
 
         private void Bouton_frein_Click(object sender, RoutedEventArgs e)
         {
-            if (Cars[0].Frein == false)
+            /*if (Cars[0].Frein == false)
                 Cars[0].Frein = true;
             else
-                Cars[0].Frein = false;
+                Cars[0].Frein = false;*/
         }
 
         private void Choix_proportion_voituregauche_ValueChanged(object sender,
