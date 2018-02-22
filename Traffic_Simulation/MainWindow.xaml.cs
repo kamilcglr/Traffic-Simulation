@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Wpf.Gauges;
 
 namespace Simulateur_0._0._2
 {
@@ -26,7 +28,6 @@ namespace Simulateur_0._0._2
         private readonly Random _rand = new Random();
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
         private readonly DispatcherTimer _timer2 = new DispatcherTimer();
-
 
 
         public MainWindow()
@@ -50,6 +51,7 @@ namespace Simulateur_0._0._2
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
             NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
             NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
+            Gaugetest.Value = (((Cars[0].Vitesse*0.25)/0.02)*3.6); 
         }
 
         public void Avance_ligne1()
@@ -57,7 +59,7 @@ namespace Simulateur_0._0._2
             _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
             var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-            var acceleration =  -0.002* Math.Log(ChoixAcceleration.Value) + 0.0088;
+            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
             for (var i = 0; i < Cars.Count; i++)
                 if (i == 0) // Pour la première voiture on la fait avancer dans tous les cas
@@ -87,7 +89,7 @@ namespace Simulateur_0._0._2
             _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
             double distancePtcritique = 100;
-            var vitessemax = ((ChoixVitessemax.Value/3.6)* 0.02) / 0.25;
+            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
             var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
 
@@ -229,6 +231,7 @@ namespace Simulateur_0._0._2
                 {
                     temp.Width = 16;
                 }
+
                 if (temp.Lane == 2)
                 {
                     temp.Yposition = PositionL2;
@@ -263,7 +266,7 @@ namespace Simulateur_0._0._2
 
             var nbajout = (int) ChoixNombrevoitures.Value - Nbvoitures;
             //Arrondit pour respecter le choix de proportion de chaque côté
-            var nbajoutVoiegauche =  (int) Math.Round(nbajout *  (ChoixProportionVoituregauche.Value / 100), 0);
+            var nbajoutVoiegauche = (int) Math.Round(nbajout * (ChoixProportionVoituregauche.Value / 100), 0);
             var nbajoutVoiedroite = nbajout - nbajoutVoiegauche;
 
             if (nbajout > 0)
@@ -278,7 +281,7 @@ namespace Simulateur_0._0._2
                         Lane = 2,
                         Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL2,
-                        Xposition = positionDernier - 3*_distanceEntreVehicule //A VOIR
+                        Xposition = positionDernier - 3 * _distanceEntreVehicule //A VOIR
                     };
                     Cars2.Add(voiture);
                     Affichage.Children.Add(voiture);
@@ -294,9 +297,9 @@ namespace Simulateur_0._0._2
                     Voiture voiture = new Voiture
                     {
                         Lane = 1,
-                        Vitesse =  ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
+                        Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL1,
-                        Xposition = positionDernier - 3*_distanceEntreVehicule
+                        Xposition = positionDernier - 3 * _distanceEntreVehicule
                     };
                     Cars.Add(voiture);
                     Affichage.Children.Add(voiture);
@@ -343,10 +346,12 @@ namespace Simulateur_0._0._2
                 while (i != 0)
                 {
                     Voiture voiture = new Voiture();
-                    if (_rand.Next(100) < densiteCamion && Chargement) //Pas besoin de faire la densité de camion pour les autres cas
+                    if (_rand.Next(100) < densiteCamion && Chargement
+                    ) //Pas besoin de faire la densité de camion pour les autres cas
                     {
                         Ajoutcamion(voiture);
                     }
+
                     voiture.Lane = 2;
                     voiture.Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
                     voiture.Yposition = PositionL2;
@@ -367,6 +372,7 @@ namespace Simulateur_0._0._2
                     {
                         Ajoutcamion(voiture);
                     }
+
                     voiture.Lane = 1;
                     voiture.Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
                     voiture.Yposition = PositionL1;
@@ -377,6 +383,7 @@ namespace Simulateur_0._0._2
                     Canvas.SetBottom(voiture, voiture.Yposition);
                     j--;
                 }
+
                 Chargement = false;
             }
 
@@ -392,16 +399,18 @@ namespace Simulateur_0._0._2
             voiture.Width = 32;
             voiture.Height = 10;
         }
+
         private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3) +"km/h";
+            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3) + "km/h";
         }
 
         private void Choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             //Acceleration renvoyée en pixel/20ms2
             //On exprime va afficher ici le 0 à 100
-            AccelerationmaxChoixAffichage.Content = "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 3) +"s";
+            AccelerationmaxChoixAffichage.Content =
+                "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 3) + "s";
         }
 
         private void Bouton_frein_Click(object sender, RoutedEventArgs e)
@@ -416,7 +425,7 @@ namespace Simulateur_0._0._2
             RoutedPropertyChangedEventArgs<double> e)
         {
             ProportionVoiegaucheChoixAffichage.Content = "Proportion véhicules file de gauche" +
-                                                            ChoixProportionVoituregauche.Value.ToString("F0") + " %";
+                                                         ChoixProportionVoituregauche.Value.ToString("F0") + " %";
         }
 
         private void choix_distance_entre_vehicules_ValueChanged(object sender,
@@ -442,6 +451,44 @@ namespace Simulateur_0._0._2
         {
             NombrevehiculesChoixAffichage.Content =
                 "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
+        }
+    }
+
+}
+
+namespace Wpf.Gauges { 
+    public partial class AngularGaugeExmple : UserControl, INotifyPropertyChanged
+    {
+        private double _value;
+
+        public AngularGaugeExmple()
+        {
+
+            Value = 0;
+
+            DataContext = this;
+        }
+
+        public double Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                OnPropertyChanged("Value");
+            }
+        }
+
+        public void ChangeValueOnClick()
+        {
+            Value = new Random().Next(50, 250);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
