@@ -28,6 +28,7 @@ namespace Simulateur_0._0._2
         private readonly Random _rand = new Random();
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
         private readonly DispatcherTimer _timer2 = new DispatcherTimer();
+        private readonly DispatcherTimer _timer3 = new DispatcherTimer();
 
 
         public MainWindow()
@@ -37,6 +38,15 @@ namespace Simulateur_0._0._2
             _timer1.Interval = TimeSpan.FromMilliseconds(20);
             _timer2.Tick += timer2_Tick;
             _timer2.Interval = TimeSpan.FromMilliseconds(20);
+            _timer3.Tick += timer3_Tick;
+            _timer3.Interval = TimeSpan.FromSeconds(1);
+
+        }
+        //ICI ON S'OCCUPE DES Graphiques (chaque seconde)
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            Gaugetest.Value = Vitessemoyenne();
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -51,7 +61,6 @@ namespace Simulateur_0._0._2
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
             NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
             NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
-            Gaugetest.Value = (((Cars[0].Vitesse*0.25)/0.02)*3.6); 
         }
 
         public void Avance_ligne1()
@@ -331,6 +340,23 @@ namespace Simulateur_0._0._2
             }
         }
 
+        public double Vitessemoyenne()
+        {
+            double vitessemoy = 0;
+            for (int i = 0; i < Cars.Count; i++)
+            {
+                vitessemoy += Cars[i].Vitesse;
+            }
+            for (int i = 0; i < Cars2.Count; i++)
+            {
+                vitessemoy += Cars2[i].Vitesse;
+            }
+
+            vitessemoy = vitessemoy / (Cars.Count + Cars2.Count);
+            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
+            return vitessemoy;
+        }
+
         //UI ELEMENTS
         public void Start(object sender, RoutedEventArgs e)
         {
@@ -389,6 +415,7 @@ namespace Simulateur_0._0._2
 
             _timer1.Start();
             _timer2.Start();
+            _timer3.Start();
         }
 
         private void Ajoutcamion(Voiture voiture)
