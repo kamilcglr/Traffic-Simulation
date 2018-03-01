@@ -7,21 +7,17 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using LiveCharts;
 using Wpf.Gauges;
+using System.Threading;
+using System.Threading.Tasks;
+using LiveCharts.Configurations;
 
 namespace Wpf.Gauges
 {
     public partial class AngularGaugeExmple : UserControl, INotifyPropertyChanged
     {
         private double _value;
-
-        public AngularGaugeExmple()
-        {
-
-            Value = 0;
-
-            DataContext = this;
-        }
 
         public double Value
         {
@@ -33,11 +29,6 @@ namespace Wpf.Gauges
             }
         }
 
-        public void ChangeValueOnClick()
-        {
-            Value = new Random().Next(50, 250);
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(string propertyName = null)
@@ -46,3 +37,5 @@ namespace Wpf.Gauges
         }
     }
 }
+
+

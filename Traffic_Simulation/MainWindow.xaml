@@ -23,20 +23,44 @@
                 <Border.Background>
                     <ImageBrush ImageSource="Images/Route.png" Stretch="None"/>
                 </Border.Background>
-
             </Border>
         </Canvas>
         <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="130" 
                           LabelsStep="50" TicksStep="25" Wedge="300"
                           TicksForeground="White" Foreground="White" 
                           FontWeight="Bold" FontSize="16"
-                          SectionsInnerRadius=".5" Width="150" Height="150" RenderTransformOrigin="-1.367,0.913" Margin="10,343,874,227">
+                          SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="3,345,936,287">
             <lvc:AngularGauge.Sections>
                 <lvc:AngularSection FromValue="0" ToValue="70" Fill="#FF00FF2E"/>
                 <lvc:AngularSection FromValue="70" ToValue="100" Fill="#F8A725"/>
                 <lvc:AngularSection FromValue="100" ToValue="130" Fill="#FF3939"/>
             </lvc:AngularGauge.Sections>
         </lvc:AngularGauge>
+        <lvc:CartesianChart x:Name="Graphtest" Margin="118,345,133,252" ScrollBarFill="{x:Null}">
+            <lvc:CartesianChart.Series>
+                <lvc:StepLineSeries Values="{Binding Values}" Foreground="#FF0095E0" StrokeThickness="1" />
+            </lvc:CartesianChart.Series>
+            <lvc:CartesianChart.AxisX>
+                <lvc:Axis LabelFormatter="{Binding DateTimeFormatter}" 
+                          MaxValue="{Binding AxisMax}" 
+                          MinValue="{Binding AxisMin}"
+                          Unit="{Binding AxisUnit}" Foreground="#FFAAAAAA">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator Step="{Binding AxisStep}" StrokeThickness="0"  />
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
+            </lvc:CartesianChart.AxisX>
+            <lvc:CartesianChart.AxisY>
+                <lvc:Axis
+                    MinValue =" 0">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator 
+                            StrokeThickness="1"  />
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
+            </lvc:CartesianChart.AxisY>
+        </lvc:CartesianChart>
+
 
         <Label x:Name="NombrevehiculesChoixAffichage" Content="Nombre de véhicules :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,37,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
         <Label x:Name="ProportionVoiegaucheChoixAffichage" Content="Proportion véhicules file de gauche :" Grid.Column="1" HorizontalAlignment="Center" Margin="7,69,10,0" VerticalAlignment="Top" Height="23" Width="149" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
@@ -56,5 +80,6 @@
         <Button x:Name="BoutonFrein" Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="52,486,0,0" VerticalAlignment="Top" Width="74" Click="Bouton_frein_Click" ClickMode="Release" />
         <Slider x:Name="ChoixVitessemax" Grid.Column="1" HorizontalAlignment="Center" Margin="10,209,10,0" VerticalAlignment="Top" Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="130" Value="90" SmallChange="1"/>
         <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="52,617,0,0" VerticalAlignment="Top" Width="75"/>
+        <CheckBox Content="CheckBox" HorizontalAlignment="Left" Margin="-75,357,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

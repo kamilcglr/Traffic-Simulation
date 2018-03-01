@@ -7,6 +7,10 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Helpers;
+using LiveCharts.Wpf;
 using Wpf.Gauges;
 
 namespace Simulateur_0._0._2
@@ -29,6 +33,9 @@ namespace Simulateur_0._0._2
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
         private readonly DispatcherTimer _timer2 = new DispatcherTimer();
         private readonly DispatcherTimer _timer3 = new DispatcherTimer();
+        
+        public static List<ObservableValue> Vitesse_valeurs = new List<ObservableValue>() ;
+        public static int Etape = 0;
 
 
         public MainWindow()
@@ -40,13 +47,26 @@ namespace Simulateur_0._0._2
             _timer2.Interval = TimeSpan.FromMilliseconds(20);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(1);
+            
 
         }
         //ICI ON S'OCCUPE DES Graphiques (chaque seconde)
         private void timer3_Tick(object sender, EventArgs e)
         {
             Gaugetest.Value = Vitessemoyenne();
+            MiseajourVitesseMoy();
+            
             //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
+        }
+
+        public void MiseajourVitesseMoy()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Vitesse_valeurs[i].Value = Vitesse_valeurs[i + 1].Value;
+            }
+            Vitesse_valeurs[10].Value = Vitessemoyenne();
+           
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -412,7 +432,33 @@ namespace Simulateur_0._0._2
 
                 Chargement = false;
             }
+            ObservableValue v1 = new ObservableValue(0);//1
+            Vitesse_valeurs.Add(v1);
+            ObservableValue v2 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v2);
+            ObservableValue v3 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v3);
+            ObservableValue v4 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v4);
+            ObservableValue v5 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v5);
+            ObservableValue v6 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v6);
+            ObservableValue v7 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v7);
+            ObservableValue v8 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v8);
+            ObservableValue v9 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v9);
+            ObservableValue v10 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v10);
+            ObservableValue v11 = new ObservableValue(0);
+            Vitesse_valeurs.Add(v11);
 
+            Graphtest.Series.Add(new LineSeries
+            {
+                Values = new ChartValues<ObservableValue> { Vitesse_valeurs[0], Vitesse_valeurs[1], Vitesse_valeurs[2], Vitesse_valeurs[3], Vitesse_valeurs[4], Vitesse_valeurs[5], Vitesse_valeurs[6], Vitesse_valeurs[7], Vitesse_valeurs[8], Vitesse_valeurs[9], Vitesse_valeurs[10] },
+            });
             _timer1.Start();
             _timer2.Start();
             _timer3.Start();
@@ -472,7 +518,6 @@ namespace Simulateur_0._0._2
             DensitecamionChoixAffichage.Content =
                 "Proportion de camions " + ChoixDensitecamion.Value.ToString("F0") + " %";
         }
-
 
         private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
