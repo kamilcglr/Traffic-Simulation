@@ -26,10 +26,9 @@
             </Canvas>
             <DockPanel x:Name="PannelVitesses" Height="100" VerticalAlignment="Center" >
                 <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="130" 
-                              LabelsStep="50" TicksStep="25" Wedge="300"
-                              TicksForeground="White" Foreground="White" 
-                              FontWeight="Normal" FontSize="16"
-                              SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,0" Height="100" Width="100" HorizontalAlignment="Left">
+                              LabelsStep="20" TicksStep="10" Wedge="280"
+                              TicksForeground="White" Foreground="White" FontSize="8"
+                              SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left">
                     <lvc:AngularGauge.Sections>
                         <lvc:AngularSection FromValue="0" ToValue="70" Fill="#FF00FF2E"/>
                         <lvc:AngularSection FromValue="70" ToValue="100" Fill="#F8A725"/>
