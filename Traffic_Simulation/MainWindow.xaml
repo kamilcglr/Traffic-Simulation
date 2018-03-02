@@ -24,7 +24,7 @@
                     <ImageBrush ImageSource="Images/Route.png"/>
                 </Canvas.Background>
             </Canvas>
-            <DockPanel x:Name="PannelVitesses" Height="100" VerticalAlignment="Center" >
+            <DockPanel x:Name="PannelVitesses" Height="100" >
                 <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="130" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
                               TicksForeground="White" Foreground="White" FontSize="8"
@@ -54,6 +54,9 @@
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+            </DockPanel>
+            <DockPanel x:Name="PannelvehicluesArret" Height="100">
+                <lvc:Gauge x:Name="GaugeNbvehiculesArret" From ="0" Value="{Binding Value}" To="{Binding Value, ElementName=ChoixNombrevoitures}" />
             </DockPanel>
 
         </StackPanel>

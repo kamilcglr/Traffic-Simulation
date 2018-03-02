@@ -51,6 +51,7 @@ namespace Simulateur_0._0._2
         {
             Gaugetest.Value = Vitessemoyenne();
             MiseajourVitesseMoy();
+            GaugeNbvehiculesArret.Value = NbVehiculesArret();
             //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
         }
 
@@ -63,6 +64,25 @@ namespace Simulateur_0._0._2
             VitesseValeurs[19].Value = Gaugetest.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
 
+        public int NbVehiculesArret()
+        {
+            int n=0;
+            for (int i =0; i< Cars.Count ; i++)
+            {
+                if (Cars[i].Vitesse < 0.2)
+                {
+                    n++;
+                }
+            }
+            for (int i = 0; i < Cars2.Count ; i++)
+            {
+                if (Cars2[i].Vitesse <0.2)
+                {
+                    n++;
+                }
+            }
+            return n;
+        }
         private void timer1_Tick(object sender, EventArgs e)
         {
             Avance_ligne1();

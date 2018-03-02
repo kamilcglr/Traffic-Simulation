@@ -58,7 +58,11 @@ namespace Simulateur_0._0._2
                     Canvas.SetBottom(voiture, voiture.Yposition);
                     j--;
                 }
+                //----------------------INIT GRAPHS-------------------------
                 InitialiserGraphVitesse();
+              //  InitialiserNbvehiculesArret();
+                //----------------------------------------------------------
+
                 Chargement = false;
             }
             Graphtest.Series.Add(new LineSeries
@@ -87,7 +91,6 @@ namespace Simulateur_0._0._2
                     VitesseValeurs[19]
                 },
                 PointGeometrySize = 0
-                
             });
             _timer1.Start();
             _timer2.Start();
@@ -101,6 +104,11 @@ namespace Simulateur_0._0._2
                 var point = new ObservableValue(0);
                 VitesseValeurs.Add(point);
             }
+        }
+
+        public void InitialiserNbvehiculesArret()
+        {
+            GaugeNbvehiculesArret.To = Cars.Count + Cars2.Count;
         }
         private void Ajoutcamion(Voiture voiture)
         {
