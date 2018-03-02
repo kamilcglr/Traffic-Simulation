@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Simulateur_0._0._2"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" 
-    mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None">
+    mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" ResizeMode="NoResize">
 
     <Grid x:Name="Grille">
         <Grid.ColumnDefinitions>
@@ -36,26 +36,21 @@
                         <lvc:AngularSection FromValue="100" ToValue="130" Fill="#FF3939"/>
                     </lvc:AngularGauge.Sections>
                 </lvc:AngularGauge>
-                <lvc:CartesianChart x:Name="Graphtest" Margin="0" ScrollBarFill="{x:Null}" Width="700" Height="100" HorizontalAlignment="Center">
+                <lvc:CartesianChart x:Name="Graphtest" Margin="0,3" ScrollBarFill="{x:Null}" Width="700" HorizontalAlignment="Center" BorderBrush="#FFFFAE42" BorderThickness="1">
                     <lvc:CartesianChart.Series>
-                        <lvc:StepLineSeries Values="{Binding Values}" Foreground="#FF0095E0" StrokeThickness="1" />
+                        <lvc:StepLineSeries Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis LabelFormatter="{Binding DateTimeFormatter}" 
-                              MaxValue="{Binding AxisMax}" 
-                              MinValue="{Binding AxisMin}"
-                              Unit="{Binding AxisUnit}" Foreground="#FFAAAAAA">
+                        <lvc:Axis ShowLabels="False" MinValue="0" MaxValue="19" >
                             <lvc:Axis.Separator>
-                                <lvc:Separator Step="{Binding AxisStep}" StrokeThickness="0"  />
+                                <lvc:Separator Step="1" StrokeThickness="0"/>
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
                     <lvc:CartesianChart.AxisY>
-                        <lvc:Axis
-                        MinValue =" 0">
+                        <lvc:Axis MinValue =" 0">
                             <lvc:Axis.Separator>
-                                <lvc:Separator 
-                                StrokeThickness="1"  />
+                                <lvc:Separator  StrokeThickness="0"  />
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>

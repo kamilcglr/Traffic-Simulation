@@ -34,9 +34,7 @@ namespace Simulateur_0._0._2
         private readonly DispatcherTimer _timer2 = new DispatcherTimer();
         private readonly DispatcherTimer _timer3 = new DispatcherTimer();
         
-        public static List<ObservableValue> Vitesse_valeurs = new List<ObservableValue>() ;
-        public static int Etape = 0;
-
+        public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>() ;
 
         public MainWindow()
         {
@@ -47,26 +45,22 @@ namespace Simulateur_0._0._2
             _timer2.Interval = TimeSpan.FromMilliseconds(20);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(1);
-            
-
         }
         //ICI ON S'OCCUPE DES Graphiques (chaque seconde)
         private void timer3_Tick(object sender, EventArgs e)
         {
             Gaugetest.Value = Vitessemoyenne();
             MiseajourVitesseMoy();
-            
             //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
         }
 
         public void MiseajourVitesseMoy()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 19; i++)
             {
-                Vitesse_valeurs[i].Value = Vitesse_valeurs[i + 1].Value;
+                VitesseValeurs[i].Value = VitesseValeurs[i + 1].Value;
             }
-            Vitesse_valeurs[10].Value = Vitessemoyenne();
-           
+            VitesseValeurs[19].Value = Gaugetest.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -377,153 +371,7 @@ namespace Simulateur_0._0._2
             return vitessemoy;
         }
 
-        //UI ELEMENTS
-        public void Start(object sender, RoutedEventArgs e)
-        {
-            if (Chargement)
-            {
-                var nbvoituresVoiegauche =
-                    (int) (ChoixNombrevoitures.Value * (ChoixProportionVoituregauche.Value / 100));
-                var nbvoituresVoiedroite = (int) ChoixNombrevoitures.Value - nbvoituresVoiegauche;
-                var densiteCamion = (int) ChoixDensitecamion.Value;
-                _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
-                var i = nbvoituresVoiegauche;
-                while (i != 0)
-                {
-                    Voiture voiture = new Voiture();
-                    if (_rand.Next(100) < densiteCamion && Chargement
-                    ) //Pas besoin de faire la densité de camion pour les autres cas
-                    {
-                        Ajoutcamion(voiture);
-                    }
-
-                    voiture.Lane = 2;
-                    voiture.Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-                    voiture.Yposition = PositionL2;
-                    voiture.Xposition = _distanceEntreVehicule * 2 * i;
-                    Cars2.Add(voiture);
-                    Affichage.Children.Add(voiture);
-                    Canvas.SetLeft(voiture, voiture.Xposition);
-                    Canvas.SetBottom(voiture, voiture.Yposition);
-                    i--;
-                }
-
-                var j = nbvoituresVoiedroite;
-                while (j != 0)
-                {
-                    Voiture voiture = new Voiture();
-                    if (_rand.Next(100) < densiteCamion && Chargement
-                    ) //Pas besoin de faire la densité de camion pour les autres cas
-                    {
-                        Ajoutcamion(voiture);
-                    }
-
-                    voiture.Lane = 1;
-                    voiture.Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-                    voiture.Yposition = PositionL1;
-                    voiture.Xposition = j * _distanceEntreVehicule * 2 + ChoixNombrevoitures.Value;
-                    Cars.Add(voiture);
-                    Affichage.Children.Add(voiture);
-                    Canvas.SetLeft(voiture, voiture.Xposition);
-                    Canvas.SetBottom(voiture, voiture.Yposition);
-                    j--;
-                }
-
-                Chargement = false;
-            }
-            ObservableValue v1 = new ObservableValue(0);//1
-            Vitesse_valeurs.Add(v1);
-            ObservableValue v2 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v2);
-            ObservableValue v3 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v3);
-            ObservableValue v4 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v4);
-            ObservableValue v5 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v5);
-            ObservableValue v6 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v6);
-            ObservableValue v7 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v7);
-            ObservableValue v8 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v8);
-            ObservableValue v9 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v9);
-            ObservableValue v10 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v10);
-            ObservableValue v11 = new ObservableValue(0);
-            Vitesse_valeurs.Add(v11);
-
-            Graphtest.Series.Add(new LineSeries
-            {
-                Values = new ChartValues<ObservableValue> { Vitesse_valeurs[0], Vitesse_valeurs[1], Vitesse_valeurs[2], Vitesse_valeurs[3], Vitesse_valeurs[4], Vitesse_valeurs[5], Vitesse_valeurs[6], Vitesse_valeurs[7], Vitesse_valeurs[8], Vitesse_valeurs[9], Vitesse_valeurs[10] },
-            });
-            _timer1.Start();
-            _timer2.Start();
-            _timer3.Start();
-        }
-
-        private void Ajoutcamion(Voiture voiture)
-        {
-            voiture.Vehiculelent = true;
-            var relativeUri = new Uri("Images/truck.png", UriKind.Relative);
-            voiture.Source = new BitmapImage(relativeUri);
-            voiture.Width = 32;
-            voiture.Height = 10;
-        }
-
-        private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3) + "km/h";
-        }
-
-        private void Choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            //Acceleration renvoyée en pixel/20ms2
-            //On exprime va afficher ici le 0 à 100
-            AccelerationmaxChoixAffichage.Content =
-                "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 3) + "s";
-        }
-
-        private void Bouton_frein_Click(object sender, RoutedEventArgs e)
-        {
-            /*if (Cars[0].Frein == false)
-                Cars[0].Frein = true;
-            else
-                Cars[0].Frein = false;*/
-        }
-
-        private void Choix_proportion_voituregauche_ValueChanged(object sender,
-            RoutedPropertyChangedEventArgs<double> e)
-        {
-            ProportionVoiegaucheChoixAffichage.Content = "Proportion véhicules file de gauche" +
-                                                         ChoixProportionVoituregauche.Value.ToString("F0") + " %";
-        }
-
-        private void choix_distance_entre_vehicules_ValueChanged(object sender,
-            RoutedPropertyChangedEventArgs<double> e)
-        {
-            DistanceSecuriteAffichage.Content =
-                "Distance entre veh : " + ChoixDistanceEntreVehicules.Value.ToString("F0");
-        }
-
-        private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            DecelerationChoixAffichage.Content = "Deceleration : " + Math.Round(ChoixDeceleration.Value, 3);
-        }
-
-        private void Choix_densitecamion_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            DensitecamionChoixAffichage.Content =
-                "Proportion de camions " + ChoixDensitecamion.Value.ToString("F0") + " %";
-        }
-
-        private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            NombrevehiculesChoixAffichage.Content =
-                "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
-        }
     }
 
 }
