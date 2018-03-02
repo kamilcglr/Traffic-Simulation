@@ -26,8 +26,8 @@ namespace Simulateur_0._0._2
         private int _distanceEntreVehicule = 20;
         public int Nbvoitures;
         private readonly int _pointCritique = 800;
-        public int PositionL1 = 540;
-        public int PositionL2 = 570;
+        public int PositionL1 = 80;
+        public int PositionL2 = 110;
 
         private readonly Random _rand = new Random();
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
@@ -239,7 +239,7 @@ namespace Simulateur_0._0._2
             var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             var deceleration = ChoixDeceleration.Value;
 
-            if (Cars[0].Xposition >= Bordure.ActualWidth - 16)
+            if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
             {
                 Voiture temp = Cars[0];
                 Cars.RemoveAt(0);
