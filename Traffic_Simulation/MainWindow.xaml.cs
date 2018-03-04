@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using LiveCharts;
@@ -44,7 +45,7 @@ namespace Simulateur_0._0._2
             _timer2.Tick += timer2_Tick;
             _timer2.Interval = TimeSpan.FromMilliseconds(20);
             _timer3.Tick += timer3_Tick;
-            _timer3.Interval = TimeSpan.FromSeconds(1);
+            _timer3.Interval = TimeSpan.FromSeconds(3);
         }
         //ICI ON S'OCCUPE DES Graphiques (chaque seconde)
         private void timer3_Tick(object sender, EventArgs e)
@@ -52,9 +53,18 @@ namespace Simulateur_0._0._2
             Gaugetest.Value = Vitessemoyenne();
             MiseajourVitesseMoy();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
+            ProgressBarcoloration();
+            
             //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
         }
 
+        public void ProgressBarcoloration()
+        {
+            PourcentageVitesse.Value = (Vitessemoyenne()*100)/ChoixVitessemax.Value;
+            byte rouge = Convert.ToByte( ((100 - PourcentageVitesse.Value) / 100) * 255);
+            byte vert = Convert.ToByte(((PourcentageVitesse.Value / 100) * 255));
+            PourcentageVitesse.Foreground = new SolidColorBrush(Color.FromArgb(255, rouge, vert, 0));
+        }
         public void MiseajourVitesseMoy()
         {
             for (int i = 0; i < 19; i++)
