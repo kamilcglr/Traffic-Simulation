@@ -18,6 +18,8 @@ namespace Simulateur_0._0._2
             acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             deceleration = ChoixDeceleration.Value;
             _distanceEntreVehicule = (int)ChoixDistanceEntreVehicules.Value;
+            distancePtcritique = 100;
+            distanceAnalyse = 500;
             //----------------------------------------------------------------
 
             //----------------------INIT GRAPHS-------------------------
@@ -36,6 +38,7 @@ namespace Simulateur_0._0._2
                 _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
                 var i = nbvoituresVoiegauche;
+                var decoupageL1 = 800 / i;
                 while (i != 0)
                 {
                     var voiture = new Voiture();
@@ -44,9 +47,9 @@ namespace Simulateur_0._0._2
                         Ajoutcamion(voiture);
 
                     voiture.Lane = 2;
-                    voiture.Vitesse = ChoixVitessemax.Value / 3.6 * 0.02 / 0.25;
+                    voiture.Vitesse = vitessemax;
                     voiture.Yposition = PositionL2;
-                    voiture.Xposition = _distanceEntreVehicule * 2 * i;
+                    voiture.Xposition = decoupageL1 * i ;
                     Cars2.Add(voiture);
                     Affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture.Xposition);
@@ -55,6 +58,7 @@ namespace Simulateur_0._0._2
                 }
 
                 var j = nbvoituresVoiedroite;
+                var decoupageL2 = 800 / j;
                 while (j != 0)
                 {
                     var voiture = new Voiture();
@@ -63,9 +67,9 @@ namespace Simulateur_0._0._2
                         Ajoutcamion(voiture);
 
                     voiture.Lane = 1;
-                    voiture.Vitesse = ChoixVitessemax.Value / 3.6 * 0.02 / 0.25;
+                    voiture.Vitesse = vitessemax;
                     voiture.Yposition = PositionL1;
-                    voiture.Xposition = j * _distanceEntreVehicule * 2 + ChoixNombrevoitures.Value;
+                    voiture.Xposition = decoupageL2 * j;
                     Cars.Add(voiture);
                     Affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture.Xposition);
