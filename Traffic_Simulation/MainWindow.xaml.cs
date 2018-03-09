@@ -288,8 +288,6 @@ namespace Simulateur_0._0._2
 
         public void Retour_vehicules()
         {
-           
-
             if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
             {
                 Voiture temp = Cars[0];

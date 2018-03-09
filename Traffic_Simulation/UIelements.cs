@@ -41,6 +41,7 @@ namespace Simulateur_0._0._2
                 var decoupageL1 = 800 / i;
                 while (i != 0)
                 {
+                    
                     var voiture = new Voiture();
                     if (_rand.Next(100) < densiteCamion && Chargement
                     ) //Pas besoin de faire la densité de camion pour les autres cas
@@ -49,7 +50,7 @@ namespace Simulateur_0._0._2
                     voiture.Lane = 2;
                     voiture.Vitesse = vitessemax;
                     voiture.Yposition = PositionL2;
-                    voiture.Xposition = decoupageL1 * i ;
+                    voiture.Xposition = decoupageL1 * i - 800 ;
                     Cars2.Add(voiture);
                     Affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture.Xposition);
@@ -69,15 +70,13 @@ namespace Simulateur_0._0._2
                     voiture.Lane = 1;
                     voiture.Vitesse = vitessemax;
                     voiture.Yposition = PositionL1;
-                    voiture.Xposition = decoupageL2 * j;
+                    voiture.Xposition = (decoupageL2 * j - 800);
                     Cars.Add(voiture);
                     Affichage.Children.Add(voiture);
                     Canvas.SetLeft(voiture, voiture.Xposition);
                     Canvas.SetBottom(voiture, voiture.Yposition);
                     j--;
                 }
-                
-
                 Chargement = false;
             }
 
