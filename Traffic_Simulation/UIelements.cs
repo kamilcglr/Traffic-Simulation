@@ -13,6 +13,20 @@ namespace Simulateur_0._0._2
         //UI ELEMENTS
         public void Start(object sender, RoutedEventArgs e)
         {
+            //----------------------INIT VALEURS-----------------------------
+            vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
+            acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
+            deceleration = ChoixDeceleration.Value;
+            _distanceEntreVehicule = (int)ChoixDistanceEntreVehicules.Value;
+            //----------------------------------------------------------------
+
+            //----------------------INIT GRAPHS-------------------------
+            InitialiserGraphVitesse();
+            InitialiserNbvehiculesArret();
+            InitialiserGraphNbVehiculesArret();
+            InitialiserGaugeVitesse();
+            //----------------------------------------------------------
+            
             if (Chargement) // On effectue cette étape si c'est la première fois qu'est pressé le bouton
             {
                 var nbvoituresVoiegauche =
@@ -58,18 +72,17 @@ namespace Simulateur_0._0._2
                     Canvas.SetBottom(voiture, voiture.Yposition);
                     j--;
                 }
-                //----------------------INIT GRAPHS-------------------------
-                InitialiserGraphVitesse();
-                InitialiserNbvehiculesArret();
-                InitialiserGraphNbVehiculesArret();
-                InitialiserGaugeVitesse();
-                //----------------------------------------------------------
+                
 
                 Chargement = false;
             }
+
+            //--------------LANCEMENT TIMERs (à la fin !)---------------
             _timer1.Start();
             _timer2.Start();
             _timer3.Start();
+            _timerGauges.Start();
+            //----------------------------------------------------------
         }
         //----------------------------------GRAPHES----------------------------------------------------
         public void InitialiserGraphVitesse()

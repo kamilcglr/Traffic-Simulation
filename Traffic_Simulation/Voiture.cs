@@ -19,6 +19,8 @@ namespace Simulateur_0._0._2
         public double Xposition;
         public double Yposition;
 
+        public bool ChangementL;
+
         public Voiture() //constructeur
         {
             var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
@@ -36,6 +38,18 @@ namespace Simulateur_0._0._2
 
         public double Move(double vitessemax, double acceleration, double deceleration)
         {
+            if (ChangementL)//Si il y a changement de ligne alors on fait translater la voiture
+            {
+                if (Yposition < 80)
+                {
+                    Yposition = 80;
+                    ChangementL = false;
+                }
+                else
+                {
+                    Yposition--;
+                }
+            }
             if (Frein)
             {
                 Vitesse = Vitesse/ deceleration;

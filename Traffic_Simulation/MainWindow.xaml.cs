@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using LiveCharts;
@@ -24,7 +25,6 @@ namespace Simulateur_0._0._2
         private static readonly List<Voiture> Cars = new List<Voiture>();
         private static readonly List<Voiture> Cars2 = new List<Voiture>();
         public bool Chargement = true;
-        private int _distanceEntreVehicule = 20;
         public int Nbvoitures;
         private readonly int _pointCritique = 800;
         public int PositionL1 = 80;
@@ -34,7 +34,15 @@ namespace Simulateur_0._0._2
         private readonly DispatcherTimer _timer1 = new DispatcherTimer();
         private readonly DispatcherTimer _timer2 = new DispatcherTimer();
         private readonly DispatcherTimer _timer3 = new DispatcherTimer();
-        
+        private readonly DispatcherTimer _timerGauges = new DispatcherTimer();
+
+        //VALEURS CHANGEANTES
+        private static double vitessemax = 0;
+        private static double acceleration = 0;
+        private static double deceleration = 0;
+        private int _distanceEntreVehicule = 0;
+
+
         public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>() ;
         public static List<ObservableValue> NbVehiculesArretValeurs = new List<ObservableValue>();
 
@@ -48,15 +56,36 @@ namespace Simulateur_0._0._2
             _timer2.Interval = TimeSpan.FromMilliseconds(20);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(3);
+            _timerGauges.Tick += timerGauges_Tick;
+            _timerGauges.Interval = TimeSpan.FromSeconds(1);
         }
-        //ICI ON S'OCCUPE DES Graphiques (chaque seconde)
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
+            acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
+            deceleration = ChoixDeceleration.Value;
+            _distanceEntreVehicule = (int)ChoixDistanceEntreVehicules.Value;
+
+            Avance_ligne1();
+            Retour_vehicules();
+        }
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            Avance_ligne2();
+            if (Cars.Count + Cars2.Count != (int)ChoixNombrevoitures.Value) ModificationNbVehicules();
+            NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
+            NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
+        }
         private void timer3_Tick(object sender, EventArgs e)
         {
-            Gaugetest.Value = Vitessemoyenne();
             MiseajourVitesseMoy();
-            GaugeNbvehiculesArret.Value = NbVehiculesArret();
             MiseajourNbVehiculesArret();
-            //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
+        }
+
+        private void timerGauges_Tick(object sender, EventArgs e)
+        {
+            Gaugetest.Value = Vitessemoyenne();
+            GaugeNbvehiculesArret.Value = NbVehiculesArret();
         }
 
         /*public void ProgressBarcoloration()
@@ -66,6 +95,7 @@ namespace Simulateur_0._0._2
             byte vert = Convert.ToByte(((PourcentageVitesse.Value / 100) * 255));
             PourcentageVitesse.Foreground = new SolidColorBrush(Color.FromArgb(255, rouge, vert, 0));
         }*/
+
         public void MiseajourVitesseMoy()
         {
             for (int i = 0; i < 19; i++)
@@ -102,27 +132,9 @@ namespace Simulateur_0._0._2
             }
             return n;
         }
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            Avance_ligne1();
-            Retour_vehicules();
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            Avance_ligne2();
-            if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
-            NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
-            NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
-        }
-
+        
         public void Avance_ligne1()
         {
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-
-            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
-            var deceleration = ChoixDeceleration.Value;
             for (var i = 0; i < Cars.Count; i++)
                 if (i == 0) // Pour la première voiture on la fait avancer dans tous les cas
                 {
@@ -148,12 +160,8 @@ namespace Simulateur_0._0._2
 
         public void Avance_ligne2()
         {
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-
             double distancePtcritique = 100;
-            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
-            var deceleration = ChoixDeceleration.Value;
+
 
             for (var i = 0; i < Cars2.Count; i++)
                 if (i == 0)
@@ -216,10 +224,8 @@ namespace Simulateur_0._0._2
 
         public int Champ_libre(double xposition)
         {
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-
             var autoriseChampLibre = -1;
-            for (var i = 0; i < Cars.Count; i++)
+            for (var i = 0; i < Cars.Count; i++)//Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
                 if (Cars[i].Xposition >= xposition - _distanceEntreVehicule &&
                     Cars[i].Xposition <= xposition + _distanceEntreVehicule)
                 {
@@ -231,7 +237,7 @@ namespace Simulateur_0._0._2
                     autoriseChampLibre = i;
                 }
 
-            if (autoriseChampLibre != -1)
+            if (autoriseChampLibre != -1)//Personne, alors on prend la place de la voiture jsute derriere celle qui avait la position de cars2
                 for (var i = Cars.Count - 1; i != 0; i--)
                     if (Cars[i].Xposition < xposition)
                     {
@@ -248,29 +254,22 @@ namespace Simulateur_0._0._2
 
         public void Changement_ligne(int position, int i)
         {
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-
-            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
-            var deceleration = ChoixDeceleration.Value;
-
             Voiture temp = Cars2[i];
             Cars2.RemoveAt(i);
             if (position + 1 > Cars.Count) //Si on dépasse la valeur 
                 Cars.Add(temp);
             else
                 Cars.Insert(position + 1, temp);
+
             //On affiche cette voiture et on la fait avancer
-            Cars[position + 1].Yposition = PositionL1;
+            Cars[position+1].ChangementL = true;//On active le dépacement en Y
             Canvas.SetLeft(Cars[position + 1], Cars[position + 1].Move(vitessemax, acceleration, deceleration));
             Canvas.SetBottom(Cars[position + 1], Cars[position + 1].Yposition);
         }
 
         public void Retour_vehicules()
         {
-            var vitessemax = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25;
-            var acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
-            var deceleration = ChoixDeceleration.Value;
+           
 
             if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
             {
@@ -320,8 +319,6 @@ namespace Simulateur_0._0._2
                 _timer2.Stop();
                 relanceTimers = true;
             }
-
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
             var densiteCamion = (int) ChoixDensitecamion.Value;
 
             Nbvoitures = Cars.Count + Cars2.Count;
