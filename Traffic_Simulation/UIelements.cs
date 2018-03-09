@@ -60,10 +60,24 @@ namespace Simulateur_0._0._2
                 }
                 //----------------------INIT GRAPHS-------------------------
                 InitialiserGraphVitesse();
-              //  InitialiserNbvehiculesArret();
+                InitialiserNbvehiculesArret();
+                InitialiserGraphNbVehiculesArret();
+                InitialiserGaugeVitesse();
                 //----------------------------------------------------------
 
                 Chargement = false;
+            }
+            _timer1.Start();
+            _timer2.Start();
+            _timer3.Start();
+        }
+        //----------------------------------GRAPHES----------------------------------------------------
+        public void InitialiserGraphVitesse()
+        {
+            for (int i = 0; i < 20; i++) //Creation de 20 Points
+            {
+                var point = new ObservableValue(0);
+                VitesseValeurs.Add(point);
             }
             Graphtest.Series.Add(new LineSeries
             {
@@ -92,23 +106,75 @@ namespace Simulateur_0._0._2
                 },
                 PointGeometrySize = 0
             });
-            _timer1.Start();
-            _timer2.Start();
-            _timer3.Start();
+
         }
-        //----------------------------------GRAPHES----------------------------------------------------
-        public void InitialiserGraphVitesse()
+        public void InitialiserGraphNbVehiculesArret()
         {
             for (int i = 0; i < 20; i++) //Creation de 20 Points
             {
                 var point = new ObservableValue(0);
-                VitesseValeurs.Add(point);
+                NbVehiculesArretValeurs.Add(point);
             }
+            GraphNbVehiculesArret.Series.Add(new ColumnSeries
+            {
+                Values = new ChartValues<ObservableValue>
+                {
+                    NbVehiculesArretValeurs[0],
+                    NbVehiculesArretValeurs[1],
+                    NbVehiculesArretValeurs[2],
+                    NbVehiculesArretValeurs[3],
+                    NbVehiculesArretValeurs[4],
+                    NbVehiculesArretValeurs[5],
+                    NbVehiculesArretValeurs[6],
+                    NbVehiculesArretValeurs[7],
+                    NbVehiculesArretValeurs[8],
+                    NbVehiculesArretValeurs[9],
+                    NbVehiculesArretValeurs[10],
+                    NbVehiculesArretValeurs[11],
+                    NbVehiculesArretValeurs[12],
+                    NbVehiculesArretValeurs[13],
+                    NbVehiculesArretValeurs[14],
+                    NbVehiculesArretValeurs[15],
+                    NbVehiculesArretValeurs[16],
+                    NbVehiculesArretValeurs[17],
+                    NbVehiculesArretValeurs[18],
+                    NbVehiculesArretValeurs[19]
+                }
+            });
+
         }
 
         public void InitialiserNbvehiculesArret()
         {
             GaugeNbvehiculesArret.To = Cars.Count + Cars2.Count;
+        }
+
+        public void InitialiserGaugeVitesse()
+        {
+            var vitesses = Gaugetest.ToValue;
+            var decoupe = vitesses / 7;
+
+            Sec1.FromValue = vitesses - decoupe;
+            Sec1.ToValue = (vitesses);
+
+            Sec2.FromValue =vitesses - decoupe*2;
+            Sec2.ToValue = Sec1.FromValue;
+
+            Sec3.FromValue = vitesses - decoupe * 3;
+            Sec3.ToValue = Sec2.FromValue;
+
+            Sec4.FromValue = vitesses - decoupe * 4;
+            Sec4.ToValue = Sec3.FromValue;
+
+            Sec5.FromValue = vitesses - decoupe * 5;
+            Sec5.ToValue = Sec4.FromValue;
+
+            Sec6.FromValue = vitesses - decoupe * 6;
+            Sec6.ToValue = Sec5.FromValue;
+
+            Sec7.FromValue = 0;
+            Sec7.ToValue = Sec6.FromValue;
+
         }
         private void Ajoutcamion(Voiture voiture)
         {
@@ -122,6 +188,9 @@ namespace Simulateur_0._0._2
         private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3) + "km/h";
+            //Respecter cet ordre, ToValue réutilisé dans InitialiserGauge
+            Gaugetest.ToValue = ChoixVitessemax.Value + 20;
+            InitialiserGaugeVitesse();
         }
 
         private void Choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -36,6 +36,8 @@ namespace Simulateur_0._0._2
         private readonly DispatcherTimer _timer3 = new DispatcherTimer();
         
         public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>() ;
+        public static List<ObservableValue> NbVehiculesArretValeurs = new List<ObservableValue>();
+
 
         public MainWindow()
         {
@@ -53,18 +55,17 @@ namespace Simulateur_0._0._2
             Gaugetest.Value = Vitessemoyenne();
             MiseajourVitesseMoy();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
-            ProgressBarcoloration();
-            
+            MiseajourNbVehiculesArret();
             //Exemple Graphique.ajouter =  ChoixDensitecamion.Value Ou autre value de slider
         }
 
-        public void ProgressBarcoloration()
+        /*public void ProgressBarcoloration()
         {
             PourcentageVitesse.Value = (Vitessemoyenne()*100)/ChoixVitessemax.Value;
             byte rouge = Convert.ToByte( ((100 - PourcentageVitesse.Value) / 100) * 255);
             byte vert = Convert.ToByte(((PourcentageVitesse.Value / 100) * 255));
             PourcentageVitesse.Foreground = new SolidColorBrush(Color.FromArgb(255, rouge, vert, 0));
-        }
+        }*/
         public void MiseajourVitesseMoy()
         {
             for (int i = 0; i < 19; i++)
@@ -72,6 +73,14 @@ namespace Simulateur_0._0._2
                 VitesseValeurs[i].Value = VitesseValeurs[i + 1].Value;
             }
             VitesseValeurs[19].Value = Gaugetest.Value; //On prend la valeur que l'on a déjà calculé précédement
+        }
+        public void MiseajourNbVehiculesArret()
+        {
+            for (int i = 0; i < 19; i++)
+            {
+                NbVehiculesArretValeurs[i].Value = NbVehiculesArretValeurs[i + 1].Value;
+            }
+            NbVehiculesArretValeurs[19].Value = GaugeNbvehiculesArret.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
 
         public int NbVehiculesArret()

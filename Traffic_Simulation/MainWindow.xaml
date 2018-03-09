@@ -27,22 +27,27 @@
                 </Canvas.Background>
             </Canvas>
             <DockPanel x:Name="PannelVitesses" Height="100" >
-                <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="130" 
+                <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
                               TicksForeground="White" Foreground="White" FontSize="8"
                               SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left">
+                    
                     <lvc:AngularGauge.Sections>
-                        <lvc:AngularSection FromValue="0" ToValue="70" Fill="#FF00FF2E"/>
-                        <lvc:AngularSection FromValue="70" ToValue="100" Fill="#F8A725"/>
-                        <lvc:AngularSection FromValue="100" ToValue="130" Fill="#FF3939"/>
+                        <lvc:AngularSection x:Name="Sec1" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="DarkGreen"/>
+                        <lvc:AngularSection x:Name="Sec2"  FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="Green"/>
+                        <lvc:AngularSection x:Name="Sec3"  FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="YellowGreen"/>
+                        <lvc:AngularSection x:Name="Sec4" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="Yellow"/>
+                        <lvc:AngularSection x:Name="Sec5"  FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="Orange"/>
+                        <lvc:AngularSection x:Name="Sec6" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="OrangeRed"/>
+                        <lvc:AngularSection x:Name="Sec7" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="Red"/>
                     </lvc:AngularGauge.Sections>
+                    
                 </lvc:AngularGauge>
                 <!--<ProgressBar x:Name="PourcentageVitesse" Height="100" VerticalAlignment="Top" Width="50" Orientation="Vertical" Value="{Binding Value}"  Margin="10,0,0,0" Background="{x:Null}" Foreground="Black"/>
-                
-                -->
-                <lvc:CartesianChart x:Name="Graphtest" Margin="0,3" ScrollBarFill="{x:Null}" Width="700" HorizontalAlignment="Center" BorderBrush="#FFFFAE42" BorderThickness="1">
-                    <lvc:CartesianChart.Series>
-                        <lvc:StepLineSeries Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
+                                -->
+                <lvc:CartesianChart x:Name="Graphtest" Margin="0,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1">
+                    <lvc:CartesianChart.Series >
+                        <lvc:StepLineSeries x:Name="Serie1" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.AxisX>
                         <lvc:Axis ShowLabels="False" MinValue="0" MaxValue="19" >
@@ -61,8 +66,27 @@
                 </lvc:CartesianChart>
             </DockPanel>
             <DockPanel x:Name="PannelvehicluesArret" Height="100">
-                <lvc:Gauge x:Name="GaugeNbvehiculesArret" From ="0" Value="{Binding Value}" To="{Binding Value, ElementName=ChoixNombrevoitures}" HorizontalAlignment="Left" Width="100" Foreground="White" />
-
+                <lvc:Gauge x:Name="GaugeNbvehiculesArret" From ="0" Value="{Binding Value}" To="{Binding Value, ElementName=ChoixNombrevoitures}" HorizontalAlignment="Left" Width="100" Foreground="White" Margin="5,5,0,5" />
+                <lvc:CartesianChart Name="GraphNbVehiculesArret" Width="700" Margin="0,5" >
+                    <lvc:CartesianChart.Series>
+                        <lvc:StackedColumnSeries Values="{Binding Values}" ColumnPadding="10" Stroke="#FF1D92F0" Foreground="#FF2195F2" />
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis ShowLabels="False" MinValue="0" MaxValue="20" >
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1" StrokeThickness="0"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue =" 0">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator  StrokeThickness="0"  />
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+                
             </DockPanel>
             <DockPanel x:Name="PannelTempsPasse" Height="100">
 
