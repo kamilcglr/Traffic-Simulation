@@ -26,6 +26,24 @@
                     <ImageBrush ImageSource="Images/Route.png"/>
                 </Canvas.Background>
             </Canvas>
+            <DockPanel x:Name="HeatMapPannel1" Height="20">
+                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" >
+                    <lvc:CartesianChart.Series >
+                        <lvc:HeatSeries x:Name="lane1" Values="{Binding Values}" DrawsHeatRange="False"  />
+                        <lvc:HeatSeries x:Name="lane2" Values="{Binding Values}" DrawsHeatRange="False" />
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX >
+                        <lvc:Axis ShowLabels="False">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"></lvc:Separator>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis ShowLabels="False" ></lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+            </DockPanel>
             <DockPanel x:Name="PannelVitesses" Height="100" >
                 <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
@@ -89,23 +107,7 @@
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
             </DockPanel>
-            <DockPanel x:Name="HeatMapPannel" Height="100">
-                <lvc:CartesianChart x:Name="HeatMap" >
-                    <lvc:CartesianChart.Series >
-                        <lvc:HeatSeries  Values="{Binding Values}" />
-                    </lvc:CartesianChart.Series>
-                    <lvc:CartesianChart.AxisX >
-                        <lvc:Axis ShowLabels="False">
-                            <lvc:Axis.Separator>
-                                <lvc:Separator Step="1"></lvc:Separator>
-                            </lvc:Axis.Separator>
-                        </lvc:Axis>
-                    </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis ShowLabels="False" ></lvc:Axis>
-                    </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>
-            </DockPanel>
+            
 
 
         </StackPanel>

@@ -195,36 +195,95 @@ namespace Simulateur_0._0._2
         }
         public void InitialiserHeatMap()
         {
-            for (int i = 0; i < 10; i++) //Creation de 20 Points
+            for (int i = 0; i < 20; i++) //Creation de 20 Points
             {
                 var point = new HeatPoint(i,0,0);
-                HeatMapValeurs.Add(point);
+                HeatMapValeurs1.Add(point);
             }
-            HeatMap.Series.Add(new HeatSeries
+            HeatMap1.Series.Add(new HeatSeries
             {
                 Values = new ChartValues<HeatPoint>
                 {
-                    HeatMapValeurs[0],
-                    HeatMapValeurs[1],
-                    HeatMapValeurs[2],
-                    HeatMapValeurs[3],
-                    HeatMapValeurs[4],
-                    HeatMapValeurs[5],
-                    HeatMapValeurs[6],
-                    HeatMapValeurs[7],
-                    HeatMapValeurs[8],
-                    HeatMapValeurs[9]
+                    HeatMapValeurs1[0],
+                    HeatMapValeurs1[1],
+                    HeatMapValeurs1[2],
+                    HeatMapValeurs1[3],
+                    HeatMapValeurs1[4],
+                    HeatMapValeurs1[5],
+                    HeatMapValeurs1[6],
+                    HeatMapValeurs1[7],
+                    HeatMapValeurs1[8],
+                    HeatMapValeurs1[9],
+                    HeatMapValeurs1[10],
+                    HeatMapValeurs1[11],
+                    HeatMapValeurs1[12],
+                    HeatMapValeurs1[13],
+                    HeatMapValeurs1[14],
+                    HeatMapValeurs1[15],
+                    HeatMapValeurs1[16],
+                    HeatMapValeurs1[17],
+                    HeatMapValeurs1[18],
+                    HeatMapValeurs1[19]
                 },
                 GradientStopCollection = new GradientStopCollection
                 {
-                    new GradientStop(Colors.Green, 0),
-                    new GradientStop(Colors.YellowGreen, .25),
-                    new GradientStop(Colors.Orange, .5),
-                    new GradientStop(Colors.OrangeRed, .75),
-                    new GradientStop(Colors.Red, 1)
+                    new GradientStop(Color.FromRgb(0,104,55), 0),
+                    new GradientStop(Color.FromRgb(0,104,55), .10),
+                    new GradientStop(Color.FromRgb(26,152,80), .20),
+                    new GradientStop(Color.FromRgb(102,189,99), .30),
+                    new GradientStop(Color.FromRgb(166,217,106), .40),
+                    new GradientStop(Color.FromRgb(217,239,139), .50),
+                    new GradientStop(Color.FromRgb(254,224,139), .60),
+                    new GradientStop(Color.FromRgb(253,174,97), .70),
+                    new GradientStop(Color.FromRgb(244,109,67), .80),
+                    new GradientStop(Color.FromRgb(215,48,39), .90),
+                    new GradientStop(Color.FromRgb(165,0,38), 1)
                 },
                 DrawsHeatRange = false
-});
+
+            });
+            for (int i = 0; i < 16; i++) //Creation de 20 Points
+            {
+                var point = new HeatPoint(i, 1, 0);
+                HeatMapValeurs2.Add(point);
+            }
+            HeatMap1.Series.Add(new HeatSeries
+            {
+                Values = new ChartValues<HeatPoint>
+                {
+                    HeatMapValeurs2[0],
+                    HeatMapValeurs2[1],
+                    HeatMapValeurs2[2],
+                    HeatMapValeurs2[3],
+                    HeatMapValeurs2[4],
+                    HeatMapValeurs2[5],
+                    HeatMapValeurs2[6],
+                    HeatMapValeurs2[7],
+                    HeatMapValeurs2[8],
+                    HeatMapValeurs2[9],
+                    HeatMapValeurs2[10],
+                    HeatMapValeurs2[11],
+                    HeatMapValeurs2[12],
+                    HeatMapValeurs2[13],
+                    HeatMapValeurs2[14],
+                    HeatMapValeurs2[15]
+                },
+                GradientStopCollection = new GradientStopCollection
+                {
+                    new GradientStop(Color.FromRgb(0,104,55), 0),
+                    new GradientStop(Color.FromRgb(0,104,55), .10),
+                    new GradientStop(Color.FromRgb(26,152,80), .20),
+                    new GradientStop(Color.FromRgb(102,189,99), .30),
+                    new GradientStop(Color.FromRgb(166,217,106), .40),
+                    new GradientStop(Color.FromRgb(217,239,139), .50),
+                    new GradientStop(Color.FromRgb(254,224,139), .60),
+                    new GradientStop(Color.FromRgb(253,174,97), .70),
+                    new GradientStop(Color.FromRgb(244,109,67), .80),
+                    new GradientStop(Color.FromRgb(215,48,39), .90),
+                    new GradientStop(Color.FromRgb(165,0,38), 1)
+                },
+                DrawsHeatRange = false,
+            });
         }
         private void Ajoutcamion(Voiture voiture)
         {

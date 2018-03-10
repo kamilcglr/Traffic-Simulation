@@ -27,7 +27,7 @@ namespace Simulateur_0._0._2
         private static readonly List<Voiture> Cars2 = new List<Voiture>();
         public bool Chargement = true;
         public int Nbvoitures;
-        private readonly int _pointCritique = 800;
+        private readonly int _pointCritique = 900;
         public int PositionL1 = 80;
         public int PositionL2 = 110;
 
@@ -49,7 +49,9 @@ namespace Simulateur_0._0._2
 
         public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>() ;
         public static List<ObservableValue> NbVehiculesArretValeurs = new List<ObservableValue>();
-        public static List<HeatPoint> HeatMapValeurs = new List<HeatPoint>();
+        public static List<HeatPoint> HeatMapValeurs1 = new List<HeatPoint>();
+        public static List<HeatPoint> HeatMapValeurs2 = new List<HeatPoint>();
+
 
 
         public MainWindow()
@@ -106,21 +108,43 @@ namespace Simulateur_0._0._2
         }*/
         public void MiseajourHeatMap()
         {
-            List<int> vehiculesIn = new List<int>(0);
-            for (var i = 0; i< 10; i++)
+            for (var j = 0; j < 20; j++)
             {
-                int nombre = 0;
-                vehiculesIn.Add(nombre);
+                HeatMapValeurs1[j].Weight = 0;
+            }
+            for (var j = 0; j < 16; j++)
+            {
+                HeatMapValeurs2[j].Weight = 0;
             }
             for (var i = 0; i < Cars.Count; i++)
             {
                 for (var j = 0; j < 10; j++)
                 {
-                    if (Cars[i].Xposition < (j + 1) * 100)
+                    if (Cars[i].Xposition < (j + 1) * 50)
                     {
-                        vehiculesIn[j]++;
-                        HeatMapValeurs[j].Weight = vehiculesIn[j];
+                        HeatMapValeurs1[j].Weight++;
                         break;
+                    }
+                }
+            }
+            if (Cars2.Count == 0) //Si pas de voitures dans la voie 2 tout vider
+            {
+                for (var j = 0; j < 16; j++)
+                {
+                    HeatMapValeurs2[j].Weight = 0;
+                }
+            }
+            else
+            {
+                for (var i = 0; i < Cars2.Count; i++)
+                {
+                    for (var j = 0; j < 16; j++)
+                    {
+                        if (Cars2[i].Xposition < (j + 1) * 50)
+                        {
+                            HeatMapValeurs2[j].Weight++;
+                            break;
+                        }
                     }
                 }
             }
