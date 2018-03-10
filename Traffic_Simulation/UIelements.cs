@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using LiveCharts;
 using LiveCharts.Defaults;
@@ -24,9 +25,10 @@ namespace Simulateur_0._0._2
 
             //----------------------INIT GRAPHS-------------------------
             InitialiserGraphVitesse();
-            InitialiserNbvehiculesArret();
+            InitialiserGaugeNbvehiculesArret();
             InitialiserGraphNbVehiculesArret();
             InitialiserGaugeVitesse();
+            InitialiserHeatMap();
             //----------------------------------------------------------
             
             if (Chargement) // On effectue cette étape si c'est la première fois qu'est pressé le bouton
@@ -38,7 +40,8 @@ namespace Simulateur_0._0._2
                 _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
 
                 var i = nbvoituresVoiegauche;
-                var decoupageL1 = 800 / i;
+                var decoupageL1 = 800;
+                if (i!=0){ decoupageL1 = 800 / i;}
                 while (i != 0)
                 {
                     
@@ -159,12 +162,10 @@ namespace Simulateur_0._0._2
             });
 
         }
-
-        public void InitialiserNbvehiculesArret()
+        public void InitialiserGaugeNbvehiculesArret()
         {
             GaugeNbvehiculesArret.To = ChoixNombrevoitures.Value;
         }
-
         public void InitialiserGaugeVitesse()
         {
             var vitesses = Gaugetest.ToValue;
@@ -191,6 +192,39 @@ namespace Simulateur_0._0._2
             Sec7.FromValue = 0;
             Sec7.ToValue = Sec6.FromValue;
 
+        }
+        public void InitialiserHeatMap()
+        {
+            for (int i = 0; i < 10; i++) //Creation de 20 Points
+            {
+                var point = new HeatPoint(i,0,0);
+                HeatMapValeurs.Add(point);
+            }
+            HeatMap.Series.Add(new HeatSeries
+            {
+                Values = new ChartValues<HeatPoint>
+                {
+                    HeatMapValeurs[0],
+                    HeatMapValeurs[1],
+                    HeatMapValeurs[2],
+                    HeatMapValeurs[3],
+                    HeatMapValeurs[4],
+                    HeatMapValeurs[5],
+                    HeatMapValeurs[6],
+                    HeatMapValeurs[7],
+                    HeatMapValeurs[8],
+                    HeatMapValeurs[9]
+                },
+                GradientStopCollection = new GradientStopCollection
+                {
+                    new GradientStop(Colors.Green, 0),
+                    new GradientStop(Colors.YellowGreen, .25),
+                    new GradientStop(Colors.Orange, .5),
+                    new GradientStop(Colors.OrangeRed, .75),
+                    new GradientStop(Colors.Red, 1)
+                },
+                DrawsHeatRange = false
+});
         }
         private void Ajoutcamion(Voiture voiture)
         {
@@ -246,7 +280,7 @@ namespace Simulateur_0._0._2
         {
             NombrevehiculesChoixAffichage.Content =
                 "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
-            InitialiserNbvehiculesArret();
+            InitialiserGaugeNbvehiculesArret();
         }
     }
 }

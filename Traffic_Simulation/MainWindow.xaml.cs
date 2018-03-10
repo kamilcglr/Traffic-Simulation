@@ -13,6 +13,7 @@ using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Helpers;
 using LiveCharts.Wpf;
+using LiveCharts.Wpf.Charts.Base;
 using Wpf.Gauges;
 
 namespace Simulateur_0._0._2
@@ -48,6 +49,7 @@ namespace Simulateur_0._0._2
 
         public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>() ;
         public static List<ObservableValue> NbVehiculesArretValeurs = new List<ObservableValue>();
+        public static List<HeatPoint> HeatMapValeurs = new List<HeatPoint>();
 
 
         public MainWindow()
@@ -84,8 +86,9 @@ namespace Simulateur_0._0._2
         }
         private void timer3_Tick(object sender, EventArgs e)
         {
-            MiseajourVitesseMoy();
-            MiseajourNbVehiculesArret();
+            UpdateGraphVitesseMoy();
+            UpdateGraphNbVehiculesArret();
+            MiseajourHeatMap();
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
@@ -101,8 +104,28 @@ namespace Simulateur_0._0._2
             byte vert = Convert.ToByte(((PourcentageVitesse.Value / 100) * 255));
             PourcentageVitesse.Foreground = new SolidColorBrush(Color.FromArgb(255, rouge, vert, 0));
         }*/
-
-        public void MiseajourVitesseMoy()
+        public void MiseajourHeatMap()
+        {
+            List<int> vehiculesIn = new List<int>(0);
+            for (var i = 0; i< 10; i++)
+            {
+                int nombre = 0;
+                vehiculesIn.Add(nombre);
+            }
+            for (var i = 0; i < Cars.Count; i++)
+            {
+                for (var j = 0; j < 10; j++)
+                {
+                    if (Cars[i].Xposition < (j + 1) * 100)
+                    {
+                        vehiculesIn[j]++;
+                        HeatMapValeurs[j].Weight = vehiculesIn[j];
+                        break;
+                    }
+                }
+            }
+        }
+        public void UpdateGraphVitesseMoy()
         {
             for (int i = 0; i < 19; i++)
             {
@@ -110,7 +133,7 @@ namespace Simulateur_0._0._2
             }
             VitesseValeurs[19].Value = Gaugetest.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
-        public void MiseajourNbVehiculesArret()
+        public void UpdateGraphNbVehiculesArret()
         {
             for (int i = 0; i < 19; i++)
             {
