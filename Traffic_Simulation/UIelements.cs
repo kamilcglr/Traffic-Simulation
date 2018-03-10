@@ -31,57 +31,7 @@ namespace Simulateur_0._0._2
             InitialiserHeatMap();
             //----------------------------------------------------------
             
-            if (Chargement) // On effectue cette étape si c'est la première fois qu'est pressé le bouton
-            {
-                var nbvoituresVoiegauche =
-                    (int) (ChoixNombrevoitures.Value * (ChoixProportionVoituregauche.Value / 100));
-                var nbvoituresVoiedroite = (int) ChoixNombrevoitures.Value - nbvoituresVoiegauche;
-                var densiteCamion = (int) ChoixDensitecamion.Value;
-                _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-
-                var i = nbvoituresVoiegauche;
-                var decoupageL1 = 800;
-                if (i!=0){ decoupageL1 = 800 / i;}
-                while (i != 0)
-                {
-                    
-                    var voiture = new Voiture();
-                    if (_rand.Next(100) < densiteCamion && Chargement
-                    ) //Pas besoin de faire la densité de camion pour les autres cas
-                        Ajoutcamion(voiture);
-
-                    voiture.Lane = 2;
-                    voiture.Vitesse = vitessemax;
-                    voiture.Yposition = PositionL2;
-                    voiture.Xposition = decoupageL1 * i - 800 ;
-                    Cars2.Add(voiture);
-                    Affichage.Children.Add(voiture);
-                    Canvas.SetLeft(voiture, voiture.Xposition);
-                    Canvas.SetBottom(voiture, voiture.Yposition);
-                    i--;
-                }
-
-                var j = nbvoituresVoiedroite;
-                var decoupageL2 = 800 / j;
-                while (j != 0)
-                {
-                    var voiture = new Voiture();
-                    if (_rand.Next(100) < densiteCamion && Chargement
-                    ) //Pas besoin de faire la densité de camion pour les autres cas
-                        Ajoutcamion(voiture);
-
-                    voiture.Lane = 1;
-                    voiture.Vitesse = vitessemax;
-                    voiture.Yposition = PositionL1;
-                    voiture.Xposition = (decoupageL2 * j - 800);
-                    Cars.Add(voiture);
-                    Affichage.Children.Add(voiture);
-                    Canvas.SetLeft(voiture, voiture.Xposition);
-                    Canvas.SetBottom(voiture, voiture.Yposition);
-                    j--;
-                }
-                Chargement = false;
-            }
+            if (Chargement) InitaliserVoitures();
 
             //--------------LANCEMENT TIMERs (à la fin !)---------------
             _timer1.Start();
@@ -90,7 +40,7 @@ namespace Simulateur_0._0._2
             _timerGauges.Start();
             //----------------------------------------------------------
         }
-        //----------------------------------GRAPHES----------------------------------------------------
+        //----------------------------------GRAPHES----------------------------------------------
         public void InitialiserGraphVitesse()
         {
             for (int i = 0; i < 20; i++) //Creation de 20 Points
@@ -285,6 +235,60 @@ namespace Simulateur_0._0._2
                 DrawsHeatRange = false,
             });
         }
+        public void InitaliserVoitures()
+        {
+            // On effectue cette étape si c'est la première fois qu'est pressé le bouton
+            {
+                var nbvoituresVoiegauche =
+                    (int)(ChoixNombrevoitures.Value * (ChoixProportionVoituregauche.Value / 100));
+                var nbvoituresVoiedroite = (int)ChoixNombrevoitures.Value - nbvoituresVoiegauche;
+                var densiteCamion = (int)ChoixDensitecamion.Value;
+                _distanceEntreVehicule = (int)ChoixDistanceEntreVehicules.Value;
+
+                var i = nbvoituresVoiegauche;
+                var decoupageL1 = 800;
+                if (i != 0) { decoupageL1 = 800 / i; }
+                while (i != 0)
+                {
+
+                    var voiture = new Voiture();
+                    if (_rand.Next(100) < densiteCamion && Chargement
+                    ) //Pas besoin de faire la densité de camion pour les autres cas
+                        Ajoutcamion(voiture);
+
+                    voiture.Lane = 2;
+                    voiture.Vitesse = vitessemax;
+                    voiture.Yposition = PositionL2;
+                    voiture.Xposition = decoupageL1 * i - 800;
+                    Cars2.Add(voiture);
+                    Affichage.Children.Add(voiture);
+                    Canvas.SetLeft(voiture, voiture.Xposition);
+                    Canvas.SetBottom(voiture, voiture.Yposition);
+                    i--;
+                }
+
+                var j = nbvoituresVoiedroite;
+                var decoupageL2 = 800 / j;
+                while (j != 0)
+                {
+                    var voiture = new Voiture();
+                    if (_rand.Next(100) < densiteCamion && Chargement
+                    ) //Pas besoin de faire la densité de camion pour les autres cas
+                        Ajoutcamion(voiture);
+
+                    voiture.Lane = 1;
+                    voiture.Vitesse = vitessemax;
+                    voiture.Yposition = PositionL1;
+                    voiture.Xposition = (decoupageL2 * j - 800);
+                    Cars.Add(voiture);
+                    Affichage.Children.Add(voiture);
+                    Canvas.SetLeft(voiture, voiture.Xposition);
+                    Canvas.SetBottom(voiture, voiture.Yposition);
+                    j--;
+                }
+                Chargement = false;
+            }
+        }
         private void Ajoutcamion(Voiture voiture)
         {
             voiture.Vehiculelent = true;
@@ -293,7 +297,6 @@ namespace Simulateur_0._0._2
             voiture.Width = 32;
             voiture.Height = 10;
         }
-
         private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 0) + "km/h";
@@ -301,7 +304,6 @@ namespace Simulateur_0._0._2
             Gaugetest.ToValue = ChoixVitessemax.Value + 20;
             InitialiserGaugeVitesse();
         }
-
         private void Choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             //Acceleration renvoyée en pixel/20ms2
@@ -309,32 +311,27 @@ namespace Simulateur_0._0._2
             AccelerationmaxChoixAffichage.Content =
                 "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 1) + "s";
         }
-
         private void Choix_proportion_voituregauche_ValueChanged(object sender,
             RoutedPropertyChangedEventArgs<double> e)
         {
             ProportionVoiegaucheChoixAffichage.Content = "Proportion véhicules file de gauche" +
                                                          ChoixProportionVoituregauche.Value.ToString("F0") + " %";
         }
-
         private void choix_distance_entre_vehicules_ValueChanged(object sender,
             RoutedPropertyChangedEventArgs<double> e)
         {
             DistanceSecuriteAffichage.Content =
                 "Distance entre veh : " + ChoixDistanceEntreVehicules.Value.ToString("F0");
         }
-
         private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             DecelerationChoixAffichage.Content = "Deceleration : " + Math.Round(ChoixDeceleration.Value, 3);
         }
-
         private void Choix_densitecamion_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             DensitecamionChoixAffichage.Content =
                 "Proportion de camions " + ChoixDensitecamion.Value.ToString("F0") + " %";
         }
-
         private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             NombrevehiculesChoixAffichage.Content =

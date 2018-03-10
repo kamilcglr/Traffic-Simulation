@@ -98,6 +98,36 @@ namespace Simulateur_0._0._2
             Gaugetest.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
         }
+        public double Vitessemoyenne()
+        {
+            double vitessemoy = 0;
+            int i = 0;
+            while (Cars[i].Xposition > 0 )
+            {
+                vitessemoy += Cars[i].Vitesse;
+                i++;
+                if (i == Cars.Count)
+                {
+                    break;
+                }
+            }
+            int j = 0;
+            if (Cars2.Count != 0)
+            {
+                while (Cars2[j].Xposition > 0)
+                {
+                    vitessemoy += Cars2[j].Vitesse;
+                    j++;
+                    if (j == Cars2.Count)
+                    {
+                        break;
+                    }
+                }
+            }
+            vitessemoy = vitessemoy / (i+j);
+            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
+            return vitessemoy;
+        }
 
         /*public void ProgressBarcoloration()
         {
@@ -168,21 +198,38 @@ namespace Simulateur_0._0._2
 
         public int NbVehiculesArret()
         {
-            int n=0;
-            for (int i =0; i< Cars.Count ; i++)
+            int n = 0;
+            int i = 0;
+            while (Cars[i].Xposition >= 0 )
             {
                 if (Cars[i].Vitesse < 0.2)
                 {
                     n++;
                 }
-            }
-            for (int i = 0; i < Cars2.Count ; i++)
-            {
-                if (Cars2[i].Vitesse <0.2)
+                i++;
+                if (i == Cars.Count)
                 {
-                    n++;
+                    break;
                 }
             }
+
+            if (Cars2.Count != 0)
+            {
+                int j = 0;
+                while (Cars2[j].Xposition > 0)
+                {
+                    if (Cars2[j].Vitesse < 0.2)
+                    {
+                        n++;
+                    }
+                    j++;
+                    if (j == Cars2.Count)
+                    {
+                        break;
+                    }
+                }
+            }
+
             return n;
         }
         
@@ -371,7 +418,7 @@ namespace Simulateur_0._0._2
             {
                 Voiture temp = Cars[0];
                 Cars.RemoveAt(0);
-                temp.Xposition = -10; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
+                temp.Xposition = -100; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
                 temp.Vitesse = vitessemax;
                 temp.Vehiculelent = false;
                 var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
@@ -516,23 +563,7 @@ namespace Simulateur_0._0._2
             }
         }
 
-        public double Vitessemoyenne()
-        {
-            double vitessemoy = 0;
-            for (int i = 0; i < Cars.Count; i++)
-            {
-                vitessemoy += Cars[i].Vitesse;
-            }
-            for (int i = 0; i < Cars2.Count; i++)
-            {
-                vitessemoy += Cars2[i].Vitesse;
-            }
-
-            vitessemoy = vitessemoy / (Cars.Count + Cars2.Count);
-            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
-            return vitessemoy;
-        }
-
+        
 
     }
 
