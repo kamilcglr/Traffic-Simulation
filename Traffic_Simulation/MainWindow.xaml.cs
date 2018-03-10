@@ -52,7 +52,8 @@ namespace Simulateur_0._0._2
         public static List<HeatPoint> HeatMapValeurs1 = new List<HeatPoint>();
         public static List<HeatPoint> HeatMapValeurs2 = new List<HeatPoint>();
 
-
+        public static double VmoyLabel = 0;
+        public static List<double> Vmoy = new List<double>();
 
         public MainWindow()
         {
@@ -97,7 +98,22 @@ namespace Simulateur_0._0._2
         {
             Gaugetest.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
+            UpdateLabelVitesseMoyenne(Gaugetest.Value);
+
         }
+
+        public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
+        {
+            Vmoy.RemoveAt(0);
+            Vmoy.Add(ajoutvitesse);
+            for (int i = 0; i < Vmoy.Count; i++)
+            {
+                VmoyLabel += Vmoy[i];
+            }
+            VmoyLabel = VmoyLabel / Vmoy.Count;
+            LabelVitesseMoyenne.Content = "Vitesse Moyenne (2min): " + Math.Round(VmoyLabel, 0).ToString();
+
+         }
         public double Vitessemoyenne()
         {
             double vitessemoy = 0;

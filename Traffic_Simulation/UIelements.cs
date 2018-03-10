@@ -29,6 +29,7 @@ namespace Simulateur_0._0._2
             InitialiserGraphNbVehiculesArret();
             InitialiserGaugeVitesse();
             InitialiserHeatMap();
+            InitialiserLabelVmoy();
             //----------------------------------------------------------
             
             if (Chargement) InitaliserVoitures();
@@ -75,6 +76,7 @@ namespace Simulateur_0._0._2
                 },
                 PointGeometrySize = 0
             });
+            
 
         }
         public void InitialiserGraphNbVehiculesArret()
@@ -287,6 +289,13 @@ namespace Simulateur_0._0._2
                     j--;
                 }
                 Chargement = false;
+            }
+        }
+        public void InitialiserLabelVmoy()
+        {
+            for (int i = 0; i < 120; i++)
+            {
+                Vmoy.Add(ChoixVitessemax.Value);
             }
         }
         private void Ajoutcamion(Voiture voiture)

@@ -63,7 +63,7 @@
                 </lvc:AngularGauge>
                 <!--<ProgressBar x:Name="PourcentageVitesse" Height="100" VerticalAlignment="Top" Width="50" Orientation="Vertical" Value="{Binding Value}"  Margin="10,0,0,0" Background="{x:Null}" Foreground="Black"/>
                                 -->
-                <lvc:CartesianChart x:Name="Graphtest" Margin="0,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3">
+                <lvc:CartesianChart x:Name="Graphtest" Margin="5,5,0,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3">
                     <lvc:CartesianChart.Series >
                         <lvc:StepLineSeries x:Name="Serie1" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                     </lvc:CartesianChart.Series>
@@ -82,6 +82,7 @@
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+                <Label x:Name="LabelVitesseMoyenne" HorizontalAlignment="Right" Content="{Binding Value}" />
             </DockPanel>
             <DockPanel x:Name="PannelvehicluesArret" Height="100">
                 <lvc:Gauge x:Name="GaugeNbvehiculesArret" 
@@ -107,9 +108,6 @@
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
             </DockPanel>
-            
-
-
         </StackPanel>
 
 
