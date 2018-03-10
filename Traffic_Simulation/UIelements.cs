@@ -162,7 +162,7 @@ namespace Simulateur_0._0._2
 
         public void InitialiserNbvehiculesArret()
         {
-            GaugeNbvehiculesArret.To = Cars.Count + Cars2.Count;
+            GaugeNbvehiculesArret.To = ChoixNombrevoitures.Value;
         }
 
         public void InitialiserGaugeVitesse()
@@ -203,7 +203,7 @@ namespace Simulateur_0._0._2
 
         private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 3) + "km/h";
+            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 0) + "km/h";
             //Respecter cet ordre, ToValue réutilisé dans InitialiserGauge
             Gaugetest.ToValue = ChoixVitessemax.Value + 20;
             InitialiserGaugeVitesse();
@@ -214,15 +214,7 @@ namespace Simulateur_0._0._2
             //Acceleration renvoyée en pixel/20ms2
             //On exprime va afficher ici le 0 à 100
             AccelerationmaxChoixAffichage.Content =
-                "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 3) + "s";
-        }
-
-        private void Bouton_frein_Click(object sender, RoutedEventArgs e)
-        {
-            /*if (Cars[0].Frein == false)
-                Cars[0].Frein = true;
-            else
-                Cars[0].Frein = false;*/
+                "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 1) + "s";
         }
 
         private void Choix_proportion_voituregauche_ValueChanged(object sender,
@@ -254,6 +246,7 @@ namespace Simulateur_0._0._2
         {
             NombrevehiculesChoixAffichage.Content =
                 "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
+            InitialiserNbvehiculesArret();
         }
     }
 }
