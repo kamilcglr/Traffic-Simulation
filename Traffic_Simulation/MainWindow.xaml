@@ -27,7 +27,7 @@
                 </Canvas.Background>
             </Canvas>
             <DockPanel x:Name="HeatMapPannel1" Height="20">
-                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" >
+                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" AnimationsSpeed="0:0:2" >
                     <lvc:CartesianChart.Series >
                         <lvc:HeatSeries x:Name="lane1" Values="{Binding Values}" DrawsHeatRange="False"  />
                         <lvc:HeatSeries x:Name="lane2" Values="{Binding Values}" DrawsHeatRange="False" />
@@ -48,7 +48,7 @@
                 <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
                               TicksForeground="White" Foreground="White" FontSize="8"
-                              SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left">
+                              SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left" AnimationsSpeed="0:0:1">
                     
                     <lvc:AngularGauge.Sections>
                         <lvc:AngularSection x:Name="Sec1" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="DarkGreen"/>
@@ -63,7 +63,7 @@
                 </lvc:AngularGauge>
                 <!--<ProgressBar x:Name="PourcentageVitesse" Height="100" VerticalAlignment="Top" Width="50" Orientation="Vertical" Value="{Binding Value}"  Margin="10,0,0,0" Background="{x:Null}" Foreground="Black"/>
                                 -->
-                <lvc:CartesianChart x:Name="Graphtest" Margin="0,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1">
+                <lvc:CartesianChart x:Name="Graphtest" Margin="0,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3">
                     <lvc:CartesianChart.Series >
                         <lvc:StepLineSeries x:Name="Serie1" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                     </lvc:CartesianChart.Series>

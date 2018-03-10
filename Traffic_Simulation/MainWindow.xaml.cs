@@ -118,7 +118,7 @@ namespace Simulateur_0._0._2
             }
             for (var i = 0; i < Cars.Count; i++)
             {
-                for (var j = 0; j < 10; j++)
+                for (var j = 0; j < 20; j++)
                 {
                     if (Cars[i].Xposition < (j + 1) * 50)
                     {
