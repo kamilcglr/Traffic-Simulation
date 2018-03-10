@@ -167,28 +167,41 @@ namespace Simulateur_0._0._2
         public void Avance_ligne2()
         {
             for (var i = 0; i < Cars2.Count; i++)
-                if (i == 0)
-                {   //Pour la première voiture on vérifie seulement si elle est dans le point critique
+                if (i == 0)//Voiture de tête
+                {   //Pour la première voiture on vérifie seulement si elle est dans zone d'analyse
                     if (Cars2[0].Xposition <= _pointCritique - distanceAnalyse)
                     {
                         Canvas.SetLeft(Cars2[0], Cars2[0].Move(vitessemax, acceleration, deceleration));
                         Canvas.SetBottom(Cars2[0], Cars2[0].Yposition);
                     }
-                    else //La voiture est dans la zone de changement
+                    else //La voiture est dans la zone d'analyse
                     {
-                        var position = Champ_libre(Cars2[0].Xposition);
-                        if (position != -1 )
+                        bool force = false;
+                        //On freine si on est dans la zone critique
+                        if ((Cars2[0].Xposition > _pointCritique - distancePtcritique)) //On regarde si on est dans la zone critique
                         {
-                            Changement_ligne(position, 0);
-                        }
-                        else
-                        {//On freine si on est dans la zone critique
-                            if ((Cars2[0].Xposition > _pointCritique - distancePtcritique))
+                            //Si c'est le cas, on cherche une postion ou on freine
+                            force = true;
+                            var position = Champ_libre(Cars2[0].Xposition, force);
+                            if (position != -1) //On peut changer de voie en forcant
+                            {
+                                Changement_ligne(position, i);
+                            }
+                            else //pas de place même en forçant, donc on freine
                             {
                                 Cars2[0].Frein = true;
                                 Canvas.SetLeft(Cars2[0], Cars2[0].Move(vitessemax, acceleration, deceleration));
                                 Canvas.SetBottom(Cars2[0], Cars2[0].Yposition);
                                 Cars2[0].Frein = false;
+                            }
+                        }
+                        else //on n'est pas dans la zone critique
+                        {
+                            force = false; //On recherchera une position sans forcer
+                            var position = Champ_libre(Cars2[i].Xposition, force);
+                            if (position != -1)
+                            {
+                                Changement_ligne(position, i);//On change sans forcer
                             }
                             else
                             {//si on est pas dans la distance critique on peut continuer à avancer
@@ -200,8 +213,8 @@ namespace Simulateur_0._0._2
                 }
                 else //On fait avancer les autres voitures en  véfrifant devant
                 {   
-                    if (Cars2[i].Xposition <= _pointCritique - distanceAnalyse)//Verification zone analyse
-                    {
+                    if (Cars2[i].Xposition <= _pointCritique - distanceAnalyse)//Verification zone non analyse
+                    {//Avance normalement
                         if (Cars2[i].Xposition + Cars2[i].Width < Cars2[i - 1].Xposition - _distanceEntreVehicule)
                         {
                             Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
@@ -218,35 +231,54 @@ namespace Simulateur_0._0._2
                     //Sinon le vehicule est dans la zone d'analyse
                     else
                     {//Recherde de position libre sur l'autre voie
-                        var position = Champ_libre(Cars2[i].Xposition);
-                        if (position != -1)
+                        bool force = false;
+                        if ((Cars2[i].Xposition > _pointCritique - distancePtcritique)) //On regarde si on est dans la zone critique
                         {
-                            Changement_ligne(position, i);
-                        }
-                        else
-                        {//On freine si on est dans la zone critique
-                            if ((Cars2[i].Xposition > _pointCritique - distancePtcritique))
+                            //Si c'est le cas, on cherche une postion ou on freine
+                            force = true;
+                            var position = Champ_libre(Cars2[i].Xposition, force);
+                            if (position != -1) //On peut changer de voie en forcant
+                            {
+                                Changement_ligne(position, i);
+
+                            }
+                            else //pas de place même en forçant, donc on freine
                             {
                                 Cars2[i].Frein = true;
                                 Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
                                 Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
                                 Cars2[i].Frein = false;
                             }
-                            else {//si on n'est pas dans la distance critique on peut continuer à avancer
-                                Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                                Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
-                            }
+                        }
+                        else //on n'est pas dans la zone critique
+                            {
+                                force = false; //On recherchera une position sans forcer
+                                var position = Champ_libre(Cars2[i].Xposition, force);
+                                if (position != -1)
+                                {
+                                    Changement_ligne(position, i);
+                                }
+                                else
+                                {//si on n'est pas dans la distance critique on peut continuer à avancer
+                                    Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
+                                    Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
+                                }
                         }
                     }
                 }
         }
 
-        public int Champ_libre(double xposition)
+        public int Champ_libre(double xposition, bool force)
         {
             var autoriseChampLibre = -1;
+            double distancesecu = _distanceEntreVehicule;
+            if (!force)//la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
+            {
+                distancesecu=  _distanceEntreVehicule * 2;
+            }
             for (var i = 0; i < Cars.Count; i++)//Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
                 if (Cars[i].Xposition >= xposition - _distanceEntreVehicule &&
-                    Cars[i].Xposition <= xposition + 2* _distanceEntreVehicule)
+                    Cars[i].Xposition <= xposition + distancesecu)
                 {
                     autoriseChampLibre = -1;
                     break; //On peut arreter de chercher il y a deja un vehicule
