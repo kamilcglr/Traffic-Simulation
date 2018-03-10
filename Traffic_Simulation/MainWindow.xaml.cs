@@ -215,7 +215,7 @@ namespace Simulateur_0._0._2
                             Cars2[i].Frein = false;
                         }
                     }
-                    //Si le vehicule est dans la zone d'analyse
+                    //Sinon le vehicule est dans la zone d'analyse
                     else
                     {//Recherde de position libre sur l'autre voie
                         var position = Champ_libre(Cars2[i].Xposition);
@@ -232,7 +232,7 @@ namespace Simulateur_0._0._2
                                 Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
                                 Cars2[i].Frein = false;
                             }
-                            else {//si on est pas dans la distance critique on peut continuer à avancer
+                            else {//si on n'est pas dans la distance critique on peut continuer à avancer
                                 Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
                                 Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
                             }
@@ -246,10 +246,10 @@ namespace Simulateur_0._0._2
             var autoriseChampLibre = -1;
             for (var i = 0; i < Cars.Count; i++)//Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
                 if (Cars[i].Xposition >= xposition - _distanceEntreVehicule &&
-                    Cars[i].Xposition <= xposition + _distanceEntreVehicule)
+                    Cars[i].Xposition <= xposition + 2* _distanceEntreVehicule)
                 {
                     autoriseChampLibre = -1;
-                    break;
+                    break; //On peut arreter de chercher il y a deja un vehicule
                 }
                 else
                 {
@@ -292,15 +292,18 @@ namespace Simulateur_0._0._2
             {
                 Voiture temp = Cars[0];
                 Cars.RemoveAt(0);
-                temp.Xposition = 0;
+                temp.Xposition = -10; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
                 temp.Vitesse = vitessemax;
                 temp.Vehiculelent = false;
                 var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
                 temp.Source = new BitmapImage(relativeUri);
+                //On réevalue la voie du véhicule 
                 if (_rand.Next(100) < ChoixProportionVoituregauche.Value)
                     temp.Lane = 2;
                 else
                     temp.Lane = 1;
+
+                //Densité de camion
                 if (_rand.Next(100) < ChoixDensitecamion.Value)
                 {
                     Ajoutcamion(temp);
@@ -312,7 +315,7 @@ namespace Simulateur_0._0._2
 
                 if (temp.Lane == 2)
                 {
-                    temp.Yposition = PositionL2;
+                    temp.Yposition = PositionL2;//Mettre la position verticale
                     Cars2.Add(temp);
                     Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
                     Canvas.SetBottom(temp, temp.Yposition);
@@ -328,7 +331,7 @@ namespace Simulateur_0._0._2
 
         public void ModificationNbVehicules()
         {
-            var relanceTimers = false;
+            var relanceTimers = false;//Bool pour relancer les timers
             //Si les timers sont actifs (bouton start déjà appuyé une fois) on arrete les timers et on devra relancer les timers  à la fin
             if (_timer1.IsEnabled || _timer2.IsEnabled)
             {
@@ -337,7 +340,6 @@ namespace Simulateur_0._0._2
                 relanceTimers = true;
             }
             var densiteCamion = (int) ChoixDensitecamion.Value;
-
             Nbvoitures = Cars.Count + Cars2.Count;
 
             var nbajout = (int) ChoixNombrevoitures.Value - Nbvoitures;
@@ -351,13 +353,23 @@ namespace Simulateur_0._0._2
                 var i = nbajoutVoiegauche;
                 while (i != 0)
                 {
-                    double positionDernier = Cars2.Last().Xposition;
-                    var voiture = new Voiture
+                    double positionDernier;
+                    //On recupere la positiion de la derniere voiture 
+                    if (Cars2.Count == 0)
+                    {
+                    positionDernier = 0;
+                    }
+                    else
+                    {
+                    positionDernier = Cars2.Last().Xposition;
+                    }
+
+                var voiture = new Voiture
                     {
                         Lane = 2,
                         Vitesse = ((ChoixVitessemax.Value / 3.6) * 0.02) / 0.25,
                         Yposition = PositionL2,
-                        Xposition = positionDernier - 3 * _distanceEntreVehicule //A VOIR
+                        Xposition = positionDernier - 3 * _distanceEntreVehicule //Valeur arbitraire, on laisse assez de place en cas de freinage
                     };
                     Cars2.Add(voiture);
                     Affichage.Children.Add(voiture);
@@ -369,7 +381,16 @@ namespace Simulateur_0._0._2
                 var j = nbajoutVoiedroite;
                 while (j != 0)
                 {
-                    double positionDernier = Cars.Last().Xposition;
+                    double positionDernier;
+                    if (Cars.Count == 0)
+                    {
+                        positionDernier = 0;
+                    }
+                    else
+                    {
+                        positionDernier = Cars.Last().Xposition;
+                    }
+
                     Voiture voiture = new Voiture
                     {
                         Lane = 1,
@@ -389,12 +410,21 @@ namespace Simulateur_0._0._2
             {
                 for (var i = 0; i > nbajoutVoiegauche; i--)
                 {
+                    if (Cars2.Count == 0)//Il n'y a pas assez de vehicules à enlever sur cette voie
+                    {
+                        nbajoutVoiedroite = nbajoutVoiedroite - nbajoutVoiegauche; //On enlève les voitures sur l'autre voie
+                        break;
+                    }
                     Affichage.Children.Remove(Cars2[Cars2.Count - 1]);
                     Cars2.RemoveAt(Cars2.Count - 1);
                 }
 
                 for (var i = 0; i > nbajoutVoiedroite; i--)
                 {
+                    if (Cars.Count == 0)//Pas de voiture à enlever sur cette voie
+                    {
+                        break;
+                    }
                     Affichage.Children.Remove(Cars[Cars.Count - 1]);
                     Cars.RemoveAt(Cars.Count - 1);
                 }
