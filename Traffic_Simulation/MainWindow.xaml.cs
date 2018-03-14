@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using LiveCharts;
 using LiveCharts.Defaults;
+using LiveCharts.Definitions.Series;
 using LiveCharts.Helpers;
 using LiveCharts.Wpf;
 using LiveCharts.Wpf.Charts.Base;
@@ -25,6 +27,10 @@ namespace Simulateur_0._0._2
     {
         private static readonly List<Voiture> Cars = new List<Voiture>();
         private static readonly List<Voiture> Cars2 = new List<Voiture>();
+
+        private static  List<Voiture> CarsCopie = new List<Voiture>();
+        private static  List<Voiture> Cars2Copie = new List<Voiture>();
+
         public bool Chargement = true;
         public int Nbvoitures;
         private readonly int _pointCritique = 900;
@@ -52,6 +58,7 @@ namespace Simulateur_0._0._2
         public static List<HeatPoint> HeatMapValeurs1 = new List<HeatPoint>();
         public static List<HeatPoint> HeatMapValeurs2 = new List<HeatPoint>();
 
+
         public static double VmoyLabel = 0;
         public static List<double> Vmoy = new List<double>();
 
@@ -59,9 +66,9 @@ namespace Simulateur_0._0._2
         {
             InitializeComponent();
             _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(20);
+            _timer1.Interval = TimeSpan.FromMilliseconds(5);
             _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(20);
+            _timer2.Interval = TimeSpan.FromMilliseconds(5);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(3);
             _timerGauges.Tick += timerGauges_Tick;
@@ -76,14 +83,16 @@ namespace Simulateur_0._0._2
             distancePtcritique = 100;
             distanceAnalyse = 500;
 
-
             Avance_ligne1();
             Retour_vehicules();
+
+
         }
         private void timer2_Tick(object sender, EventArgs e)
         {
             Avance_ligne2();
             if (Cars.Count + Cars2.Count != (int)ChoixNombrevoitures.Value) ModificationNbVehicules();
+
             NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
             NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
         }
@@ -92,13 +101,17 @@ namespace Simulateur_0._0._2
             UpdateGraphVitesseMoy();
             UpdateGraphNbVehiculesArret();
             MiseajourHeatMap();
+
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
         {
-            Gaugetest.Value = Vitessemoyenne();
+            CarsCopie = Cars;
+            Cars2Copie = Cars2;
+
+            GaugeVitesse.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
-            UpdateLabelVitesseMoyenne(Gaugetest.Value);
+            UpdateLabelVitesseMoyenne(GaugeVitesse.Value);//On utilise la valeur deja calculee
 
         }
 
@@ -106,35 +119,40 @@ namespace Simulateur_0._0._2
         {
             Vmoy.RemoveAt(0);
             Vmoy.Add(ajoutvitesse);
-            for (int i = 0; i < Vmoy.Count; i++)
+            for (int i = 0; i < Vmoy.Count; i++) //CFCT
             {
                 VmoyLabel += Vmoy[i];
             }
             VmoyLabel = VmoyLabel / Vmoy.Count;
-            LabelVitesseMoyenne.Content = "Vitesse Moyenne (2min): " + Math.Round(VmoyLabel, 0).ToString();
+            LabelVitesseMoyenne.Content = "Vitesse Moyenne (2min):" + Environment.NewLine + Math.Round(VmoyLabel, 0).ToString();
 
-         }
+        }
         public double Vitessemoyenne()
         {
+            File.AppendAllText("testecriture", "Debut Vmoy" + Environment.NewLine);
             double vitessemoy = 0;
-            int i = 0;
-            while (Cars[i].Xposition > 0 )
+            int i = 1; //on initialise à 1 pour éviter de diviser par zero
+            if (CarsCopie.Count != 0)
             {
-                vitessemoy += Cars[i].Vitesse;
-                i++;
-                if (i == Cars.Count)
+                i = 0;
+                while (CarsCopie[i].Xposition > 0 )
                 {
-                    break;
+                    vitessemoy += CarsCopie[i].Vitesse;
+                    i++;
+                    if (i == CarsCopie.Count)
+                    {
+                        break;
+                    }
                 }
             }
             int j = 0;
-            if (Cars2.Count != 0)
+            if (Cars2Copie.Count != 0)
             {
-                while (Cars2[j].Xposition > 0)
+                while (Cars2Copie[j].Xposition > 0)
                 {
-                    vitessemoy += Cars2[j].Vitesse;
+                    vitessemoy += Cars2Copie[j].Vitesse;
                     j++;
-                    if (j == Cars2.Count)
+                    if (j == Cars2Copie.Count)
                     {
                         break;
                     }
@@ -142,8 +160,11 @@ namespace Simulateur_0._0._2
             }
             vitessemoy = vitessemoy / (i+j);
             vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
+            File.AppendAllText("testecriture", "Fin Vmoy" + Environment.NewLine);
             return vitessemoy;
         }
+
+
 
         /*public void ProgressBarcoloration()
         {
@@ -154,39 +175,39 @@ namespace Simulateur_0._0._2
         }*/
         public void MiseajourHeatMap()
         {
-            for (var j = 0; j < 20; j++)
+            for (var j = 0; j < 12; j++)
             {
                 HeatMapValeurs1[j].Weight = 0;
             }
-            for (var j = 0; j < 16; j++)
+            for (var j = 0; j < 10; j++)
             {
                 HeatMapValeurs2[j].Weight = 0;
             }
-            for (var i = 0; i < Cars.Count; i++)
+            for (var i = 0; i < CarsCopie.Count; i++)
             {
-                for (var j = 0; j < 20; j++)
+                for (var j = 0; j < 12; j++)
                 {
-                    if (Cars[i].Xposition < (j + 1) * 50)
+                    if (CarsCopie[i].Xposition < (j + 1) * 83)
                     {
                         HeatMapValeurs1[j].Weight++;
                         break;
                     }
                 }
             }
-            if (Cars2.Count == 0) //Si pas de voitures dans la voie 2 tout vider
+            if (Cars2Copie.Count == 0) //Si pas de voitures dans la voie 2 tout vider
             {
-                for (var j = 0; j < 16; j++)
+                for (var j = 0; j < 10; j++)
                 {
                     HeatMapValeurs2[j].Weight = 0;
                 }
             }
             else
             {
-                for (var i = 0; i < Cars2.Count; i++)
+                for (var i = 0; i < Cars2Copie.Count; i++)
                 {
-                    for (var j = 0; j < 16; j++)
+                    for (var j = 0; j < 10; j++)
                     {
-                        if (Cars2[i].Xposition < (j + 1) * 50)
+                        if (Cars2Copie[i].Xposition < (j + 1) * 100)
                         {
                             HeatMapValeurs2[j].Weight++;
                             break;
@@ -201,7 +222,7 @@ namespace Simulateur_0._0._2
             {
                 VitesseValeurs[i].Value = VitesseValeurs[i + 1].Value;
             }
-            VitesseValeurs[19].Value = Gaugetest.Value; //On prend la valeur que l'on a déjà calculé précédement
+            VitesseValeurs[19].Value = GaugeVitesse.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
         public void UpdateGraphNbVehiculesArret()
         {
@@ -214,41 +235,45 @@ namespace Simulateur_0._0._2
 
         public int NbVehiculesArret()
         {
+            File.AppendAllText("testecriture", "Debut NbvehiculesArret"  + Environment.NewLine);
             int n = 0;
-            int i = 0;
-            while (Cars[i].Xposition >= 0 )
+            if (CarsCopie.Count != 0)
             {
-                if (Cars[i].Vitesse < 0.2)
+                int i = 0;
+                while (CarsCopie[i].Xposition >= 0)
                 {
-                    n++;
-                }
-                i++;
-                if (i == Cars.Count)
-                {
-                    break;
-                }
-            }
-
-            if (Cars2.Count != 0)
-            {
-                int j = 0;
-                while (Cars2[j].Xposition > 0)
-                {
-                    if (Cars2[j].Vitesse < 0.2)
+                    if (CarsCopie[i].Vitesse < 0.2)
                     {
                         n++;
                     }
-                    j++;
-                    if (j == Cars2.Count)
+                    i++;
+                    if (i == CarsCopie.Count)
                     {
                         break;
                     }
                 }
             }
-
+            if (Cars2Copie.Count != 0)
+            {
+                int j = 0;
+                while (Cars2Copie[j].Xposition > 0)
+                {
+                    if (Cars2Copie[j].Vitesse < 0.2)
+                    {
+                        n++;
+                    }
+                    j++;
+                    if (j == Cars2Copie.Count)
+                    {
+                        break;
+                    }
+                }
+            }
+            File.AppendAllText("testecriture", "Fin NbvehiculesArret" + Environment.NewLine);
             return n;
+
         }
-        
+
         public void Avance_ligne1()
         {
             for (var i = 0; i < Cars.Count; i++)
@@ -578,10 +603,6 @@ namespace Simulateur_0._0._2
                 _timer2.Start();
             }
         }
-
-        
-
     }
-
 }
 

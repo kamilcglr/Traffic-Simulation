@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -40,6 +41,8 @@ namespace Simulateur_0._0._2
             _timer3.Start();
             _timerGauges.Start();
             //----------------------------------------------------------
+
+            
         }
         //----------------------------------GRAPHES----------------------------------------------
         public void InitialiserGraphVitesse()
@@ -120,7 +123,7 @@ namespace Simulateur_0._0._2
         }
         public void InitialiserGaugeVitesse()
         {
-            var vitesses = Gaugetest.ToValue;
+            var vitesses = GaugeVitesse.ToValue;
             var decoupe = vitesses / 7;
 
             Sec1.FromValue = vitesses - decoupe;
@@ -147,7 +150,7 @@ namespace Simulateur_0._0._2
         }
         public void InitialiserHeatMap()
         {
-            for (int i = 0; i < 20; i++) //Creation de 20 Points
+            for (int i = 0; i < 12; i++) //Creation de 20 Points
             {
                 var point = new HeatPoint(i,0,0);
                 HeatMapValeurs1.Add(point);
@@ -167,15 +170,8 @@ namespace Simulateur_0._0._2
                     HeatMapValeurs1[8],
                     HeatMapValeurs1[9],
                     HeatMapValeurs1[10],
-                    HeatMapValeurs1[11],
-                    HeatMapValeurs1[12],
-                    HeatMapValeurs1[13],
-                    HeatMapValeurs1[14],
-                    HeatMapValeurs1[15],
-                    HeatMapValeurs1[16],
-                    HeatMapValeurs1[17],
-                    HeatMapValeurs1[18],
-                    HeatMapValeurs1[19]
+                    HeatMapValeurs1[11]
+
                 },
                 GradientStopCollection = new GradientStopCollection
                 {
@@ -194,7 +190,7 @@ namespace Simulateur_0._0._2
                 DrawsHeatRange = false
 
             });
-            for (int i = 0; i < 16; i++) //Creation de 20 Points
+            for (int i = 0; i < 10; i++) //Creation de 20 Points
             {
                 var point = new HeatPoint(i, 1, 0);
                 HeatMapValeurs2.Add(point);
@@ -212,13 +208,7 @@ namespace Simulateur_0._0._2
                     HeatMapValeurs2[6],
                     HeatMapValeurs2[7],
                     HeatMapValeurs2[8],
-                    HeatMapValeurs2[9],
-                    HeatMapValeurs2[10],
-                    HeatMapValeurs2[11],
-                    HeatMapValeurs2[12],
-                    HeatMapValeurs2[13],
-                    HeatMapValeurs2[14],
-                    HeatMapValeurs2[15]
+                    HeatMapValeurs2[9]
                 },
                 GradientStopCollection = new GradientStopCollection
                 {
@@ -310,7 +300,7 @@ namespace Simulateur_0._0._2
         {
             VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 0) + "km/h";
             //Respecter cet ordre, ToValue réutilisé dans InitialiserGauge
-            Gaugetest.ToValue = ChoixVitessemax.Value + 20;
+            GaugeVitesse.ToValue = ChoixVitessemax.Value + 20;
             InitialiserGaugeVitesse();
         }
         private void Choix_acceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

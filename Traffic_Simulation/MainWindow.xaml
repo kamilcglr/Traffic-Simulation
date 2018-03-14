@@ -26,8 +26,8 @@
                     <ImageBrush ImageSource="Images/Route.png"/>
                 </Canvas.Background>
             </Canvas>
-            <DockPanel x:Name="HeatMapPannel1" Height="20">
-                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" AnimationsSpeed="0:0:2" >
+            <DockPanel x:Name="HeatMapPannel1" Height="10">
+                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" AnimationsSpeed="0:0:3"  Hoverable="False" DataTooltip="{x:Null}"  >
                     <lvc:CartesianChart.Series >
                         <lvc:HeatSeries x:Name="lane1" Values="{Binding Values}" DrawsHeatRange="False"  />
                         <lvc:HeatSeries x:Name="lane2" Values="{Binding Values}" DrawsHeatRange="False" />
@@ -45,7 +45,7 @@
                 </lvc:CartesianChart>
             </DockPanel>
             <DockPanel x:Name="PannelVitesses" Height="100" >
-                <lvc:AngularGauge x:Name="Gaugetest" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
+                <lvc:AngularGauge x:Name="GaugeVitesse" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
                               TicksForeground="White" Foreground="White" FontSize="8"
                               SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left" AnimationsSpeed="0:0:1">
