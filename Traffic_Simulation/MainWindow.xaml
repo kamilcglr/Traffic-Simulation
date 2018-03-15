@@ -47,9 +47,9 @@
             <DockPanel x:Name="PannelVitesses" Height="100" >
                 <lvc:AngularGauge x:Name="GaugeVitesse" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
-                              TicksForeground="White" Foreground="White" FontSize="8"
-                              SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left" AnimationsSpeed="0:0:1">
-                    
+                              TicksForeground="White" Foreground="White" FontSize="10"
+                              SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="5,5,0,5" Width="90" HorizontalAlignment="Left" AnimationsSpeed="0:0:1" NeedleFill="#FFE6E8E6" FontFamily="Roboto Light">
+
                     <lvc:AngularGauge.Sections>
                         <lvc:AngularSection x:Name="Sec1" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="DarkGreen"/>
                         <lvc:AngularSection x:Name="Sec2"  FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="Green"/>
@@ -59,36 +59,44 @@
                         <lvc:AngularSection x:Name="Sec6" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="OrangeRed"/>
                         <lvc:AngularSection x:Name="Sec7" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="Red"/>
                     </lvc:AngularGauge.Sections>
-                    
+
                 </lvc:AngularGauge>
                 <!--<ProgressBar x:Name="PourcentageVitesse" Height="100" VerticalAlignment="Top" Width="50" Orientation="Vertical" Value="{Binding Value}"  Margin="10,0,0,0" Background="{x:Null}" Foreground="Black"/>
                                 -->
-                <lvc:CartesianChart x:Name="Graphtest" Margin="5,5,0,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3">
+                <lvc:CartesianChart x:Name="Graphtest" Margin="50,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3" HorizontalAlignment="Left" >
                     <lvc:CartesianChart.Series >
                         <lvc:StepLineSeries x:Name="Serie1" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis ShowLabels="False" MinValue="0" MaxValue="19" >
+                        <lvc:Axis ShowLabels="False" MinValue="0" MaxValue="19" Foreground="#FFE6E8E6" FontFamily="Roboto Light" >
                             <lvc:Axis.Separator>
                                 <lvc:Separator Step="1" StrokeThickness="0"/>
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
                     <lvc:CartesianChart.AxisY>
-                        <lvc:Axis MinValue =" 0">
+                        <lvc:Axis MinValue =" 0" Foreground="#FFE6E8E6" FontFamily="Roboto Light">
                             <lvc:Axis.Separator>
-                                <lvc:Separator  StrokeThickness="0"  />
+                                <lvc:Separator  StrokeThickness="0" Step="20"  />
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
-                <Label x:Name="LabelVitesseMoyenne" HorizontalAlignment="Right" Content="{Binding Value}" />
+                <StackPanel Margin="0,5,5,5">
+                    <TextBlock Background="{x:Null}"
+                             Text="Vitesse moyenne sur une intervalle de 2 min :" FontSize="14" TextAlignment="Center" TextWrapping="Wrap" Foreground="#FFFDAD00" FontFamily="Roboto Light"/>
+                    <Label x:Name="LabelVitesseMoyenne" Content="{Binding Value}" Background="{x:Null}" Foreground="#FFFDAD00" VerticalAlignment="Bottom" Margin="0,2,0,0" MinWidth="20" MinHeight="20" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </StackPanel>
             </DockPanel>
             <DockPanel x:Name="PannelvehicluesArret" Height="100">
                 <lvc:Gauge x:Name="GaugeNbvehiculesArret" 
                            From ="0" Value="{Binding Value}" To="{Binding Value}" 
-                           HorizontalAlignment="Left" Width="100" Foreground="White" Margin="5,5,0,5" />
-                <lvc:CartesianChart Name="GraphNbVehiculesArret" Width="700" Margin="0,5" >
+                           HorizontalAlignment="Left" Width="90" Foreground="White" Margin="5,5,0,5" Stroke="{x:Null}" >
+                    <lvc:Gauge.GaugeBackground>
+                        <SolidColorBrush Color="#FF4D6F96" Opacity="0.1"/>
+                    </lvc:Gauge.GaugeBackground>
+                </lvc:Gauge>
+                <lvc:CartesianChart Name="GraphNbVehiculesArret" Width="700" Margin="50,5" BorderBrush="#FFFFAE42" BorderThickness="1" ScrollBarFill="{x:Null}" Foreground="#FF4D6F96" >
                     <lvc:CartesianChart.Series>
                         <lvc:StackedColumnSeries Values="{Binding Values}" ColumnPadding="10" Stroke="#FF1D92F0" Foreground="#FF2195F2" />
                     </lvc:CartesianChart.Series>
@@ -100,14 +108,43 @@
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
                     <lvc:CartesianChart.AxisY>
-                        <lvc:Axis MinValue =" 0">
+                        <lvc:Axis MinValue =" 0" Foreground="#FFE6E8E6" FontFamily="Roboto">
                             <lvc:Axis.Separator>
-                                <lvc:Separator  StrokeThickness="0"  />
+                                <lvc:Separator  StrokeThickness="0" Step="5"  />
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+                <StackPanel>
+                    <TextBlock Background="{x:Null}"   
+                             Text="Nombre de vehicules à l'arret sur une intervalle de 2 min :" FontSize="14" Foreground="#FFFDAD00" FontFamily="Roboto Light" TextWrapping="Wrap" TextAlignment="Center"  />
+                    <Label x:Name="LabelNbVehiculesArret" Content="{Binding Value}" Background="{x:Null}" Foreground="#FFFDAD00" VerticalAlignment="Bottom" Margin="0,10,0,0" MinWidth="20" MinHeight="20" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </StackPanel>
             </DockPanel>
+            <DockPanel x:Name="PannelVitesseMoyenneFCTVitesse" Height="100">
+                <!-- <lvc:CartesianChart Name="GraphVmoyFctV" Width="700" Margin="0,5" >
+                    <lvc:CartesianChart.Series>
+                        <lvc:LineSeries Values="{Binding ChartValues}" 
+                                        PointGeometry="{x:Null}" 
+                                        LineSmoothness="1"
+                                        StrokeThickness="6" 
+                                        Stroke="#F34336"
+                                        Fill="Transparent"/>
+                    </lvc:CartesianChart.Series>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis MaxValue="{Binding AxisMax}" 
+                                  MinValue="{Binding AxisMin}"
+                                  Unit="{Binding AxisUnit}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="{Binding AxisStep}" />
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
+                -->
+
+            </DockPanel>
+
         </StackPanel>
 
 
@@ -122,13 +159,13 @@
         <Label x:Name="AccelerationmaxChoixAffichage" Content="Accélération max :" Grid.Column="1" HorizontalAlignment="Center" Margin="8,159,8,0" VerticalAlignment="Top" Height="21" Width="150" FontSize="8" FontFamily="Roboto" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6"/>
         <Label x:Name="DistanceSecuriteAffichage" Content="Distance entre véhicules :" Grid.Column="1" Margin="10,277,7,0" VerticalAlignment="Top" Height="26" Width="149" FontSize="8" FontFamily="Roboto" HorizontalAlignment="Center" Foreground="#FFE6E8E6"/>
         <Slider x:Name="ChoixDistanceEntreVehicules" Grid.Column="1" HorizontalAlignment="Center" Margin="0,296,0,0" VerticalAlignment="Top" Height="19" Width="146" Maximum="100" Value="16" ValueChanged="choix_distance_entre_vehicules_ValueChanged"/>
-        <Slider x:Name="ChoixNombrevoitures" Grid.Column="1" HorizontalAlignment="Center" Margin="10,54,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="35" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" Value="15" IsSnapToTickEnabled="True" ValueChanged="Choix_nombrevoitures_ValueChanged" Delay="1"/>
+        <Slider x:Name="ChoixNombrevoitures" Grid.Column="1" HorizontalAlignment="Center" Margin="10,54,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="35" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" Value="15" IsSnapToTickEnabled="True" ValueChanged="Choix_nombrevoitures_ValueChanged" Delay="1" Background="Transparent"/>
         <Slider x:Name="ChoixProportionVoituregauche" Grid.Column="1" HorizontalAlignment="Center" Margin="10,86,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="100" ValueChanged="Choix_proportion_voituregauche_ValueChanged" Value="30" LargeChange="10" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}"/>
         <Slider x:Name="ChoixDeceleration" Grid.Column="1" HorizontalAlignment="Center" Margin="10,250,10,0" VerticalAlignment="Top" Height="22" Width="146" Maximum="2" Value="1.5" ValueChanged="choix_deceleration_ValueChanged" SmallChange="0.01" Minimum="1"/>
         <Slider x:Name="ChoixAcceleration" Grid.Column="1" HorizontalAlignment="Center" Margin="10,174,10,0" VerticalAlignment="Top" Height="20" ValueChanged="Choix_acceleration_ValueChanged" Maximum="25" Value="11" SmallChange="0.001" Width="146" Minimum="5"/>
         <Slider x:Name="ChoixDensitecamion" Grid.Column="1" HorizontalAlignment="Center" Margin="10,117,10,0" VerticalAlignment="Top" Height="18" Width="146" SmallChange="1" Maximum="100" ValueChanged="Choix_densitecamion_ValueChanged" Value="10" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" LargeChange="0"/>
         <Slider x:Name="ChoixVitessemax" Grid.Column="1" HorizontalAlignment="Center" Margin="10,209,10,0" VerticalAlignment="Top" Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="130" Value="90" SmallChange="1"/>
         <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="52,617,0,0" VerticalAlignment="Top" Width="75"/>
-        
+
     </Grid>
 </Window>

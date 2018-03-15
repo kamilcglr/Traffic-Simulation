@@ -31,6 +31,7 @@ namespace Simulateur_0._0._2
             InitialiserGaugeVitesse();
             InitialiserHeatMap();
             InitialiserLabelVmoy();
+            InitialiserLabelNbVehiculesArret();
             //----------------------------------------------------------
             
             if (Chargement) InitaliserVoitures();
@@ -47,6 +48,7 @@ namespace Simulateur_0._0._2
         //----------------------------------GRAPHES----------------------------------------------
         public void InitialiserGraphVitesse()
         {
+
             for (int i = 0; i < 20; i++) //Creation de 20 Points
             {
                 var point = new ObservableValue(0);
@@ -77,11 +79,10 @@ namespace Simulateur_0._0._2
                     VitesseValeurs[18],
                     VitesseValeurs[19]
                 },
-                PointGeometrySize = 0
-            });
-            
-
-        }
+                PointGeometrySize = 0,
+                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150))
+                });
+            }
         public void InitialiserGraphNbVehiculesArret()
         {
             for (int i = 0; i < 20; i++) //Creation de 20 Points
@@ -89,6 +90,7 @@ namespace Simulateur_0._0._2
                 var point = new ObservableValue(0);
                 NbVehiculesArretValeurs.Add(point);
             }
+
             GraphNbVehiculesArret.Series.Add(new ColumnSeries
             {
                 Values = new ChartValues<ObservableValue>
@@ -113,13 +115,15 @@ namespace Simulateur_0._0._2
                     NbVehiculesArretValeurs[17],
                     NbVehiculesArretValeurs[18],
                     NbVehiculesArretValeurs[19]
-                }
-            });
+                },
+                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150))
+        });
 
         }
         public void InitialiserGaugeNbvehiculesArret()
         {
             GaugeNbvehiculesArret.To = ChoixNombrevoitures.Value;
+            GaugeNbvehiculesArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
         }
         public void InitialiserGaugeVitesse()
         {
@@ -281,12 +285,24 @@ namespace Simulateur_0._0._2
                 Chargement = false;
             }
         }
+        public void InitialiserLabelNbVehiculesArret()
+        {
+            for (int i = 0; i < 120; i++)
+            {
+                Nbarret.Add(0);
+            }
+        }
         public void InitialiserLabelVmoy()
         {
             for (int i = 0; i < 120; i++)
             {
                 Vmoy.Add(ChoixVitessemax.Value);
             }
+        }
+
+        public void InitialiserVmoyFctV()
+        {
+            
         }
         private void Ajoutcamion(Voiture voiture)
         {

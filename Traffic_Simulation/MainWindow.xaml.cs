@@ -59,16 +59,20 @@ namespace Simulateur_0._0._2
         public static List<HeatPoint> HeatMapValeurs2 = new List<HeatPoint>();
 
 
-        public static double VmoyLabel = 0;
+        public static double ValVmoyLabel = 0;
+        public static int ValNbArretLabel = 0;
+
         public static List<double> Vmoy = new List<double>();
+        public static List<int> Nbarret = new List<int>();
+
 
         public MainWindow()
         {
             InitializeComponent();
             _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(5);
+            _timer1.Interval = TimeSpan.FromMilliseconds(20);
             _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(5);
+            _timer2.Interval = TimeSpan.FromMilliseconds(20);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(3);
             _timerGauges.Tick += timerGauges_Tick;
@@ -85,9 +89,7 @@ namespace Simulateur_0._0._2
 
             Avance_ligne1();
             Retour_vehicules();
-
-
-        }
+            }
         private void timer2_Tick(object sender, EventArgs e)
         {
             Avance_ligne2();
@@ -101,19 +103,21 @@ namespace Simulateur_0._0._2
             UpdateGraphVitesseMoy();
             UpdateGraphNbVehiculesArret();
             MiseajourHeatMap();
-
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
         {
             CarsCopie = Cars;
             Cars2Copie = Cars2;
-
+            /*
+            System.Diagnostics.Debug.WriteLine(CarsCopie.Count);
+            System.Diagnostics.Debug.WriteLine(Cars2Copie.Count);
+            */
             GaugeVitesse.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
             UpdateLabelVitesseMoyenne(GaugeVitesse.Value);//On utilise la valeur deja calculee
-
-        }
+            UpdateLabelNbVehiculesArret((int)GaugeNbvehiculesArret.Value);
+            }
 
         public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
         {
@@ -121,12 +125,25 @@ namespace Simulateur_0._0._2
             Vmoy.Add(ajoutvitesse);
             for (int i = 0; i < Vmoy.Count; i++) //CFCT
             {
-                VmoyLabel += Vmoy[i];
+                ValVmoyLabel += Vmoy[i];
             }
-            VmoyLabel = VmoyLabel / Vmoy.Count;
-            LabelVitesseMoyenne.Content = "Vitesse Moyenne (2min):" + Environment.NewLine + Math.Round(VmoyLabel, 0).ToString();
+            ValVmoyLabel = ValVmoyLabel / Vmoy.Count;
+            LabelVitesseMoyenne.Content = Math.Round(ValVmoyLabel, 0).ToString() + " km/h";
 
         }
+        public void UpdateLabelNbVehiculesArret(int ajoutarret)
+        {
+            Nbarret.RemoveAt(0);
+            Nbarret.Add(ajoutarret);
+            for (int i = 0; i < Vmoy.Count; i++) //CFCT
+            {
+                ValNbArretLabel += Nbarret[i];
+            }
+            ValNbArretLabel = ValNbArretLabel / Nbarret.Count;
+            LabelNbVehiculesArret.Content = ValNbArretLabel.ToString() + " km/h";
+
+        }
+
         public double Vitessemoyenne()
         {
             File.AppendAllText("testecriture", "Debut Vmoy" + Environment.NewLine);
@@ -163,9 +180,6 @@ namespace Simulateur_0._0._2
             File.AppendAllText("testecriture", "Fin Vmoy" + Environment.NewLine);
             return vitessemoy;
         }
-
-
-
         /*public void ProgressBarcoloration()
         {
             PourcentageVitesse.Value = (Vitessemoyenne()*100)/ChoixVitessemax.Value;
