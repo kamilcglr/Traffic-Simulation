@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using LiveCharts.Defaults;
-
+using Microsoft.Office.Interop.Excel;
+using Window = System.Windows.Window;
+using Excel = Microsoft.Office.Interop.Excel;
 namespace Simulateur_0._0._2
 {
     /// <summary>
@@ -55,18 +54,13 @@ namespace Simulateur_0._0._2
         public int PositionL1 = 80;
         public int PositionL2 = 110;
 
+        public static double VitesseTimerDeplacement = 20; //ms
+        public static double VitesseTimerGauge = 1; //s
+        public static double VitesseTimerGraph = 3; //s
 
         public MainWindow()
         {
             InitializeComponent();
-            _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(5);
-            _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(5);
-            _timer3.Tick += timer3_Tick;
-            _timer3.Interval = TimeSpan.FromSeconds(3);
-            _timerGauges.Tick += timerGauges_Tick;
-            _timerGauges.Interval = TimeSpan.FromSeconds(1);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -86,7 +80,6 @@ namespace Simulateur_0._0._2
         {
             Avance_ligne2();
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
-
             NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
             NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
         }
@@ -101,23 +94,19 @@ namespace Simulateur_0._0._2
         {
             CarsCopie = Cars;
             Cars2Copie = Cars2;
-            UpdateHeatMap();
-
-            Debug.WriteLine(CarsCopie.Count);
-            Debug.WriteLine(Cars2Copie.Count);
-
             GaugeVitesse.Value = Vitessemoyenne();
+            //UpdateHeatMap();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
-            UpdateLabelVitesseMoyenne(GaugeVitesse.Value); //On utilise la valeur deja calculee
+            UpdateLabelVitesseMoyenne(GaugeVitesse.Value); 
             UpdateLabelNbVehiculesArret((int) GaugeNbvehiculesArret.Value);
         }
 
+        
         public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
         {
             Vmoy.RemoveAt(0);
             Vmoy.Add(ajoutvitesse);
-            for (var i = 0; i < Vmoy.Count; i++) //CFCT
-                ValVmoyLabel += Vmoy[i];
+            ValVmoyLabel = Vmoy.Sum();
             ValVmoyLabel = ValVmoyLabel / Vmoy.Count;
             LabelVitesseMoyenne.Content = Math.Round(ValVmoyLabel, 0) + " km/h";
         }
@@ -126,27 +115,32 @@ namespace Simulateur_0._0._2
         {
             Nbarret.RemoveAt(0);
             Nbarret.Add(ajoutarret);
-            for (var i = 0; i < Vmoy.Count; i++) //CFCT
-                ValNbArretLabel += Nbarret[i];
+            ValNbArretLabel = Nbarret.Sum();
             ValNbArretLabel = ValNbArretLabel / Nbarret.Count;
             LabelNbVehiculesArret.Content = ValNbArretLabel + " véhicules";
         }
 
         public double Vitessemoyenne()
         {
-            double vitessemoy = 0;
-            var i = 1; //on initialise à 1 pour éviter de diviser par zero
+            double vitessemoy = 0.1;
+            var i = 0;
             if (CarsCopie.Count != 0)
             {
-                i = 0;
-                while (CarsCopie[i].Xposition > 0)
+                if (CarsCopie[0].Xposition > 0)
                 {
-                    vitessemoy += CarsCopie[i].Vitesse;
-                    i++;
-                    if (i == CarsCopie.Count) break;
+                    while (CarsCopie[i].Xposition > 0)
+                    {
+                        vitessemoy += CarsCopie[i].Vitesse;
+                        i++;
+                        if (i == CarsCopie.Count) break;
+                    }
                 }
-            }
+                else
+                {
+                    i = 1; //Eviter division par zero
+                }
 
+            }
             var j = 0;
             if (Cars2Copie.Count != 0)
                 while (Cars2Copie[j].Xposition > 0)
@@ -155,12 +149,10 @@ namespace Simulateur_0._0._2
                     j++;
                     if (j == Cars2Copie.Count) break;
                 }
-
             vitessemoy = vitessemoy / (i + j);
-            vitessemoy = vitessemoy * 0.25 / 0.02 * 3.6;
+            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
             return vitessemoy;
         }
-
         /*public void ProgressBarcoloration()
         {
             PourcentageVitesse.Value = (Vitessemoyenne()*100)/ChoixVitessemax.Value;
@@ -208,7 +200,6 @@ namespace Simulateur_0._0._2
 
         public int NbVehiculesArret()
         {
-            File.AppendAllText("testecriture", "Debut NbvehiculesArret" + Environment.NewLine);
             var n = 0;
             if (CarsCopie.Count != 0)
             {
@@ -232,7 +223,6 @@ namespace Simulateur_0._0._2
                 }
             }
 
-            File.AppendAllText("testecriture", "Fin NbvehiculesArret" + Environment.NewLine);
             return n;
         }
 
@@ -424,39 +414,42 @@ namespace Simulateur_0._0._2
 
         public void Retour_vehicules()
         {
-            if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
+            if(Cars.Count != 0)
             {
-                var temp = Cars[0];
-                Cars.RemoveAt(0);
-                temp.Xposition = -100; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
-                temp.Vitesse = vitessemax;
-                temp.Vehiculelent = false;
-                var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
-                temp.Source = new BitmapImage(relativeUri);
-                //On réevalue la voie du véhicule 
-                if (_rand.Next(100) < ChoixProportionVoituregauche.Value)
-                    temp.Lane = 2;
-                else
-                    temp.Lane = 1;
-
-                //Densité de camion
-                if (_rand.Next(100) < ChoixDensitecamion.Value)
-                    Ajoutcamion(temp);
-                else
-                    temp.Width = 16;
-
-                if (temp.Lane == 2)
+                if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
                 {
-                    temp.Yposition = PositionL2; //Mettre la position verticale
-                    Cars2.Add(temp);
-                    Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
-                    Canvas.SetBottom(temp, temp.Yposition);
-                }
-                else
-                {
-                    Cars.Add(temp);
-                    Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
-                    Canvas.SetBottom(temp, temp.Yposition);
+                    var temp = Cars[0];
+                    Cars.RemoveAt(0);
+                    temp.Xposition = -100; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
+                    temp.Vitesse = vitessemax;
+                    temp.Vehiculelent = false;
+                    var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
+                    temp.Source = new BitmapImage(relativeUri);
+                    //On réevalue la voie du véhicule 
+                    if (_rand.Next(100) < ChoixProportionVoituregauche.Value)
+                        temp.Lane = 2;
+                    else
+                        temp.Lane = 1;
+
+                    //Densité de camion
+                    if (_rand.Next(100) < ChoixDensitecamion.Value)
+                        Ajoutcamion(temp);
+                    else
+                        temp.Width = 16;
+
+                    if (temp.Lane == 2)
+                    {
+                        temp.Yposition = PositionL2; //Mettre la position verticale
+                        Cars2.Add(temp);
+                        Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
+                        Canvas.SetBottom(temp, temp.Yposition);
+                    }
+                    else
+                    {
+                        Cars.Add(temp);
+                        Canvas.SetLeft(temp, temp.Move(vitessemax, acceleration, deceleration));
+                        Canvas.SetBottom(temp, temp.Yposition);
+                    }
                 }
             }
         }
@@ -563,5 +556,11 @@ namespace Simulateur_0._0._2
                 _timer2.Start();
             }
         }
+
+        private void Eteindre(object sender, System.Windows.RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
+
     }
 }

@@ -36,11 +36,13 @@ namespace Simulateur_0._0._2
             if (Chargement) InitaliserVoitures();
 
             //--------------LANCEMENT TIMERs (à la fin !)---------------
+            InitTimer();
             _timer1.Start();
             _timer2.Start();
             _timer3.Start();
             _timerGauges.Start();
             //----------------------------------------------------------
+
         }
 
         //----------------------------------GRAPHES----------------------------------------------
@@ -180,30 +182,12 @@ namespace Simulateur_0._0._2
                 },
                 GradientStopCollection = new GradientStopCollection
                 {
-                    new GradientStop(Color.FromRgb(0, 104, 55), 0),
-                    new GradientStop(Color.FromRgb(0, 104, 55), .10),
-                    new GradientStop(Color.FromRgb(26, 152, 80), .20),
-                    new GradientStop(Color.FromRgb(102, 189, 99), .30),
-                    new GradientStop(Color.FromRgb(166, 217, 106), .40),
-                    new GradientStop(Color.FromRgb(217, 239, 139), .50),
-                    new GradientStop(Color.FromRgb(254, 200, 139), .60),
-                    new GradientStop(Color.FromRgb(253, 174, 97), .70),
-                    new GradientStop(Color.FromRgb(244, 109, 67), .80),
-                    new GradientStop(Color.FromRgb(215, 48, 39), .90),
-                    new GradientStop(Color.FromRgb(165, 0, 38), 1)
-                    /*
-                     new GradientStop(Color.FromRgb(0,104,55), 0),
-                    new GradientStop(Color.FromRgb(0,104,55), .10),
-                    new GradientStop(Color.FromRgb(26,152,80), .20),
-                    new GradientStop(Color.FromRgb(102,189,99), .30),
-                    new GradientStop(Color.FromRgb(166,217,106), .40),
-                    new GradientStop(Color.FromRgb(217,239,139), .50),
-                    new GradientStop(Color.FromRgb(254,224,139), .60),
-                    new GradientStop(Color.FromRgb(253,174,97), .70),
-                    new GradientStop(Color.FromRgb(244,109,67), .80),
-                    new GradientStop(Color.FromRgb(215,48,39), .90),
-                    new GradientStop(Color.FromRgb(165,0,38), 1)
-                    */
+
+                    new GradientStop(Colors.LightSkyBlue, 0),
+                    new GradientStop(Colors.SkyBlue, .25),
+                    new GradientStop(Colors.DodgerBlue, .50),
+                    new GradientStop(Colors.MediumBlue, .75),
+                    new GradientStop(Colors.DarkBlue, 1)
                 },
                 DrawsHeatRange = false
             });
@@ -225,12 +209,25 @@ namespace Simulateur_0._0._2
                 },
                 GradientStopCollection = new GradientStopCollection
                 {
-                    new GradientStop(Colors.DarkGreen, 0),
+                    /*
+                    new GradientStop(Colors.SeaGreen, 0),
                     new GradientStop(Colors.YellowGreen, .25),
-                    new GradientStop(Colors.DarkOrange, .50),
+                    new GradientStop(Colors.DarkGoldenrod, .50),
                     new GradientStop(Colors.OrangeRed, .75),
-
                     new GradientStop(Colors.DarkRed, 1)
+                    */
+                    new GradientStop(Colors.LightSkyBlue, 0),
+                    new GradientStop(Colors.SkyBlue, .25),
+                    new GradientStop(Colors.DodgerBlue, .50),
+                    new GradientStop(Colors.MediumBlue, .75),
+                    new GradientStop(Colors.DarkBlue, 1)
+                    /*
+                    new GradientStop(Color.FromRgb(239,243,255), 0),
+                    new GradientStop(Color.FromRgb(189,215,231), .25),
+                    new GradientStop(Color.FromRgb(107,174,214), .50),
+                    new GradientStop(Color.FromRgb(49,130,189), .75),
+                    new GradientStop(Color.FromRgb(8,81,156), 1)
+                    */
                     /*
                      * new GradientStop(Color.FromRgb(0,104,55), 0),
                     new GradientStop(Color.FromRgb(0,104,55), .10),
@@ -321,6 +318,17 @@ namespace Simulateur_0._0._2
         {
         }
 
+        public void InitTimer()
+        {
+            _timer1.Tick += timer1_Tick;
+            _timer1.Interval = TimeSpan.FromMilliseconds(ChoixVitesseSimulation.Value);
+            _timer2.Tick += timer2_Tick;
+            _timer2.Interval = TimeSpan.FromMilliseconds(ChoixVitesseSimulation.Value);
+            _timer3.Tick += timer3_Tick;
+            _timer3.Interval = TimeSpan.FromSeconds(VitesseTimerGraph);
+            _timerGauges.Tick += timerGauges_Tick;
+            _timerGauges.Interval = TimeSpan.FromSeconds(VitesseTimerGauge);
+        }
         private void Ajoutcamion(Voiture voiture)
         {
             voiture.Vehiculelent = true;
@@ -377,5 +385,7 @@ namespace Simulateur_0._0._2
                 "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
             InitialiserGaugeNbvehiculesArret();
         }
+        
+       
     }
 }
