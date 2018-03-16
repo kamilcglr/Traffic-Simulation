@@ -80,9 +80,14 @@ namespace Simulateur_0._0._2
                     VitesseValeurs[19]
                 },
                 PointGeometrySize = 0,
-                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150))
-                });
-            }
+                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150)),
+                StrokeThickness = 0
+               
+            });
+            Graphtest.HideTooltip();
+            Graphtest.DataTooltip = null;
+            Graphtest.Hoverable = false;
+        }
         public void InitialiserGraphNbVehiculesArret()
         {
             for (int i = 0; i < 20; i++) //Creation de 20 Points
@@ -118,6 +123,9 @@ namespace Simulateur_0._0._2
                 },
                 Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150))
         });
+            GraphNbVehiculesArret.HideTooltip();
+            GraphNbVehiculesArret.DataTooltip = null;
+            GraphNbVehiculesArret.Hoverable = false;
 
         }
         public void InitialiserGaugeNbvehiculesArret()
@@ -154,7 +162,7 @@ namespace Simulateur_0._0._2
         }
         public void InitialiserHeatMap()
         {
-            for (int i = 0; i < 12; i++) //Creation de 20 Points
+            for (int i = 0; i < 6; i++) //Creation de 20 Points
             {
                 var point = new HeatPoint(i,0,0);
                 HeatMapValeurs1.Add(point);
@@ -168,13 +176,7 @@ namespace Simulateur_0._0._2
                     HeatMapValeurs1[2],
                     HeatMapValeurs1[3],
                     HeatMapValeurs1[4],
-                    HeatMapValeurs1[5],
-                    HeatMapValeurs1[6],
-                    HeatMapValeurs1[7],
-                    HeatMapValeurs1[8],
-                    HeatMapValeurs1[9],
-                    HeatMapValeurs1[10],
-                    HeatMapValeurs1[11]
+                    HeatMapValeurs1[5]
 
                 },
                 GradientStopCollection = new GradientStopCollection
@@ -185,16 +187,29 @@ namespace Simulateur_0._0._2
                     new GradientStop(Color.FromRgb(102,189,99), .30),
                     new GradientStop(Color.FromRgb(166,217,106), .40),
                     new GradientStop(Color.FromRgb(217,239,139), .50),
+                    new GradientStop(Color.FromRgb(254,200,139), .60),
+                    new GradientStop(Color.FromRgb(253,174,97), .70),
+                    new GradientStop(Color.FromRgb(244,109,67), .80),
+                    new GradientStop(Color.FromRgb(215,48,39), .90),
+                    new GradientStop(Color.FromRgb(165,0,38), 1)
+                    /*
+                     new GradientStop(Color.FromRgb(0,104,55), 0),
+                    new GradientStop(Color.FromRgb(0,104,55), .10),
+                    new GradientStop(Color.FromRgb(26,152,80), .20),
+                    new GradientStop(Color.FromRgb(102,189,99), .30),
+                    new GradientStop(Color.FromRgb(166,217,106), .40),
+                    new GradientStop(Color.FromRgb(217,239,139), .50),
                     new GradientStop(Color.FromRgb(254,224,139), .60),
                     new GradientStop(Color.FromRgb(253,174,97), .70),
                     new GradientStop(Color.FromRgb(244,109,67), .80),
                     new GradientStop(Color.FromRgb(215,48,39), .90),
                     new GradientStop(Color.FromRgb(165,0,38), 1)
+                    */
                 },
                 DrawsHeatRange = false
 
             });
-            for (int i = 0; i < 10; i++) //Creation de 20 Points
+            for (int i = 0; i < 5; i++) //Creation de 20 Points
             {
                 var point = new HeatPoint(i, 1, 0);
                 HeatMapValeurs2.Add(point);
@@ -207,16 +222,18 @@ namespace Simulateur_0._0._2
                     HeatMapValeurs2[1],
                     HeatMapValeurs2[2],
                     HeatMapValeurs2[3],
-                    HeatMapValeurs2[4],
-                    HeatMapValeurs2[5],
-                    HeatMapValeurs2[6],
-                    HeatMapValeurs2[7],
-                    HeatMapValeurs2[8],
-                    HeatMapValeurs2[9]
+                    HeatMapValeurs2[4]
                 },
                 GradientStopCollection = new GradientStopCollection
                 {
-                    new GradientStop(Color.FromRgb(0,104,55), 0),
+                    new GradientStop(Colors.DarkGreen, 0),
+                    new GradientStop(Colors.YellowGreen, .25),
+                    new GradientStop(Colors.DarkOrange, .50),
+                    new GradientStop(Colors.OrangeRed, .75),
+
+                    new GradientStop(Colors.DarkRed, 1)
+                    /*
+                     * new GradientStop(Color.FromRgb(0,104,55), 0),
                     new GradientStop(Color.FromRgb(0,104,55), .10),
                     new GradientStop(Color.FromRgb(26,152,80), .20),
                     new GradientStop(Color.FromRgb(102,189,99), .30),
@@ -227,9 +244,13 @@ namespace Simulateur_0._0._2
                     new GradientStop(Color.FromRgb(244,109,67), .80),
                     new GradientStop(Color.FromRgb(215,48,39), .90),
                     new GradientStop(Color.FromRgb(165,0,38), 1)
+                     */
                 },
                 DrawsHeatRange = false,
             });
+            HeatMap1.HideTooltip();
+            HeatMap1.DataTooltip = null;
+            HeatMap1.Hoverable = false;
         }
         public void InitaliserVoitures()
         {

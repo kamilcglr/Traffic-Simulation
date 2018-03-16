@@ -70,9 +70,9 @@ namespace Simulateur_0._0._2
         {
             InitializeComponent();
             _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(20);
+            _timer1.Interval = TimeSpan.FromMilliseconds(5);
             _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(20);
+            _timer2.Interval = TimeSpan.FromMilliseconds(5);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(3);
             _timerGauges.Tick += timerGauges_Tick;
@@ -102,17 +102,17 @@ namespace Simulateur_0._0._2
         {
             UpdateGraphVitesseMoy();
             UpdateGraphNbVehiculesArret();
-            MiseajourHeatMap();
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
         {
             CarsCopie = Cars;
             Cars2Copie = Cars2;
-            /*
+            UpdateHeatMap();
+
             System.Diagnostics.Debug.WriteLine(CarsCopie.Count);
             System.Diagnostics.Debug.WriteLine(Cars2Copie.Count);
-            */
+            
             GaugeVitesse.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
             UpdateLabelVitesseMoyenne(GaugeVitesse.Value);//On utilise la valeur deja calculee
@@ -129,7 +129,6 @@ namespace Simulateur_0._0._2
             }
             ValVmoyLabel = ValVmoyLabel / Vmoy.Count;
             LabelVitesseMoyenne.Content = Math.Round(ValVmoyLabel, 0).ToString() + " km/h";
-
         }
         public void UpdateLabelNbVehiculesArret(int ajoutarret)
         {
@@ -140,13 +139,12 @@ namespace Simulateur_0._0._2
                 ValNbArretLabel += Nbarret[i];
             }
             ValNbArretLabel = ValNbArretLabel / Nbarret.Count;
-            LabelNbVehiculesArret.Content = ValNbArretLabel.ToString() + " km/h";
-
+            LabelNbVehiculesArret.Content = ValNbArretLabel.ToString() + " véhicules";
         }
 
         public double Vitessemoyenne()
         {
-            File.AppendAllText("testecriture", "Debut Vmoy" + Environment.NewLine);
+            
             double vitessemoy = 0;
             int i = 1; //on initialise à 1 pour éviter de diviser par zero
             if (CarsCopie.Count != 0)
@@ -177,8 +175,8 @@ namespace Simulateur_0._0._2
             }
             vitessemoy = vitessemoy / (i+j);
             vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
-            File.AppendAllText("testecriture", "Fin Vmoy" + Environment.NewLine);
             return vitessemoy;
+            
         }
         /*public void ProgressBarcoloration()
         {
@@ -187,21 +185,21 @@ namespace Simulateur_0._0._2
             byte vert = Convert.ToByte(((PourcentageVitesse.Value / 100) * 255));
             PourcentageVitesse.Foreground = new SolidColorBrush(Color.FromArgb(255, rouge, vert, 0));
         }*/
-        public void MiseajourHeatMap()
+        public void UpdateHeatMap()
         {
-            for (var j = 0; j < 12; j++)
+            for (var j = 0; j < 6; j++)
             {
                 HeatMapValeurs1[j].Weight = 0;
             }
-            for (var j = 0; j < 10; j++)
+            for (var j = 0; j < 5; j++)
             {
                 HeatMapValeurs2[j].Weight = 0;
             }
             for (var i = 0; i < CarsCopie.Count; i++)
             {
-                for (var j = 0; j < 12; j++)
+                for (var j = 0; j < 6; j++)
                 {
-                    if (CarsCopie[i].Xposition < (j + 1) * 83)
+                    if (CarsCopie[i].Xposition < (j + 1) * 166)
                     {
                         HeatMapValeurs1[j].Weight++;
                         break;
@@ -210,7 +208,7 @@ namespace Simulateur_0._0._2
             }
             if (Cars2Copie.Count == 0) //Si pas de voitures dans la voie 2 tout vider
             {
-                for (var j = 0; j < 10; j++)
+                for (var j = 0; j < 5; j++)
                 {
                     HeatMapValeurs2[j].Weight = 0;
                 }
@@ -219,9 +217,9 @@ namespace Simulateur_0._0._2
             {
                 for (var i = 0; i < Cars2Copie.Count; i++)
                 {
-                    for (var j = 0; j < 10; j++)
+                    for (var j = 0; j < 5; j++)
                     {
-                        if (Cars2Copie[i].Xposition < (j + 1) * 100)
+                        if (Cars2Copie[i].Xposition < (j + 1) * 200)
                         {
                             HeatMapValeurs2[j].Weight++;
                             break;
