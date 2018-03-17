@@ -126,28 +126,38 @@
                     <Label x:Name="LabelNbVehiculesArret" Content="{Binding Value}" Background="{x:Null}" Foreground="#FFFDAD00" VerticalAlignment="Bottom" Margin="0,10,0,0" MinWidth="20" MinHeight="20" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
                 </StackPanel>
             </DockPanel>
-            <DockPanel x:Name="PannelVitesseMoyenneFCTVitesse" Height="100">
-                <!-- <lvc:CartesianChart Name="GraphVmoyFctV" Width="700" Margin="0,5" >
+            <DockPanel x:Name="TempsPasse" Height="100">
+                <lvc:Gauge x:Name="GaugeTempsPasseArret" 
+                           From ="0" Value="{Binding Value}" To="{Binding Value}" 
+                           HorizontalAlignment="Left" Width="90" Foreground="White" Margin="5,5,0,5" Stroke="{x:Null}" >
+                    <lvc:Gauge.GaugeBackground>
+                        <SolidColorBrush Color="#FF4D6F96" Opacity="0.1"/>
+                    </lvc:Gauge.GaugeBackground>
+                </lvc:Gauge>
+                <lvc:CartesianChart Name="GraphTempsPasseArret" Width="700" Margin="50,5" BorderBrush="#FFFFAE42" BorderThickness="1" ScrollBarFill="{x:Null}" Foreground="#FF4D6F96" Hoverable="False" >
                     <lvc:CartesianChart.Series>
-                        <lvc:LineSeries Values="{Binding ChartValues}" 
-                                        PointGeometry="{x:Null}" 
-                                        LineSmoothness="1"
-                                        StrokeThickness="6" 
-                                        Stroke="#F34336"
-                                        Fill="Transparent"/>
+                        <lvc:StackedColumnSeries Values="{Binding Values}" ColumnPadding="10" Stroke="#FF1D92F0" Foreground="#FF2195F2" />
                     </lvc:CartesianChart.Series>
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis MaxValue="{Binding AxisMax}" 
-                                  MinValue="{Binding AxisMin}"
-                                  Unit="{Binding AxisUnit}">
+                        <lvc:Axis ShowLabels="False" MinValue="0" MaxValue="20" >
                             <lvc:Axis.Separator>
-                                <lvc:Separator Step="{Binding AxisStep}" />
+                                <lvc:Separator Step="1" StrokeThickness="0"/>
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue =" 0" Foreground="#FFE6E8E6" FontFamily="Roboto">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator  StrokeThickness="0" Step="5"  />
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
-                -->
-
+                <StackPanel>
+                    <TextBlock Background="{x:Null}"   
+                             Text="Temps passé à l'arret sur un intervalle de 2 min :" FontSize="14" Foreground="#FFFDAD00" FontFamily="Roboto Light" TextWrapping="Wrap" TextAlignment="Center"  />
+                    <Label x:Name="LabelTempsPasse" Content="{Binding Value}" Background="{x:Null}" Foreground="#FFFDAD00" VerticalAlignment="Bottom" Margin="0,10,0,0" MinWidth="20" MinHeight="20" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+                </StackPanel>
             </DockPanel>
 
         </StackPanel>

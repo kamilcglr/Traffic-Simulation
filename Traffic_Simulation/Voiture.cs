@@ -19,7 +19,10 @@ namespace Simulateur_0._0._2
         public double Xposition;
         public double Yposition;
 
+        public double TempsPasseBouchon;
+        public bool dejaArret;
         public bool ChangementL;
+        public int temps;
 
         public Voiture() //constructeur
         {
@@ -34,6 +37,9 @@ namespace Simulateur_0._0._2
             Acceleration = 0;
             Lane = 1;
             Vehiculelent = false;
+            TempsPasseBouchon = 0;
+            dejaArret = false;
+            temps = 0;
         }
 
         public double Move(double vitessemax, double acceleration, double deceleration)
@@ -49,6 +55,20 @@ namespace Simulateur_0._0._2
                 {
                     Yposition--;
                 }
+            }
+
+           
+            if (Vitesse < 0.2 && Xposition>0)
+            {
+                if (dejaArret)
+                {
+                    TempsPasseBouchon++;
+                }
+                dejaArret = true;
+            }
+            else
+            {
+                dejaArret = false;
             }
             if (Frein)
             {

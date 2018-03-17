@@ -31,6 +31,8 @@ namespace Simulateur_0._0._2
             InitialiserHeatMap();
             InitialiserLabelVmoy();
             InitialiserLabelNbVehiculesArret();
+            InitialiserGaugTempsPasseArret();
+            InitialiserGraphTempsPasseArret();
             //----------------------------------------------------------
 
             if (Chargement) InitaliserVoitures();
@@ -127,11 +129,55 @@ namespace Simulateur_0._0._2
             GraphNbVehiculesArret.DataTooltip = null;
             GraphNbVehiculesArret.Hoverable = false;
         }
+        public void InitialiserGraphTempsPasseArret()
+        {
+            for (var i = 0; i < 20; i++) //Creation de 20 Points
+            {
+                var point = new ObservableValue(0);
+                TempsPasseArret.Add(point);
+            }
+
+            GraphTempsPasseArret.Series.Add(new ColumnSeries
+            {
+                Values = new ChartValues<ObservableValue>
+                {
+                    TempsPasseArret[0],
+                    TempsPasseArret[1],
+                    TempsPasseArret[2],
+                    TempsPasseArret[3],
+                    TempsPasseArret[4],
+                    TempsPasseArret[5],
+                    TempsPasseArret[6],
+                    TempsPasseArret[7],
+                    TempsPasseArret[8],
+                    TempsPasseArret[9],
+                    TempsPasseArret[10],
+                    TempsPasseArret[11],
+                    TempsPasseArret[12],
+                    TempsPasseArret[13],
+                    TempsPasseArret[14],
+                    TempsPasseArret[15],
+                    TempsPasseArret[16],
+                    TempsPasseArret[17],
+                    TempsPasseArret[18],
+                    TempsPasseArret[19]
+                },
+                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150))
+            });
+            GraphTempsPasseArret.HideTooltip();
+            GraphTempsPasseArret.DataTooltip = null;
+            GraphTempsPasseArret.Hoverable = false;
+        }
 
         public void InitialiserGaugeNbvehiculesArret()
         {
             GaugeNbvehiculesArret.To = ChoixNombrevoitures.Value;
             GaugeNbvehiculesArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
+        }
+        public void InitialiserGaugTempsPasseArret()
+        {
+            GaugeTempsPasseArret.To = 60;
+            GaugeTempsPasseArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
         }
 
         public void InitialiserGaugeVitesse()
@@ -318,17 +364,6 @@ namespace Simulateur_0._0._2
         {
         }
 
-        public void InitTimer()
-        {
-            _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(0.01);
-            _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(0.01);
-            _timer3.Tick += timer3_Tick;
-            _timer3.Interval = TimeSpan.FromSeconds(VitesseTimerGraph);
-            _timerGauges.Tick += timerGauges_Tick;
-            _timerGauges.Interval = TimeSpan.FromSeconds(VitesseTimerGauge);
-        }
         private void Ajoutcamion(Voiture voiture)
         {
             voiture.Vehiculelent = true;

@@ -31,6 +31,8 @@ namespace Simulateur_0._0._2
 
         public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>();
         public static List<ObservableValue> NbVehiculesArretValeurs = new List<ObservableValue>();
+        public static List<ObservableValue> TempsPasseArret = new List<ObservableValue>();
+
         public static List<HeatPoint> HeatMapValeurs1 = new List<HeatPoint>();
         public static List<HeatPoint> HeatMapValeurs2 = new List<HeatPoint>();
 
@@ -54,13 +56,28 @@ namespace Simulateur_0._0._2
         public int PositionL1 = 80;
         public int PositionL2 = 110;
 
-        public static double VitesseTimerGauge = 0.01; //s
+        public static double MesureTemps = 0;
+
+        public static double VitesseTimerSimulation = 20; //ms
+        public static double VitesseTimerGauge = 1; //s
         public static double VitesseTimerGraph = 3; //s
 
         public MainWindow()
         {
             InitializeComponent();
         }
+        public void InitTimer()
+        {
+            _timer1.Tick += timer1_Tick;
+            _timer1.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
+            _timer2.Tick += timer2_Tick;
+            _timer2.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
+            _timer3.Tick += timer3_Tick;
+            _timer3.Interval = TimeSpan.FromSeconds(VitesseTimerGraph);
+            _timerGauges.Tick += timerGauges_Tick;
+            _timerGauges.Interval = TimeSpan.FromSeconds(VitesseTimerGauge);
+        }
+
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -77,16 +94,33 @@ namespace Simulateur_0._0._2
 
         private void timer2_Tick(object sender, EventArgs e)
         {
+            for (int i = 0; i < Cars.Count; i++)
+            {
+                if (Cars[i].Xposition > 0)
+                {
+                    Cars[i].temps++;
+                }
+            }
+            for (int i = 0; i < Cars2.Count; i++)
+            {
+                if (Cars2[i].Xposition > 0)
+                {
+                    Cars2[i].temps++;
+                }
+            }
+
             Avance_ligne2();
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
             NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
             NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
+            
         }
 
         private void timer3_Tick(object sender, EventArgs e)
         {
             UpdateGraphVitesseMoy();
             UpdateGraphNbVehiculesArret();
+            UpdateGraphTempsPasseArret();
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
@@ -95,15 +129,39 @@ namespace Simulateur_0._0._2
             Cars2Copie = Cars2;
             GaugeVitesse.Value = Vitessemoyenne();
             VitesseMoyenneSimulateur.Add(GaugeVitesse.Value);
+            GaugeTempsPasseArret.Value = TempsPasseBouchon();
+            GaugeNbvehiculesArret.Value = NbVehiculesArret();
             //UpdateHeatMap();
-            //GaugeNbvehiculesArret.Value = NbVehiculesArret();
             //UpdateLabelVitesseMoyenne(GaugeVitesse.Value); 
             //UpdateLabelNbVehiculesArret((int) GaugeNbvehiculesArret.Value);
+
         }
 
-        public void TempsPasseBouchon()
+        public double TempsPasseBouchon()//Mettre dans jauge
         {
+            if (CarsCopie.Count != 0)
+            {
+                double tp = 0;
+                for (int i = 0; i < CarsCopie.Count; i++)
+                {
+                    tp += CarsCopie[i].TempsPasseBouchon;
+                }
 
+                for (int i = 0; i < Cars2Copie.Count; i++)
+                {
+                    tp += Cars2Copie[i].TempsPasseBouchon;
+                }
+
+                tp = tp / (Cars2Copie.Count + CarsCopie.Count); //Temps passé en 20 milisecondes (tp *20ms) 
+                tp = (tp * (VitesseTimerSimulation))/1000;
+                return Math.Round(tp,1); // On passe de millisecondes à secondes
+            }
+            else return 0;
+        }
+
+        public double MoyMesureTemps()
+        {
+            return MesureTemps *(VitesseTimerSimulation)/ 1000;
         }
         public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
         {
@@ -122,6 +180,7 @@ namespace Simulateur_0._0._2
             ValNbArretLabel = ValNbArretLabel / Nbarret.Count;
             LabelNbVehiculesArret.Content = ValNbArretLabel + " véhicules";
         }
+        
 
         public double Vitessemoyenne()
         {
@@ -200,7 +259,13 @@ namespace Simulateur_0._0._2
             NbVehiculesArretValeurs[19].Value =
                 GaugeNbvehiculesArret.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
-
+        public void UpdateGraphTempsPasseArret()
+        {
+            for (var i = 0; i < 19; i++) TempsPasseArret[i].Value = TempsPasseArret[i + 1].Value;
+            TempsPasseArret[19].Value =
+                GaugeTempsPasseArret.Value;
+        }
+        
         public int NbVehiculesArret()
         {
             var n = 0;
@@ -209,7 +274,10 @@ namespace Simulateur_0._0._2
                 var i = 0;
                 while (CarsCopie[i].Xposition >= 0)
                 {
-                    if (CarsCopie[i].Vitesse < 0.2) n++;
+                    if (CarsCopie[i].Vitesse < 0.2)
+                    {
+                        n++; //0,2 vaut moins de dix km/h
+                    }
                     i++;
                     if (i == CarsCopie.Count) break;
                 }
@@ -220,7 +288,10 @@ namespace Simulateur_0._0._2
                 var j = 0;
                 while (Cars2Copie[j].Xposition > 0)
                 {
-                    if (Cars2Copie[j].Vitesse < 0.2) n++;
+                    if (Cars2Copie[j].Vitesse < 0.2)
+                    {
+                        n++;
+                    }
                     j++;
                     if (j == Cars2Copie.Count) break;
                 }
@@ -421,6 +492,13 @@ namespace Simulateur_0._0._2
             {
                 if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
                 {
+                    //MESURE TEMPS 
+                    //GaugeTempsPasseArret.Value = Cars[0].temps * (VitesseTimerSimulation) / 1000;
+                    //ATTTTTEEENTION A BIEN REMETTRE LES VALEURS INCREMENTEES A ZERO !!!!!
+                    Cars[0].temps = 0;
+                    Cars[0].TempsPasseBouchon = 0;
+
+                    //--------------------------
                     var temp = Cars[0];
                     Cars.RemoveAt(0);
                     temp.Xposition = -100; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
