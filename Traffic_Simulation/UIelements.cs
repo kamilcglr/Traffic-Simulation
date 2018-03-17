@@ -321,9 +321,9 @@ namespace Simulateur_0._0._2
         public void InitTimer()
         {
             _timer1.Tick += timer1_Tick;
-            _timer1.Interval = TimeSpan.FromMilliseconds(ChoixVitesseSimulation.Value);
+            _timer1.Interval = TimeSpan.FromMilliseconds(0.01);
             _timer2.Tick += timer2_Tick;
-            _timer2.Interval = TimeSpan.FromMilliseconds(ChoixVitesseSimulation.Value);
+            _timer2.Interval = TimeSpan.FromMilliseconds(0.01);
             _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(VitesseTimerGraph);
             _timerGauges.Tick += timerGauges_Tick;

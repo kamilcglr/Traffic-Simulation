@@ -54,8 +54,7 @@ namespace Simulateur_0._0._2
         public int PositionL1 = 80;
         public int PositionL2 = 110;
 
-        public static double VitesseTimerDeplacement = 20; //ms
-        public static double VitesseTimerGauge = 1; //s
+        public static double VitesseTimerGauge = 0.01; //s
         public static double VitesseTimerGraph = 3; //s
 
         public MainWindow()
@@ -95,13 +94,17 @@ namespace Simulateur_0._0._2
             CarsCopie = Cars;
             Cars2Copie = Cars2;
             GaugeVitesse.Value = Vitessemoyenne();
+            VitesseMoyenneSimulateur.Add(GaugeVitesse.Value);
             //UpdateHeatMap();
-            GaugeNbvehiculesArret.Value = NbVehiculesArret();
-            UpdateLabelVitesseMoyenne(GaugeVitesse.Value); 
-            UpdateLabelNbVehiculesArret((int) GaugeNbvehiculesArret.Value);
+            //GaugeNbvehiculesArret.Value = NbVehiculesArret();
+            //UpdateLabelVitesseMoyenne(GaugeVitesse.Value); 
+            //UpdateLabelNbVehiculesArret((int) GaugeNbvehiculesArret.Value);
         }
 
-        
+        public void TempsPasseBouchon()
+        {
+
+        }
         public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
         {
             Vmoy.RemoveAt(0);
