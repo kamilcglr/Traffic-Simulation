@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -23,6 +24,9 @@ namespace Simulateur_0._0._2
         public bool dejaArret;
         public bool ChangementL;
         public bool vm;
+
+        Stopwatch ChronoTempsPasseArret = new Stopwatch();
+
 
         public Voiture() //constructeur
         {
@@ -59,14 +63,21 @@ namespace Simulateur_0._0._2
             
             if (Vitesse < 0.2 && Xposition>0)
             {
-                if (dejaArret)
+                if (!dejaArret)
                 {
-                    TempsPasseBouchon++;
+                    ChronoTempsPasseArret.Start();
                 }
                 dejaArret = true;
             }
             else
             {
+                if (ChronoTempsPasseArret.IsRunning)
+                {
+                    ChronoTempsPasseArret.Stop();
+                    TimeSpan timeSpanEcoule = ChronoTempsPasseArret.Elapsed;
+                    TempsPasseBouchon += timeSpanEcoule.Seconds;
+                    ChronoTempsPasseArret.Reset();
+                }
                 dejaArret = false;
             }
             if (Frein)

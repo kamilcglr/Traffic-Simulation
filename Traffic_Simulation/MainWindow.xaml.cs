@@ -128,7 +128,7 @@ namespace Simulateur_0._0._2
             UpdateLabelVitesseMoyenne(GaugeVitesse.Value);
             UpdateLabelNbVehiculesArret((int)GaugeNbvehiculesArret.Value);
             UpdateLabelTempsPasseRoute((int)GaugeTempsPasseRoute.Value);
-            UpdateLabelTempsPasseRoute((int)GaugeTempsPasseArret.Value);
+            UpdateLabelTempsPasseArret((int)GaugeTempsPasseArret.Value);
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
@@ -136,14 +136,12 @@ namespace Simulateur_0._0._2
             CarsCopie = Cars;
             Cars2Copie = Cars2;
             GaugeVitesse.Value = Vitessemoyenne();
-            VitesseMoyenneSimulateur.Add(GaugeVitesse.Value);
-            GaugeTempsPasseArret.Value = TempsPasseBouchon();
-            GaugeNbvehiculesArret.Value = NbVehiculesArret();
 
+            GaugeNbvehiculesArret.Value = NbVehiculesArret();
+            GaugeTempsPasseArret.Value = TempsPasseBouchon();
             UpdateHeatMap();
 
         }
-
 
         public void UpdateHeatMap()
         {
@@ -169,7 +167,6 @@ namespace Simulateur_0._0._2
                         break;
                     }
         }
-
 
         //----------------PannelVitesse-------------------------
         public double Vitessemoyenne()
@@ -297,13 +294,12 @@ namespace Simulateur_0._0._2
         }
 
         //----------------PannelTempsPasseArret-------------------------
-
         public void UpdateGraphTempsPasseArret()
         {
-            for (var i = 0; i < 19; i++) TempsPasseRoute[i].Value = TempsPasseRoute[i + 1].Value;
-            TempsPasseRoute[19].Value = GaugeTempsPasseRoute.Value;
+            for (var i = 0; i < 19; i++) TempsPasseArret[i].Value = TempsPasseArret[i + 1].Value;
+            TempsPasseArret[19].Value = GaugeTempsPasseArret.Value;
         }
-        public double TempsPasseBouchon()//Mettre dans jauge
+        public double TempsPasseBouchon()
         {
             if (CarsCopie.Count != 0)
             {
@@ -312,14 +308,12 @@ namespace Simulateur_0._0._2
                 {
                     tp += CarsCopie[i].TempsPasseBouchon;
                 }
-
                 for (int i = 0; i < Cars2Copie.Count; i++)
                 {
                     tp += Cars2Copie[i].TempsPasseBouchon;
                 }
 
-                tp = tp / (Cars2Copie.Count + CarsCopie.Count); //Temps passé en 20 milisecondes (tp *20ms) 
-                tp = (tp * (VitesseTimerSimulation)) / 1000;
+                tp = tp / (Cars2Copie.Count + CarsCopie.Count);
                 return Math.Round(tp, 1); // On passe de millisecondes à secondes
             }
             else return 0;
@@ -330,9 +324,8 @@ namespace Simulateur_0._0._2
             MoyLabelTempsPasseArret.Add(ajouttemps);
             ValTempsPasseArretLabel = MoyLabelTempsPasseArret.Sum();
             ValTempsPasseArretLabel = ValTempsPasseArretLabel / MoyLabelTempsPasseArret.Count;
-            LabelTempsPasseRoute.Content = ValTempsPasseArretLabel + " secondes";
+            LabelTempsPasseArret.Content = ValTempsPasseArretLabel + " secondes";
         }
-
 
         //----------------Affichage et mouvement----------------------
         public void Avance_ligne1()
@@ -536,8 +529,7 @@ namespace Simulateur_0._0._2
                         GaugeTempsPasseRoute.Value = ts.Seconds;
                         recherchermesure = true;
                     }
-
-                //ATTTTTEEENTION A BIEN REMETTRE LES VALEURS INCREMENTEES A ZERO !!!!!
+                    //ATTTTTEEENTION A BIEN REMETTRE LES VALEURS INCREMENTEES A ZERO !!!!!
                     Cars[0].TempsPasseBouchon = 0;
 
                     //--------------------------

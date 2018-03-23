@@ -215,7 +215,7 @@ namespace Simulateur_0._0._2
                     TempsPasseArret[18],
                     TempsPasseArret[19]
                 },
-                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150))
+                Fill = new SolidColorBrush(Color.FromRgb(152, 68, 71))
             });
             GraphTempsPasseArret.HideTooltip();
             GraphTempsPasseArret.DataTooltip = null;
@@ -230,7 +230,7 @@ namespace Simulateur_0._0._2
         public void InitialiserGaugeTempsPasseArret()
         {
             GaugeTempsPasseArret.To = 60;
-            GaugeTempsPasseArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
+            GaugeTempsPasseArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(152, 68, 71));
         }
 
         public void InitialiserGaugeVitesse()
@@ -478,7 +478,5 @@ namespace Simulateur_0._0._2
                 "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
             InitialiserGaugeNbvehiculesArret();
         }
-        
-       
     }
 }
