@@ -113,8 +113,8 @@ namespace Simulateur_0._0._2
             }
             Avance_ligne2();
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
-            NbVoitures1.Content = "Ligne 1 : " + Cars.Count;
-            NbVoitures2.Content = "Ligne 1 : " + Cars2.Count;
+            NbVoitures1.Content = "Voie gauche : " + Cars.Count;
+            NbVoitures2.Content = "Voie droite : " + Cars2.Count;
             
         }
 
@@ -250,7 +250,7 @@ namespace Simulateur_0._0._2
 
             return n;
         }
-        public void UpdateGraphNbVehiculesArret()
+        public void UpdateGraphNbVehiculesArret()   
         {
             for (var i = 0; i < 19; i++) NbVehiculesArretValeurs[i].Value = NbVehiculesArretValeurs[i + 1].Value;
             NbVehiculesArretValeurs[19].Value =

@@ -90,7 +90,7 @@ namespace Simulateur_0._0._2
                     VitesseValeurs[19]
                 },
                 PointGeometrySize = 0,
-                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150)),
+                Fill = new SolidColorBrush(Color.FromRgb(117, 171, 188)),
                 StrokeThickness = 0
             });
             Graphtest.HideTooltip();
@@ -131,7 +131,7 @@ namespace Simulateur_0._0._2
                     TempsPasseRoute[19]
                 },
                 PointGeometrySize = 0,
-                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150)),
+                Fill = new SolidColorBrush(Color.FromRgb(204, 164, 59)),
                 StrokeThickness = 0
             });
             Graphtest.HideTooltip();
@@ -433,7 +433,7 @@ namespace Simulateur_0._0._2
 
         private void Choix_vitesse_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            VitessemaxChoixAffichage.Content = "Vitesse max : " + Math.Round(ChoixVitessemax.Value, 0) + "km/h";
+            VitessemaxChoixAffichage.Content = Math.Round(ChoixVitessemax.Value, 0) + " km/h";
             //Respecter cet ordre, ToValue réutilisé dans InitialiserGauge
             GaugeVitesse.ToValue = ChoixVitessemax.Value + 20;
             InitialiserGaugeVitesse();
@@ -443,39 +443,35 @@ namespace Simulateur_0._0._2
         {
             //Acceleration renvoyée en pixel/20ms2
             //On exprime va afficher ici le 0 à 100
-            AccelerationmaxChoixAffichage.Content =
-                "Accélération max (0 à 100) : " + Math.Round(ChoixAcceleration.Value, 1) + "s";
+            AccelerationmaxChoixAffichage.Content = Math.Round(ChoixAcceleration.Value, 1) + " s";
         }
 
         private void Choix_proportion_voituregauche_ValueChanged(object sender,
             RoutedPropertyChangedEventArgs<double> e)
         {
-            ProportionVoiegaucheChoixAffichage.Content = "Proportion véhicules file de gauche" +
-                                                         ChoixProportionVoituregauche.Value.ToString("F0") + " %";
+            ProportionVoiegaucheChoixAffichage.Content = ChoixProportionVoituregauche.Value.ToString("F0") + " %";
         }
 
         private void choix_distance_entre_vehicules_ValueChanged(object sender,
             RoutedPropertyChangedEventArgs<double> e)
         {
             DistanceSecuriteAffichage.Content =
-                "Distance entre veh : " + ChoixDistanceEntreVehicules.Value.ToString("F0");
+                ChoixDistanceEntreVehicules.Value.ToString("F0");
         }
 
         private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            DecelerationChoixAffichage.Content = "Deceleration : " + Math.Round(ChoixDeceleration.Value, 3);
+            DecelerationChoixAffichage.Content = Math.Round(ChoixDeceleration.Value, 3);
         }
 
         private void Choix_densitecamion_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            DensitecamionChoixAffichage.Content =
-                "Proportion de camions " + ChoixDensitecamion.Value.ToString("F0") + " %";
+            DensitecamionChoixAffichage.Content = ChoixDensitecamion.Value.ToString("F0") + " %";
         }
 
         private void Choix_nombrevoitures_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            NombrevehiculesChoixAffichage.Content =
-                "Nombre de véhicules : " + ChoixNombrevoitures.Value.ToString("F0");
+            NombrevehiculesChoixAffichage.Content = ChoixNombrevoitures.Value.ToString("F0");
             InitialiserGaugeNbvehiculesArret();
         }
     }

@@ -165,5 +165,11 @@
   <ItemGroup>
     <Resource Include="Images\cancel.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\traffic-sign.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\analysis.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
