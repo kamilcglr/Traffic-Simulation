@@ -24,15 +24,23 @@ namespace Simulateur_0._0._2
             //----------------------------------------------------------------
 
             //----------------------INIT GRAPHS-------------------------
+            InitialiserHeatMap();
+
+            InitialiserGaugeVitesse();
             InitialiserGraphVitesse();
+            InitialiserLabelVmoy();
+
             InitialiserGaugeNbvehiculesArret();
             InitialiserGraphNbVehiculesArret();
-            InitialiserGaugeVitesse();
-            InitialiserHeatMap();
-            InitialiserLabelVmoy();
             InitialiserLabelNbVehiculesArret();
-            InitialiserGaugTempsPasseArret();
+
+            InitialiserGaugeTempsPasseRoute();
+            InitialiserGraphTempsPasseRoute();
+            InitialiserLabelTempsPasseRoute();
+            
+            InitialiserGaugeTempsPasseArret();
             InitialiserGraphTempsPasseArret();
+            InitialiserLabelTempsPasseArret();
             //----------------------------------------------------------
 
             if (Chargement) InitaliserVoitures();
@@ -89,7 +97,52 @@ namespace Simulateur_0._0._2
             Graphtest.DataTooltip = null;
             Graphtest.Hoverable = false;
         }
+        public void InitialiserGraphTempsPasseRoute()
+        {
+            for (var i = 0; i < 20; i++) //Creation de 20 Points
+            {
+                var point = new ObservableValue(0);
+                TempsPasseRoute.Add(point);
+            }
 
+            GraphTempsPasseRoute.Series.Add(new LineSeries
+            {
+                Values = new ChartValues<ObservableValue>
+                {
+                    TempsPasseRoute[0],
+                    TempsPasseRoute[1],
+                    TempsPasseRoute[2],
+                    TempsPasseRoute[3],
+                    TempsPasseRoute[4],
+                    TempsPasseRoute[5],
+                    TempsPasseRoute[6],
+                    TempsPasseRoute[7],
+                    TempsPasseRoute[8],
+                    TempsPasseRoute[9],
+                    TempsPasseRoute[10],
+                    TempsPasseRoute[11],
+                    TempsPasseRoute[12],
+                    TempsPasseRoute[13],
+                    TempsPasseRoute[14],
+                    TempsPasseRoute[15],
+                    TempsPasseRoute[16],
+                    TempsPasseRoute[17],
+                    TempsPasseRoute[18],
+                    TempsPasseRoute[19]
+                },
+                PointGeometrySize = 0,
+                Fill = new SolidColorBrush(Color.FromRgb(77, 111, 150)),
+                StrokeThickness = 0
+            });
+            Graphtest.HideTooltip();
+            Graphtest.DataTooltip = null;
+            Graphtest.Hoverable = false;
+        }
+        public void InitialiserGaugeTempsPasseRoute()
+        {
+            GaugeTempsPasseRoute.ToValue = 60;
+        }
+        
         public void InitialiserGraphNbVehiculesArret()
         {
             for (var i = 0; i < 20; i++) //Creation de 20 Points
@@ -174,7 +227,7 @@ namespace Simulateur_0._0._2
             GaugeNbvehiculesArret.To = ChoixNombrevoitures.Value;
             GaugeNbvehiculesArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
         }
-        public void InitialiserGaugTempsPasseArret()
+        public void InitialiserGaugeTempsPasseArret()
         {
             GaugeTempsPasseArret.To = 60;
             GaugeTempsPasseArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
@@ -352,7 +405,7 @@ namespace Simulateur_0._0._2
 
         public void InitialiserLabelNbVehiculesArret()
         {
-            for (var i = 0; i < 120; i++) Nbarret.Add(0);
+            for (var i = 0; i < 20; i++) Nbarret.Add(0);
         }
 
         public void InitialiserLabelVmoy()
@@ -360,10 +413,15 @@ namespace Simulateur_0._0._2
             for (var i = 0; i < 120; i++) Vmoy.Add(ChoixVitessemax.Value);
         }
 
-        public void InitialiserVmoyFctV()
+        public void InitialiserLabelTempsPasseRoute()
         {
+            for (var i = 0; i < 20; i++) MoyLabelTempsPasseRoute.Add(0);
         }
-
+        public void InitialiserLabelTempsPasseArret()
+        {
+            for (var i = 0; i < 20; i++) MoyLabelTempsPasseArret.Add(0);
+        }
+        
         private void Ajoutcamion(Voiture voiture)
         {
             voiture.Vehiculelent = true;

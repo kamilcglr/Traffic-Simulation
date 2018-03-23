@@ -22,7 +22,7 @@ namespace Simulateur_0._0._2
         public double TempsPasseBouchon;
         public bool dejaArret;
         public bool ChangementL;
-        public int temps;
+        public bool vm;
 
         public Voiture() //constructeur
         {
@@ -39,7 +39,7 @@ namespace Simulateur_0._0._2
             Vehiculelent = false;
             TempsPasseBouchon = 0;
             dejaArret = false;
-            temps = 0;
+            vm = false;
         }
 
         public double Move(double vitessemax, double acceleration, double deceleration)
@@ -56,8 +56,7 @@ namespace Simulateur_0._0._2
                     Yposition--;
                 }
             }
-
-           
+            
             if (Vitesse < 0.2 && Xposition>0)
             {
                 if (dejaArret)
@@ -80,7 +79,7 @@ namespace Simulateur_0._0._2
                     Vitesse = 0;
             }
             else
-            {
+            {   
                 if (Vehiculelent)
                 {
                     if (Vitesse <= vitessemax - 0.1) Vitesse += acceleration;
