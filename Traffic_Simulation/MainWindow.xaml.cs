@@ -30,6 +30,7 @@ namespace Simulateur_0._0._2
         private static double deceleration;
         private static int distancePtcritique;
         private static int distanceAnalyse;
+        private static double distancesecuriteDepassementNonForce;
 
 
         public static List<ObservableValue> VitesseValeurs = new List<ObservableValue>();
@@ -67,13 +68,6 @@ namespace Simulateur_0._0._2
         public int PositionL1 = 80;
         public int PositionL2 = 110;
 
-
-        
-
-        public static bool recherchermesure = true;
-        Stopwatch sw = new Stopwatch();
-
-
         public MainWindow()
         {
             InitializeComponent();
@@ -100,25 +94,22 @@ namespace Simulateur_0._0._2
             acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
             deceleration = ChoixDeceleration.Value;
             _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-            distancePtcritique = 100;
-            distanceAnalyse = 500;
+            distancePtcritique = 100; //Plus on augmente la valeur, plus les voitures vont forcer tôt
+            distanceAnalyse = 700; //Plus on augmente la valeur, plus les voitures peuvent changer de ligne tôt
+            distancesecuriteDepassementNonForce = ChoixDistanceEntreVehicules.Value*4;
 
             Avance_ligne1();
             Retour_vehicules();
+            
         }
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if (recherchermesure)//On cherche une voiture pour mesure son temps 
-            {
-                MesureTemps();
-            }
             Avance_ligne2();
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
             NbVoitures1.Content = "Voie gauche : " + Cars.Count;
             NbVoitures2.Content = "Voie droite : " + Cars2.Count;
             
-
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -141,7 +132,10 @@ namespace Simulateur_0._0._2
             GaugeVitesse.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
             GaugeTempsPasseArret.Value = TempsPasseBouchon();
-           
+            if (EnSimulation)
+            {
+                VitesseMoyenneSimulateur.Add(GaugeVitesse.Value);
+            }
         }
 
         public void UpdateHeatMap()
@@ -267,19 +261,7 @@ namespace Simulateur_0._0._2
         }
 
         //----------------PannelTempsPasseRoute-------------------------
-        public void MesureTemps() //relance la mesure du temps
-        {
-            for (int i = 0; i < Cars.Count; i++)
-            {
-                if (Cars[i].Xposition > 0 && Cars[i].Xposition < 5)
-                {
-                    sw.Start();
-                    Cars[i].vm = true;
-                    recherchermesure = false;
-                    break;
-                }
-            }
-        }
+        
         public void UpdateGraphTempsPasseRoute()
         {
             for (var i = 0; i < 19; i++) TempsPasseRoute[i].Value = TempsPasseRoute[i + 1].Value;
@@ -430,7 +412,7 @@ namespace Simulateur_0._0._2
                         if (Cars2[i].Xposition > _pointCritique - distancePtcritique
                         ) //On regarde si on est dans la zone critique
                         {
-                            //Si c'est le cas, on cherche une postion ou on freine
+                           //Si c'est le cas, on cherche une postion ou on freine
                             force = true;
                             var position = Champ_libre(Cars2[i].Xposition, force);
                             if (position != -1) //On peut changer de voie en forcant
@@ -443,6 +425,7 @@ namespace Simulateur_0._0._2
                                 Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
                                 Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
                                 Cars2[i].Frein = false;
+                                
                             }
                         }
                         else //on n'est pas dans la zone critique
@@ -455,9 +438,19 @@ namespace Simulateur_0._0._2
                             }
                             else
                             {
-                                //si on n'est pas dans la distance critique on peut continuer à avancer
-                                Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                                Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
+                                //Avance normalement
+                                if (Cars2[i].Xposition + Cars2[i].Width < Cars2[i - 1].Xposition - _distanceEntreVehicule)
+                                {
+                                    Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
+                                    Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
+                                }
+                                else
+                                {
+                                    Cars2[i].Frein = true;
+                                    Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
+                                    Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
+                                    Cars2[i].Frein = false;
+                                }
                             }
                         }
                     }
@@ -467,13 +460,13 @@ namespace Simulateur_0._0._2
         public int Champ_libre(double xposition, bool force)
         {
             var autoriseChampLibre = -1;
-            double distancesecu = _distanceEntreVehicule;
-            if (!force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
-                distancesecu = _distanceEntreVehicule * 2;
+            double distancesecu = distancesecuriteDepassementNonForce;
+            if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
+                distancesecu = ChoixDistanceEntreVehicules.Value *2 ;
             for (var i = 0;
                 i < Cars.Count;
                 i++) //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
-                if (Cars[i].Xposition >= xposition - _distanceEntreVehicule &&
+                if (Cars[i].Xposition >= xposition - distancesecu &&
                     Cars[i].Xposition <= xposition + distancesecu)
                 {
                     autoriseChampLibre = -1;
@@ -521,19 +514,13 @@ namespace Simulateur_0._0._2
             {
                 if (Cars[0].Xposition >= Colonne1.ActualWidth - 16)
                 {
-                    //MESURE TEMPS
-                    if(Cars[0].vm)
+                    
+                    if (EnSimulation)
                     {
-                        Cars[0].vm = false;
-                        if (EnSimulation)
-                        {
-                            TempsPasseMoyenne.Add(sw.ElapsedMilliseconds);
-                        }
-                        TimeSpan ts = sw.Elapsed;
-                        sw.Reset();
-                        GaugeTempsPasseRoute.Value = ts.Seconds;
-                        recherchermesure = true;
+                        TempsPasseMoyenne.Add(Cars[0].ChronoTempsPasse.ElapsedMilliseconds);
                     }
+                    GaugeTempsPasseRoute.Value = Cars[0].ChronoTempsPasse.ElapsedMilliseconds / 1000;
+                    Cars[0].ChronoTempsPasse.Reset();
                     //ATTTTTEEENTION A BIEN REMETTRE LES VALEURS INCREMENTEES A ZERO !!!!!
                     Cars[0].TempsPasseBouchon = 0;
 

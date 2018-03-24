@@ -25,7 +25,8 @@ namespace Simulateur_0._0._2
         public bool ChangementL;
         public bool vm;
 
-        Stopwatch ChronoTempsPasseArret = new Stopwatch();
+        public Stopwatch ChronoTempsPasseArret = new Stopwatch();
+        public Stopwatch ChronoTempsPasse = new Stopwatch();
 
 
         public Voiture() //constructeur
@@ -60,7 +61,11 @@ namespace Simulateur_0._0._2
                     Yposition--;
                 }
             }
-            
+
+            if (Xposition > 0)
+            {
+                ChronoTempsPasse.Start();
+            }
             if (Vitesse < 0.2 && Xposition>0)
             {
                 if (!dejaArret)
@@ -93,7 +98,11 @@ namespace Simulateur_0._0._2
             {   
                 if (Vehiculelent)
                 {
-                    if (Vitesse <= vitessemax - 0.1) Vitesse += acceleration;
+                    if (Vitesse <= vitessemax)
+                        if (Vitesse <= 2)
+                        {
+                            Vitesse += acceleration;
+                        }
                 }
                 else
                 {
