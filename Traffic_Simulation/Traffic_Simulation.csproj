@@ -92,7 +92,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Graphes.cs" />
     <Compile Include="Simulation_auto.cs" />
     <Compile Include="UIelements.cs" />
     <Compile Include="Voiture.cs" />
@@ -170,6 +169,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\analysis.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\pause-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphique\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

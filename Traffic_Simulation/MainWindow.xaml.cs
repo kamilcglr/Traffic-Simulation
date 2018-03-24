@@ -17,6 +17,7 @@ namespace Simulateur_0._0._2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static bool pause = false;
         private static readonly List<Voiture> Cars = new List<Voiture>();
         private static readonly List<Voiture> Cars2 = new List<Voiture>();
 
@@ -67,9 +68,7 @@ namespace Simulateur_0._0._2
         public int PositionL2 = 110;
 
 
-        public static double VitesseTimerSimulation = 5; //ms
-        public static double VitesseTimerGauge = 1; //s
-        public static double VitesseTimerGraph = 3; //s
+        
 
         public static bool recherchermesure = true;
         Stopwatch sw = new Stopwatch();
@@ -78,16 +77,19 @@ namespace Simulateur_0._0._2
         public MainWindow()
         {
             InitializeComponent();
+            _timer1.Tick += timer1_Tick;
+            _timer2.Tick += timer2_Tick;
+            _timer3.Tick += timer3_Tick;
+            _timerGauges.Tick += timerGauges_Tick;
         }
         public void InitTimer()
         {
-            _timer1.Tick += timer1_Tick;
+            double VitesseTimerSimulation = ChoixVitesseSimulation.Value; //ms
+            double VitesseTimerGauge = 1; //s
+            double VitesseTimerGraph = 3; //s
             _timer1.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
-            _timer2.Tick += timer2_Tick;
             _timer2.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
-            _timer3.Tick += timer3_Tick;
             _timer3.Interval = TimeSpan.FromSeconds(VitesseTimerGraph);
-            _timerGauges.Tick += timerGauges_Tick;
             _timerGauges.Interval = TimeSpan.FromSeconds(VitesseTimerGauge);
         }
 
@@ -116,6 +118,7 @@ namespace Simulateur_0._0._2
             NbVoitures1.Content = "Voie gauche : " + Cars.Count;
             NbVoitures2.Content = "Voie droite : " + Cars2.Count;
             
+
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -124,11 +127,11 @@ namespace Simulateur_0._0._2
             UpdateGraphNbVehiculesArret();
             UpdateGraphTempsPasseArret();
             UpdateGraphTempsPasseRoute();
-
             UpdateLabelVitesseMoyenne(GaugeVitesse.Value);
             UpdateLabelNbVehiculesArret((int)GaugeNbvehiculesArret.Value);
             UpdateLabelTempsPasseRoute((int)GaugeTempsPasseRoute.Value);
             UpdateLabelTempsPasseArret((int)GaugeTempsPasseArret.Value);
+            UpdateHeatMap();
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
@@ -136,11 +139,9 @@ namespace Simulateur_0._0._2
             CarsCopie = Cars;
             Cars2Copie = Cars2;
             GaugeVitesse.Value = Vitessemoyenne();
-
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
             GaugeTempsPasseArret.Value = TempsPasseBouchon();
-            UpdateHeatMap();
-
+           
         }
 
         public void UpdateHeatMap()
@@ -524,6 +525,10 @@ namespace Simulateur_0._0._2
                     if(Cars[0].vm)
                     {
                         Cars[0].vm = false;
+                        if (EnSimulation)
+                        {
+                            TempsPasseMoyenne.Add(sw.ElapsedMilliseconds);
+                        }
                         TimeSpan ts = sw.Elapsed;
                         sw.Reset();
                         GaugeTempsPasseRoute.Value = ts.Seconds;
@@ -677,5 +682,13 @@ namespace Simulateur_0._0._2
             System.Windows.Application.Current.Shutdown();
         }
 
+        private void Pause(object sender, System.Windows.RoutedEventArgs e)
+        {
+            pause = true;
+            _timer1.Stop();
+            _timer2.Stop();
+            _timer3.Stop();
+            _timerGauges.Stop();
+        }
     }
 }

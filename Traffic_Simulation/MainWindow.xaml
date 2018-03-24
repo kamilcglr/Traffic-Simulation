@@ -7,7 +7,7 @@
           mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" ResizeMode="NoResize" Icon="Images/traffic-sign.png">
 
     <Grid x:Name="Grille">
-        <Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>        
             <ColumnDefinition x:Name="Colonne1" Width="1028*"/>
             <ColumnDefinition x:Name="Colonne2" Width="165*"/>
         </Grid.ColumnDefinitions>
@@ -188,18 +188,27 @@
                         <ImageBrush ImageSource="Images/analysis.png"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="BoutonStart"  Margin="20,5,0,5" VerticalAlignment="Top" Width="30" HorizontalAlignment="Center" Click="Start" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
+                <Button x:Name="BoutonStart"  Margin="5,5,0,5" VerticalAlignment="Top" Width="30" HorizontalAlignment="Center" Click="Start" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
                     <Button.Background>
                         <ImageBrush ImageSource="Images/play-button-sing(1).png"/>
                     </Button.Background>
                 </Button>
+                <Button x:Name="BoutonPause"  Margin="5" VerticalAlignment="Top" Width="30" HorizontalAlignment="Center" Click="Pause" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Images/pause-button.png"/>
+                    </Button.Background>
 
+                </Button>
                 <Button x:Name="BoutonFermer" Grid.Column="1"  VerticalAlignment="Top" Width="30" HorizontalAlignment="Right" Height="30" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0" RenderTransformOrigin="1.389,0.517" Margin="5,5,10,5" Click="Eteindre">
                     <Button.Background>
                         <ImageBrush ImageSource="Images/cancel.png"/>
                     </Button.Background>
                 </Button>
             </DockPanel>
+            <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Vitesse de simulation (timers) :" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Label x:Name="VitesseSimulationChoixAffichage" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" FontFamily="Roboto Light" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6" FontSize="14"/>
+            <Slider x:Name="ChoixVitesseSimulation"  Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="Choix_Vitesse_Simulation_Changed" Background="{x:Null}" Maximum="20" Value="20" SmallChange="1" Minimum="0.1" Foreground="Red" BorderBrush="{x:Null}"/>
+
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Nombre de véhicules :" Margin="0,10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Label x:Name="NombrevehiculesChoixAffichage" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" FontFamily="Roboto Light" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6" FontSize="14"/>
             <Slider x:Name="ChoixNombrevoitures" Height="18" Width="146" SmallChange="1" Maximum="35" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" Value="15" IsSnapToTickEnabled="True" ValueChanged="Choix_nombrevoitures_ValueChanged" Delay="1" Background="Transparent" Minimum="1"/>
@@ -222,7 +231,6 @@
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Distance de sécurité :" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
             <Label x:Name="DistanceSecuriteAffichage"  VerticalAlignment="Center" FontSize="14" FontFamily="Roboto Light" HorizontalAlignment="Center" Foreground="#FFE6E8E6" Margin="0,0,20,0"/>
             <Slider x:Name="ChoixDistanceEntreVehicules" Height="19" Width="146" Maximum="100" Value="16" ValueChanged="choix_distance_entre_vehicules_ValueChanged"/>
-            <Slider x:Name="ChoixVitesseSimulation"  Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="20" Value="20" SmallChange="1" Minimum="0.1"/>
             
             <Label x:Name="NbVoitures1"  Foreground="#FFFDAD00" FontSize="14" FontFamily="Roboto Light" MinHeight="16" />
             <Label x:Name="NbVoitures2"  Foreground="#FFFDAD00" FontFamily="Roboto Light" FontSize="14" MinHeight="16" />

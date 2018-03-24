@@ -14,44 +14,57 @@ namespace Simulateur_0._0._2
         //UI ELEMENTS
         public void Start(object sender, RoutedEventArgs e)
         {
-            //----------------------INIT VALEURS-----------------------------
-            vitessemax = ChoixVitessemax.Value / 3.6 * 0.02 / 0.25;
-            acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
-            deceleration = ChoixDeceleration.Value;
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-            distancePtcritique = 100;
-            distanceAnalyse = 500;
-            //----------------------------------------------------------------
+            if (!pause)
+            {
+                //----------------------INIT VALEURS-----------------------------
+                vitessemax = ChoixVitessemax.Value / 3.6 * 0.02 / 0.25;
+                acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
+                deceleration = ChoixDeceleration.Value;
+                _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
+                distancePtcritique = 100;
+                distanceAnalyse = 500;
+                //----------------------------------------------------------------
 
-            //----------------------INIT GRAPHS-------------------------
-            InitialiserHeatMap();
+                //----------------------INIT GRAPHS-------------------------
+                InitialiserHeatMap();
 
-            InitialiserGaugeVitesse();
-            InitialiserGraphVitesse();
-            InitialiserLabelVmoy();
+                InitialiserGaugeVitesse();
+                InitialiserGraphVitesse();
+                InitialiserLabelVmoy();
 
-            InitialiserGaugeNbvehiculesArret();
-            InitialiserGraphNbVehiculesArret();
-            InitialiserLabelNbVehiculesArret();
+                InitialiserGaugeNbvehiculesArret();
+                InitialiserGraphNbVehiculesArret();
+                InitialiserLabelNbVehiculesArret();
 
-            InitialiserGaugeTempsPasseRoute();
-            InitialiserGraphTempsPasseRoute();
-            InitialiserLabelTempsPasseRoute();
-            
-            InitialiserGaugeTempsPasseArret();
-            InitialiserGraphTempsPasseArret();
-            InitialiserLabelTempsPasseArret();
-            //----------------------------------------------------------
+                InitialiserGaugeTempsPasseRoute();
+                InitialiserGraphTempsPasseRoute();
+                InitialiserLabelTempsPasseRoute();
 
-            if (Chargement) InitaliserVoitures();
+                InitialiserGaugeTempsPasseArret();
+                InitialiserGraphTempsPasseArret();
+                InitialiserLabelTempsPasseArret();
+                //----------------------------------------------------------
 
-            //--------------LANCEMENT TIMERs (à la fin !)---------------
-            InitTimer();
-            _timer1.Start();
-            _timer2.Start();
-            _timer3.Start();
-            _timerGauges.Start();
-            //----------------------------------------------------------
+                if (Chargement) InitaliserVoitures();
+
+                //--------------LANCEMENT TIMERs (à la fin !)---------------
+               
+                InitTimer();
+                _timer1.Start();
+                _timer2.Start();
+                _timer3.Start();
+                _timerGauges.Start();
+                //----------------------------------------------------------
+            }
+            else
+            {
+                InitTimer();
+                _timer1.Start();
+                _timer2.Start();
+                _timer3.Start();
+                _timerGauges.Start();
+                pause = false;
+            }
 
         }
 
@@ -282,11 +295,11 @@ namespace Simulateur_0._0._2
                 GradientStopCollection = new GradientStopCollection
                 {
 
-                    new GradientStop(Colors.LightSkyBlue, 0),
-                    new GradientStop(Colors.SkyBlue, .25),
-                    new GradientStop(Colors.DodgerBlue, .50),
-                    new GradientStop(Colors.MediumBlue, .75),
-                    new GradientStop(Colors.DarkBlue, 1)
+                    new GradientStop(Color.FromArgb(200,241,238,246), 0),
+                    new GradientStop(Color.FromArgb(200,189,201,225), .25),
+                    new GradientStop(Color.FromArgb(200,116,169,207), .50),
+                    new GradientStop(Color.FromArgb(200,43,140,190), .75),
+                    new GradientStop(Color.FromArgb(200,4,90,141), 1)
                 },
                 DrawsHeatRange = false
             });
@@ -315,11 +328,12 @@ namespace Simulateur_0._0._2
                     new GradientStop(Colors.OrangeRed, .75),
                     new GradientStop(Colors.DarkRed, 1)
                     */
-                    new GradientStop(Colors.LightSkyBlue, 0),
-                    new GradientStop(Colors.SkyBlue, .25),
-                    new GradientStop(Colors.DodgerBlue, .50),
-                    new GradientStop(Colors.MediumBlue, .75),
-                    new GradientStop(Colors.DarkBlue, 1)
+                   
+                    new GradientStop(Color.FromArgb(200,241,238,246), 0),
+                    new GradientStop(Color.FromArgb(200,189,201,225), .25),
+                    new GradientStop(Color.FromArgb(200,116,169,207), .50),
+                    new GradientStop(Color.FromArgb(200,43,140,190), .75),
+                    new GradientStop(Color.FromArgb(200,4,90,141), 1)
                     /*
                     new GradientStop(Color.FromRgb(239,243,255), 0),
                     new GradientStop(Color.FromRgb(189,215,231), .25),
@@ -473,6 +487,10 @@ namespace Simulateur_0._0._2
         {
             NombrevehiculesChoixAffichage.Content = ChoixNombrevoitures.Value.ToString("F0");
             InitialiserGaugeNbvehiculesArret();
+        }
+        private void Choix_Vitesse_Simulation_Changed(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+        {
+            VitesseSimulationChoixAffichage.Content = Math.Round(ChoixVitesseSimulation.Value,1) + " ms";
         }
     }
 }
