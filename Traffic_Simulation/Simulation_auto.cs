@@ -17,8 +17,8 @@ namespace Simulateur_0._0._2
     public partial class MainWindow : Window
     {
         //-------------CHOIX SIMULATION--------------
-        public bool SimulationTempsPasseRoute = true;
-        public bool SimulationVitesseMoyenne = false;
+        public bool SimulationTempsPasseRoute = false;
+        public bool SimulationVitesseMoyenne = true;
         public bool SimulationTempsPasseArret = false;
         //-------------------------------------------
 
@@ -52,7 +52,7 @@ namespace Simulateur_0._0._2
 
             double VitesseTimerSimulation = 0.1; //ms
             double VitesseTimerGauge = 0.1; //s
-            double Lecture = 5; //s
+            double Lecture = 20; //s
 
             _timer1.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
             _timer2.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);

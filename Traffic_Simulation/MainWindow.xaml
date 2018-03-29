@@ -224,7 +224,7 @@
             <Slider x:Name="ChoixVitessemax" Height="18" Width="146" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="130" Value="90" SmallChange="1"/>
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Décélération :" VerticalAlignment="Center" HorizontalAlignment="Center" Width="140" Margin="0,10,0,0"></TextBlock>
             <Label x:Name="DecelerationChoixAffichage"  VerticalAlignment="Center" FontSize="14" FontFamily="Roboto Light" HorizontalAlignment="Center" Background="{x:Null}" Foreground="#FFE6E8E6" Margin="0"/>
-            <Slider x:Name="ChoixDeceleration"  Height="22" Width="146" Maximum="2" Value="1.25" ValueChanged="choix_deceleration_ValueChanged" SmallChange="0.01" Minimum="1"/>
+            <Slider x:Name="ChoixDeceleration"  Height="22" Width="146" Maximum="2" Value="1.25" ValueChanged="Choix_deceleration_ValueChanged" SmallChange="0.01" Minimum="1"/>
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Accélération Maximale :" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
             <Label x:Name="AccelerationmaxChoixAffichage"  HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="14" FontFamily="Roboto Light" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6" Margin="0,0,20,0"/>
             <Slider x:Name="ChoixAcceleration"  Height="20" ValueChanged="Choix_acceleration_ValueChanged" Maximum="25" Value="11" SmallChange="0.001" Width="146" Minimum="5"/>

@@ -80,7 +80,7 @@ namespace Simulateur_0._0._2
         {
             double VitesseTimerSimulation = ChoixVitesseSimulation.Value; //ms
             double VitesseTimerGauge = 1; //s
-            double VitesseTimerGraph = 3; //s
+            double VitesseTimerGraph = 1; //s
             _timer1.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
             _timer2.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
             _timer3.Interval = TimeSpan.FromSeconds(VitesseTimerGraph);

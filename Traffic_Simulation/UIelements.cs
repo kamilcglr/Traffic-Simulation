@@ -147,9 +147,9 @@ namespace Simulateur_0._0._2
                 Fill = new SolidColorBrush(Color.FromRgb(204, 164, 59)),
                 StrokeThickness = 0
             });
-            Graphtest.HideTooltip();
-            Graphtest.DataTooltip = null;
-            Graphtest.Hoverable = false;
+            GraphTempsPasseRoute.HideTooltip();
+            GraphTempsPasseRoute.DataTooltip = null;
+            GraphTempsPasseRoute.Hoverable = false;
         }
         public void InitialiserGaugeTempsPasseRoute()
         {
@@ -429,11 +429,11 @@ namespace Simulateur_0._0._2
 
         public void InitialiserLabelTempsPasseRoute()
         {
-            for (var i = 0; i < 20; i++) MoyLabelTempsPasseRoute.Add(0);
+            for (var i = 0; i < 120; i++) MoyLabelTempsPasseRoute.Add(0);
         }
         public void InitialiserLabelTempsPasseArret()
         {
-            for (var i = 0; i < 20; i++) MoyLabelTempsPasseArret.Add(0);
+            for (var i = 0; i < 120; i++) MoyLabelTempsPasseArret.Add(0);
         }
         
         private void Ajoutcamion(Voiture voiture)
@@ -473,7 +473,7 @@ namespace Simulateur_0._0._2
                 ChoixDistanceEntreVehicules.Value.ToString("F0");
         }
 
-        private void choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             DecelerationChoixAffichage.Content = Math.Round(ChoixDeceleration.Value, 3);
         }
