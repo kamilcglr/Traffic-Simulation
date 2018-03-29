@@ -384,7 +384,7 @@ namespace Simulateur_0._0._2
             RoutedPropertyChangedEventArgs<double> e)
         {
             DistanceSecuriteAffichage.Content =
-                ChoixDistanceEntreVehicules.Value.ToString("F0");
+                (ChoixDistanceEntreVehicules.Value).ToString("F0") + " pixels";
         }
 
         private void Choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
