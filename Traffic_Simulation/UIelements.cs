@@ -30,7 +30,7 @@ namespace Simulateur_0._0._2
                 {
                     InitaliserVoitures();
                     //----------------------INIT GRAPHS-------------------------
-                    InitialiserHeatMap();
+                    //InitialiserHeatMap();
 
                     InitialiserGaugeVitesse();
                     InitialiserGraphVitesse();
@@ -274,95 +274,6 @@ namespace Simulateur_0._0._2
 
             Sec7.FromValue = 0;
             Sec7.ToValue = Sec6.FromValue;
-        }
-
-        public void InitialiserHeatMap()
-        {
-            for (var i = 0; i < 6; i++) //Creation de 20 Points
-            {
-                var point = new HeatPoint(i, 0, 0);
-                HeatMapValeurs1.Add(point);
-            }
-
-            HeatMap1.Series.Add(new HeatSeries
-            {
-                Values = new ChartValues<HeatPoint>
-                {
-                    HeatMapValeurs1[0],
-                    HeatMapValeurs1[1],
-                    HeatMapValeurs1[2],
-                    HeatMapValeurs1[3],
-                    HeatMapValeurs1[4],
-                    HeatMapValeurs1[5]
-                },
-                GradientStopCollection = new GradientStopCollection
-                {
-
-                    new GradientStop(Color.FromArgb(200,241,238,246), 0),
-                    new GradientStop(Color.FromArgb(200,189,201,225), .25),
-                    new GradientStop(Color.FromArgb(200,116,169,207), .50),
-                    new GradientStop(Color.FromArgb(200,43,140,190), .75),
-                    new GradientStop(Color.FromArgb(200,4,90,141), 1)
-                },
-                DrawsHeatRange = false
-            });
-            for (var i = 0; i < 5; i++) //Creation de 20 Points
-            {
-                var point = new HeatPoint(i, 1, 0);
-                HeatMapValeurs2.Add(point);
-            }
-
-            HeatMap1.Series.Add(new HeatSeries
-            {
-                Values = new ChartValues<HeatPoint>
-                {
-                    HeatMapValeurs2[0],
-                    HeatMapValeurs2[1],
-                    HeatMapValeurs2[2],
-                    HeatMapValeurs2[3],
-                    HeatMapValeurs2[4]
-                },
-                GradientStopCollection = new GradientStopCollection
-                {
-                    /*
-                    new GradientStop(Colors.SeaGreen, 0),
-                    new GradientStop(Colors.YellowGreen, .25),
-                    new GradientStop(Colors.DarkGoldenrod, .50),
-                    new GradientStop(Colors.OrangeRed, .75),
-                    new GradientStop(Colors.DarkRed, 1)
-                    */
-                   
-                    new GradientStop(Color.FromArgb(200,241,238,246), 0),
-                    new GradientStop(Color.FromArgb(200,189,201,225), .25),
-                    new GradientStop(Color.FromArgb(200,116,169,207), .50),
-                    new GradientStop(Color.FromArgb(200,43,140,190), .75),
-                    new GradientStop(Color.FromArgb(200,4,90,141), 1)
-                    /*
-                    new GradientStop(Color.FromRgb(239,243,255), 0),
-                    new GradientStop(Color.FromRgb(189,215,231), .25),
-                    new GradientStop(Color.FromRgb(107,174,214), .50),
-                    new GradientStop(Color.FromRgb(49,130,189), .75),
-                    new GradientStop(Color.FromRgb(8,81,156), 1)
-                    */
-                    /*
-                     * new GradientStop(Color.FromRgb(0,104,55), 0),
-                    new GradientStop(Color.FromRgb(0,104,55), .10),
-                    new GradientStop(Color.FromRgb(26,152,80), .20),
-                    new GradientStop(Color.FromRgb(102,189,99), .30),
-                    new GradientStop(Color.FromRgb(166,217,106), .40),
-                    new GradientStop(Color.FromRgb(217,239,139), .50),
-                    new GradientStop(Color.FromRgb(254,224,139), .60),
-                    new GradientStop(Color.FromRgb(253,174,97), .70),
-                    new GradientStop(Color.FromRgb(244,109,67), .80),
-                    new GradientStop(Color.FromRgb(215,48,39), .90),
-                    new GradientStop(Color.FromRgb(165,0,38), 1)
-                     */
-                },
-                DrawsHeatRange = false
-            });
-            HeatMap1.HideTooltip();
-            HeatMap1.DataTooltip = null;
-            HeatMap1.Hoverable = false;
         }
 
         public void InitaliserVoitures()

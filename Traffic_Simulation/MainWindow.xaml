@@ -4,7 +4,7 @@
           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-          mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" ResizeMode="NoResize" Icon="Images/traffic-sign.png">
+          mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" Icon="Images/traffic-sign.png" ResizeMode="CanMinimize">
 
     <Grid x:Name="Grille">
         <Grid.ColumnDefinitions>        
@@ -19,7 +19,7 @@
                     <ImageBrush ImageSource="Images/Route.png"/>
                 </Canvas.Background>
             </Canvas>
-            <DockPanel x:Name="HeatMapPannel1" Height="50">
+            <!--<DockPanel x:Name="HeatMapPannel1" Height="50">
                 <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" AnimationsSpeed="0:0:1"  Hoverable="False" DataTooltip="{x:Null}"  >
                     <lvc:CartesianChart.Series >
                         <lvc:HeatSeries x:Name="lane1" Values="{Binding Values}" DrawsHeatRange="False"  />
@@ -37,6 +37,7 @@
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
             </DockPanel>
+            -->
             <DockPanel x:Name="PannelVitesses" Height="100" >
                 <lvc:AngularGauge x:Name="GaugeVitesse" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                               LabelsStep="20" TicksStep="10" Wedge="280"
@@ -54,8 +55,6 @@
                     </lvc:AngularGauge.Sections>
 
                 </lvc:AngularGauge>
-                <!--<ProgressBar x:Name="PourcentageVitesse" Height="100" VerticalAlignment="Top" Width="50" Orientation="Vertical" Value="{Binding Value}"  Margin="10,0,0,0" Background="{x:Null}" Foreground="Black"/>
-                                -->
                 <lvc:CartesianChart x:Name="Graphtest" Margin="50,5" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3" HorizontalAlignment="Left" Hoverable="False" >
                     <lvc:CartesianChart.Series >
                         <lvc:StepLineSeries x:Name="Serie1" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />

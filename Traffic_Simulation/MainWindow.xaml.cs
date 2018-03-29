@@ -1,11 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.RightsManagement;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using LiveCharts;
+using LiveCharts.Configurations;
 using LiveCharts.Defaults;
 using Microsoft.Office.Interop.Excel;
 using Window = System.Windows.Window;
@@ -68,6 +75,7 @@ namespace Simulateur_0._0._2
         public int PositionL1 = 80;
         public int PositionL2 = 110;
 
+        public bool isKeyPressed = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -75,7 +83,12 @@ namespace Simulateur_0._0._2
             _timer2.Tick += timer2_Tick;
             _timer3.Tick += timer3_Tick;
             _timerGauges.Tick += timerGauges_Tick;
+
+            this.PreviewKeyDown += (s1, e1) => { if (e1.Key == Key.LeftCtrl) isKeyPressed = true; };
+            this.PreviewKeyUp += (s2, e2) => { if (e2.Key == Key.LeftCtrl) isKeyPressed = false; };
+            this.PreviewMouseLeftButtonDown += (s, e) => { if (isKeyPressed) DragMove(); };
         }
+
         public void InitTimer()
         {
             double VitesseTimerSimulation = ChoixVitesseSimulation.Value; //ms
@@ -122,7 +135,7 @@ namespace Simulateur_0._0._2
             UpdateLabelNbVehiculesArret((int)GaugeNbvehiculesArret.Value);
             UpdateLabelTempsPasseRoute((int)GaugeTempsPasseRoute.Value);
             UpdateLabelTempsPasseArret((int)GaugeTempsPasseArret.Value);
-            UpdateHeatMap();
+            //UpdateHeatMap();
         }
 
         private void timerGauges_Tick(object sender, EventArgs e)
@@ -138,7 +151,7 @@ namespace Simulateur_0._0._2
             }
         }
 
-        public void UpdateHeatMap()
+        /*public void UpdateHeatMap()
         {
             for (var j = 0; j < 6; j++) HeatMapValeurs1[j].Weight = 0;
             for (var j = 0; j < 5; j++) HeatMapValeurs2[j].Weight = 0;
@@ -162,6 +175,7 @@ namespace Simulateur_0._0._2
                         break;
                     }
         }
+        */
 
         //----------------PannelVitesse-------------------------
         public double Vitessemoyenne()
