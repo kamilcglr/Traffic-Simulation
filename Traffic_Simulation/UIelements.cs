@@ -25,30 +25,33 @@ namespace Simulateur_0._0._2
                 distanceAnalyse = 500;
                 //----------------------------------------------------------------
 
-                //----------------------INIT GRAPHS-------------------------
-                InitialiserHeatMap();
 
-                InitialiserGaugeVitesse();
-                InitialiserGraphVitesse();
-                InitialiserLabelVmoy();
+                if (Chargement)
+                {
+                    InitaliserVoitures();
+                    //----------------------INIT GRAPHS-------------------------
+                    InitialiserHeatMap();
 
-                InitialiserGaugeNbvehiculesArret();
-                InitialiserGraphNbVehiculesArret();
-                InitialiserLabelNbVehiculesArret();
+                    InitialiserGaugeVitesse();
+                    InitialiserGraphVitesse();
+                    InitialiserLabelVmoy();
 
-                InitialiserGaugeTempsPasseRoute();
-                InitialiserGraphTempsPasseRoute();
-                InitialiserLabelTempsPasseRoute();
+                    InitialiserGaugeNbvehiculesArret();
+                    InitialiserGraphNbVehiculesArret();
+                    InitialiserLabelNbVehiculesArret();
 
-                InitialiserGaugeTempsPasseArret();
-                InitialiserGraphTempsPasseArret();
-                InitialiserLabelTempsPasseArret();
-                //----------------------------------------------------------
+                    InitialiserGaugeTempsPasseRoute();
+                    InitialiserGraphTempsPasseRoute();
+                    InitialiserLabelTempsPasseRoute();
 
-                if (Chargement) InitaliserVoitures();
+                    InitialiserGaugeTempsPasseArret();
+                    InitialiserGraphTempsPasseArret();
+                    InitialiserLabelTempsPasseArret();
+                    //----------------------------------------------------------
+                }
 
                 //--------------LANCEMENT TIMERs (à la fin !)---------------
-               
+
                 InitTimer();
                 _timer1.Start();
                 _timer2.Start();

@@ -20,7 +20,7 @@
                 </Canvas.Background>
             </Canvas>
             <DockPanel x:Name="HeatMapPannel1" Height="50">
-                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" AnimationsSpeed="0:0:3"  Hoverable="False" DataTooltip="{x:Null}"  >
+                <lvc:CartesianChart x:Name="HeatMap1" MinWidth="0" MinHeight="0" AnimationsSpeed="0:0:1"  Hoverable="False" DataTooltip="{x:Null}"  >
                     <lvc:CartesianChart.Series >
                         <lvc:HeatSeries x:Name="lane1" Values="{Binding Values}" DrawsHeatRange="False"  />
                         <lvc:HeatSeries x:Name="lane2" Values="{Binding Values}" DrawsHeatRange="False" />
