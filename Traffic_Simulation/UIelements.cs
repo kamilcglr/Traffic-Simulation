@@ -389,7 +389,7 @@ namespace Simulateur_0._0._2
 
         private void Choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            DecelerationChoixAffichage.Content = Math.Round(ChoixDeceleration.Value, 3);
+            DecelerationChoixAffichage.Content = Math.Round(ChoixDeceleration.Value, 3) + " %";
         }
 
         private void Choix_densitecamion_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
