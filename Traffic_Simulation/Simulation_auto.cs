@@ -17,8 +17,8 @@ namespace Simulateur_0._0._2
     public partial class MainWindow : Window
     {
         //-------------CHOIX SIMULATION--------------
-        public bool SimulationTempsPasseRoute = false;
-        public bool SimulationVitesseMoyenne = true;
+        public bool SimulationTempsPasseRoute = true;
+        public bool SimulationVitesseMoyenne = false;
         public bool SimulationTempsPasseArret = false;
         //-------------------------------------------
 
@@ -52,7 +52,7 @@ namespace Simulateur_0._0._2
 
             double VitesseTimerSimulation = 0.1; //ms
             double VitesseTimerGauge = 0.1; //s
-            double Lecture = 20; //s
+            double Lecture = 10; //s
 
             _timer1.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
             _timer2.Interval = TimeSpan.FromMilliseconds(VitesseTimerSimulation);
@@ -72,7 +72,7 @@ namespace Simulateur_0._0._2
                 Suivant();
             }
            
-            if(SimulationTempsPasseRoute){
+            if(SimulationTempsPasseRoute || SimulationTempsPasseArret){
                 if (TempsPasseMoyenne.Count > 35)//On prend au moins dix valeurs
                 {
                     TableauTempsPasseRoute[ligneVitesse - 2][colonneNbVehicules - 2] =
@@ -89,7 +89,7 @@ namespace Simulateur_0._0._2
             Application excel = new Microsoft.Office.Interop.Excel.Application();
             Workbook sheet = excel.Workbooks.Open("C:\\Users\\Kamil\\Downloads\\TempsPasse.xlsx");
             Worksheet x = excel.ActiveSheet as Worksheet;
-            if (SimulationTempsPasseRoute)
+            if (SimulationTempsPasseRoute || SimulationTempsPasseArret)
             {
                 for (int colonne = 2; colonne < 33; colonne++)
                 {
@@ -195,15 +195,15 @@ namespace Simulateur_0._0._2
                     TableauTempsPasseRouteMediane[i].Add(0);
                 }
             }
-
         }
+        
         private void LancerSimulation(object sender, System.Windows.RoutedEventArgs e)
         {
             EnSimulation = true;
             //------------INIT SIMU------------------
 
             //InitVitessetableau();
-            if(SimulationTempsPasseRoute)InitTempsPasseTableau();
+            if(SimulationTempsPasseRoute || SimulationTempsPasseArret )InitTempsPasseTableau();
             if(SimulationVitesseMoyenne)InitVitessetableau();
             ChoixNombrevoitures.Value = 5;
             ChoixVitessemax.Value = 30;

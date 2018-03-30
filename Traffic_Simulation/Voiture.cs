@@ -23,8 +23,7 @@ namespace Simulateur_0._0._2
         public double TempsPasseBouchon;
         public bool dejaArret;
         public bool ChangementL;
-        public bool vm;
-
+        public int nombredarret;
         public Stopwatch ChronoTempsPasseArret = new Stopwatch();
         public Stopwatch ChronoTempsPasse = new Stopwatch();
 
@@ -44,7 +43,7 @@ namespace Simulateur_0._0._2
             Vehiculelent = false;
             TempsPasseBouchon = 0;
             dejaArret = false;
-            vm = false;
+            nombredarret = 0;
         }
 
         public double Move(double vitessemax, double acceleration, double deceleration)
@@ -62,29 +61,31 @@ namespace Simulateur_0._0._2
                 }
             }
 
-            if (Xposition > 0)
+            if (Xposition > 0) //On fait ces actions seulement si la voiture est dans le parcours 
             {
-                ChronoTempsPasse.Start();
-            }
-            if (Vitesse < 0.2 && Xposition>0)
-            {
-                if (!dejaArret)
+                ChronoTempsPasse.Start(); //Pas de problemes si on start meme si deja start
+                if (Vitesse < 0.2) //Moins de 10km/h
                 {
-                    ChronoTempsPasseArret.Start();
+                    if (!dejaArret)
+                    {
+                        nombredarret++;
+                        ChronoTempsPasseArret.Start();
+                    }
+                    dejaArret = true;
                 }
-                dejaArret = true;
-            }
-            else
-            {
-                if (ChronoTempsPasseArret.IsRunning)
+                else
                 {
-                    ChronoTempsPasseArret.Stop();
-                    TimeSpan timeSpanEcoule = ChronoTempsPasseArret.Elapsed;
-                    TempsPasseBouchon += timeSpanEcoule.Seconds;
-                    ChronoTempsPasseArret.Reset();
+                    if (ChronoTempsPasseArret.IsRunning)
+                    {
+                        ChronoTempsPasseArret.Stop();
+                        TempsPasseBouchon += ChronoTempsPasseArret.ElapsedMilliseconds;
+                        ChronoTempsPasseArret.Reset();
+                    }
+                    dejaArret = false;
                 }
-                dejaArret = false;
             }
+
+            //---------FREINAGE AVANCE ACCELERATION--------------------
             if (Frein)
             {
                 Vitesse = Vitesse / deceleration;
@@ -99,7 +100,7 @@ namespace Simulateur_0._0._2
                 if (Vehiculelent)
                 {
                     if (Vitesse <= vitessemax)
-                        if (Vitesse <= 2)
+                        if (Vitesse <= 2) //Correspond à 90km/h
                         {
                             Vitesse += acceleration;
                         }

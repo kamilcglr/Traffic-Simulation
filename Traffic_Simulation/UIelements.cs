@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -70,7 +71,158 @@ namespace Simulateur_0._0._2
             }
 
         }
+        //----------------PannelVitesse-------------------------
+        public double Vitessemoyenne()
+        {
+            double vitessemoy = 0.1;
+            var i = 0;
+            if (CarsCopie.Count != 0)
+            {
+                if (CarsCopie[0].Xposition > 0)
+                {
+                    while (CarsCopie[i].Xposition > 0)
+                    {
+                        vitessemoy += CarsCopie[i].Vitesse;
+                        i++;
+                        if (i == CarsCopie.Count) break;
+                    }
+                }
+                else
+                {
+                    i = 1; //Eviter division par zero
+                }
 
+            }
+            var j = 0;
+            if (Cars2Copie.Count != 0)
+                while (Cars2Copie[j].Xposition > 0)
+                {
+                    vitessemoy += Cars2Copie[j].Vitesse;
+                    j++;
+                    if (j == Cars2Copie.Count) break;
+                }
+            vitessemoy = vitessemoy / (i + j);
+            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
+            return vitessemoy;
+        }
+        public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
+        {
+            Vmoy.RemoveAt(0);
+            Vmoy.Add(ajoutvitesse);
+            ValVmoyLabel = Vmoy.Sum();
+            ValVmoyLabel = ValVmoyLabel / Vmoy.Count;
+            LabelVitesseMoyenne.Content = Math.Round(ValVmoyLabel, 0) + " km/h";
+        }
+        public void UpdateGraphVitesseMoy()
+        {
+            for (var i = 0; i < 19; i++) VitesseValeurs[i].Value = VitesseValeurs[i + 1].Value;
+            VitesseValeurs[19].Value = GaugeVitesse.Value; //On prend la valeur que l'on a déjà calculé précédement
+        }
+
+        //----------------PannelNbArret-------------------------
+        public int NbVehiculesArret()
+        {
+            var n = 0;
+            if (CarsCopie.Count != 0)
+            {
+                var i = 0;
+                while (CarsCopie[i].Xposition >= 0)
+                {
+                    if (CarsCopie[i].Vitesse < 0.2)
+                    {
+                        n++; //0,2 vaut moins de dix km/h
+                    }
+                    i++;
+                    if (i == CarsCopie.Count) break;
+                }
+            }
+
+            if (Cars2Copie.Count != 0)
+            {
+                var j = 0;
+                while (Cars2Copie[j].Xposition > 0)
+                {
+                    if (Cars2Copie[j].Vitesse < 0.2)
+                    {
+                        n++;
+                    }
+                    j++;
+                    if (j == Cars2Copie.Count) break;
+                }
+            }
+
+            return n;
+        }
+        public void UpdateGraphNbVehiculesArret()
+        {
+            for (var i = 0; i < 19; i++) NbVehiculesArretValeurs[i].Value = NbVehiculesArretValeurs[i + 1].Value;
+            NbVehiculesArretValeurs[19].Value =
+                GaugeNbvehiculesArret.Value; //On prend la valeur que l'on a déjà calculé précédement
+        }
+        public void UpdateLabelNbVehiculesArret(int ajoutarret)
+        {
+            Nbarret.RemoveAt(0);
+            Nbarret.Add(ajoutarret);
+            ValNbArretLabel = Nbarret.Sum();
+            ValNbArretLabel = ValNbArretLabel / Nbarret.Count;
+            LabelNbVehiculesArret.Content = ValNbArretLabel + " véhicules";
+        }
+
+        //----------------PannelTempsPasseRoute-------------------------
+
+        public void UpdateGraphTempsPasseRoute()
+        {
+            for (var i = 0; i < 19; i++) TempsPasseRoute[i].Value = TempsPasseRoute[i + 1].Value;
+            TempsPasseRoute[19].Value = GaugeTempsPasseRoute.Value; //On prend la valeur que l'on a déjà calculé précédement
+        }
+        public void UpdateLabelTempsPasseRoute(int ajouttemps)
+        {
+            MoyLabelTempsPasseRoute.RemoveAt(0);
+            MoyLabelTempsPasseRoute.Add(ajouttemps);
+            ValTempsPasseRouteLabel = MoyLabelTempsPasseRoute.Sum();
+            ValTempsPasseRouteLabel = ValTempsPasseRouteLabel / MoyLabelTempsPasseRoute.Count;
+            LabelTempsPasseRoute.Content = ValTempsPasseRouteLabel + " secondes";
+        }
+
+        //----------------PannelTempsPasseArret-------------------------
+        public void UpdateGraphTempsPasseArret()
+        {
+            for (var i = 0; i < 19; i++) TempsPasseArret[i].Value = TempsPasseArret[i + 1].Value;
+            TempsPasseArret[19].Value = GaugeTempsPasseArret.Value;
+        }
+
+        /*public double TempsPasseBouchon()
+        {
+            if (CarsCopie.Count != 0)
+            {
+                double tp = 0;
+                for (int i = 0; i < CarsCopie.Count; i++)
+                {
+                    tp += CarsCopie[i].TempsPasseBouchon;
+                }
+
+                for (int i = 0; i < Cars2Copie.Count; i++)
+                {
+                    tp += Cars2Copie[i].TempsPasseBouchon;
+                }
+
+                tp = tp / (Cars2Copie.Count + CarsCopie.Count);
+                tp = tp / 1000;
+                return Math.Round(tp, 1); // On passe de millisecondes à secondes
+                }
+
+            return 0;
+        }*/
+        //A supprimer
+
+        public void UpdateLabelTempsPasseArret(int ajouttemps)
+        {
+            MoyLabelTempsPasseArret.RemoveAt(0);
+            MoyLabelTempsPasseArret.Add(ajouttemps);
+            ValTempsPasseArretLabel = MoyLabelTempsPasseArret.Sum();
+            ValTempsPasseArretLabel = ValTempsPasseArretLabel / MoyLabelTempsPasseArret.Count;
+            LabelTempsPasseArret.Content = ValTempsPasseArretLabel + " secondes";
+        }
         //----------------------------------GRAPHES----------------------------------------------
         public void InitialiserGraphVitesse()
         {

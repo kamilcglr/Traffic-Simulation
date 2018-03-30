@@ -76,6 +76,7 @@ namespace Simulateur_0._0._2
         public int PositionL2 = 110;
 
         public bool isKeyPressed = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -84,9 +85,9 @@ namespace Simulateur_0._0._2
             _timer3.Tick += timer3_Tick;
             _timerGauges.Tick += timerGauges_Tick;
 
-            this.PreviewKeyDown += (s1, e1) => { if (e1.Key == Key.LeftCtrl) isKeyPressed = true; };
-            this.PreviewKeyUp += (s2, e2) => { if (e2.Key == Key.LeftCtrl) isKeyPressed = false; };
-            this.PreviewMouseLeftButtonDown += (s, e) => { if (isKeyPressed) DragMove(); };
+            //this.PreviewKeyDown += (s1, e1) => { if (e1.Key == Key.LeftCtrl) isKeyPressed = true; };
+            //this.PreviewKeyUp += (s2, e2) => { if (e2.Key == Key.LeftCtrl) isKeyPressed = false; };
+            //this.PreviewMouseLeftButtonDown += (s, e) => { if (isKeyPressed) DragMove(); };
         }
 
         public void InitTimer()
@@ -100,17 +101,27 @@ namespace Simulateur_0._0._2
             _timerGauges.Interval = TimeSpan.FromSeconds(VitesseTimerGauge);
         }
 
-
+        public bool Verifblocage()
+        {
+            if (Cars[0].Xposition > _pointCritique - 16 && Cars[0].Xposition < _pointCritique + 16)
+            {
+                if (Cars[0].ChronoTempsPasseArret.ElapsedMilliseconds > Cars2[0].ChronoTempsPasseArret.ElapsedMilliseconds)
+                {
+                    return true; //la voiture de droite etait à l'arret depuis plus longtemps
+                }
+                else
+                {
+                    return false; //Elle est à l'arret depuis moins longtemps, elle va donc laisser passer celle de gauche 
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            vitessemax = ChoixVitessemax.Value / 3.6 * 0.02 / 0.25;
-            acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
-            deceleration = ChoixDeceleration.Value;
-            _distanceEntreVehicule = (int) ChoixDistanceEntreVehicules.Value;
-            distancePtcritique = 100; //Plus on augmente la valeur, plus les voitures vont forcer tôt
-            distanceAnalyse = 700; //Plus on augmente la valeur, plus les voitures peuvent changer de ligne tôt
-            distancesecuriteDepassementNonForce = ChoixDistanceEntreVehicules.Value*4;
-
+           
             Avance_ligne1();
             Retour_vehicules();
             
@@ -126,7 +137,17 @@ namespace Simulateur_0._0._2
         }
 
         private void timer3_Tick(object sender, EventArgs e)
-        {
+        {           
+            //-----------ACTUALISATION VALEURS--------------------
+            vitessemax = ChoixVitessemax.Value / 3.6 * 0.02 / 0.25;
+            acceleration = -0.002 * Math.Log(ChoixAcceleration.Value) + 0.0088;
+            deceleration = ChoixDeceleration.Value;
+            _distanceEntreVehicule = (int)ChoixDistanceEntreVehicules.Value;
+            distancePtcritique = 100; //Plus on augmente la valeur, plus les voitures vont forcer tôt
+            distanceAnalyse = 700; //Plus on augmente la valeur, plus les voitures peuvent changer de ligne tôt
+            distancesecuriteDepassementNonForce = ChoixDistanceEntreVehicules.Value*2; //On a ici une grande distance de sécurite si on ne force pas 
+
+            //-----------MISE A JOUR DES GRAPHIQUES--------------------
             UpdateGraphVitesseMoy();
             UpdateGraphNbVehiculesArret();
             UpdateGraphTempsPasseArret();
@@ -144,8 +165,7 @@ namespace Simulateur_0._0._2
             Cars2Copie = Cars2;
             GaugeVitesse.Value = Vitessemoyenne();
             GaugeNbvehiculesArret.Value = NbVehiculesArret();
-            GaugeTempsPasseArret.Value = TempsPasseBouchon();
-            if (EnSimulation)
+            if (EnSimulation && SimulationVitesseMoyenne)
             {
                 VitesseMoyenneSimulateur.Add(GaugeVitesse.Value);
             }
@@ -177,153 +197,6 @@ namespace Simulateur_0._0._2
         }
         */
 
-        //----------------PannelVitesse-------------------------
-        public double Vitessemoyenne()
-        {
-            double vitessemoy = 0.1;
-            var i = 0;
-            if (CarsCopie.Count != 0)
-            {
-                if (CarsCopie[0].Xposition > 0)
-                {
-                    while (CarsCopie[i].Xposition > 0)
-                    {
-                        vitessemoy += CarsCopie[i].Vitesse;
-                        i++;
-                        if (i == CarsCopie.Count) break;
-                    }
-                }
-                else
-                {
-                    i = 1; //Eviter division par zero
-                }
-
-            }
-            var j = 0;
-            if (Cars2Copie.Count != 0)
-                while (Cars2Copie[j].Xposition > 0)
-                {
-                    vitessemoy += Cars2Copie[j].Vitesse;
-                    j++;
-                    if (j == Cars2Copie.Count) break;
-                }
-            vitessemoy = vitessemoy / (i + j);
-            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
-            return vitessemoy;
-        }
-        public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
-        {
-            Vmoy.RemoveAt(0);
-            Vmoy.Add(ajoutvitesse);
-            ValVmoyLabel = Vmoy.Sum();
-            ValVmoyLabel = ValVmoyLabel / Vmoy.Count;
-            LabelVitesseMoyenne.Content = Math.Round(ValVmoyLabel, 0) + " km/h";
-        }
-        public void UpdateGraphVitesseMoy()
-        {
-            for (var i = 0; i < 19; i++) VitesseValeurs[i].Value = VitesseValeurs[i + 1].Value;
-            VitesseValeurs[19].Value = GaugeVitesse.Value; //On prend la valeur que l'on a déjà calculé précédement
-        }
-
-        //----------------PannelNbArret-------------------------
-        public int NbVehiculesArret()
-        {
-            var n = 0;
-            if (CarsCopie.Count != 0)
-            {
-                var i = 0;
-                while (CarsCopie[i].Xposition >= 0)
-                {
-                    if (CarsCopie[i].Vitesse < 0.2)
-                    {
-                        n++; //0,2 vaut moins de dix km/h
-                    }
-                    i++;
-                    if (i == CarsCopie.Count) break;
-                }
-            }
-
-            if (Cars2Copie.Count != 0)
-            {
-                var j = 0;
-                while (Cars2Copie[j].Xposition > 0)
-                {
-                    if (Cars2Copie[j].Vitesse < 0.2)
-                    {
-                        n++;
-                    }
-                    j++;
-                    if (j == Cars2Copie.Count) break;
-                }
-            }
-
-            return n;
-        }
-        public void UpdateGraphNbVehiculesArret()   
-        {
-            for (var i = 0; i < 19; i++) NbVehiculesArretValeurs[i].Value = NbVehiculesArretValeurs[i + 1].Value;
-            NbVehiculesArretValeurs[19].Value =
-                GaugeNbvehiculesArret.Value; //On prend la valeur que l'on a déjà calculé précédement
-        }
-        public void UpdateLabelNbVehiculesArret(int ajoutarret)
-        {
-            Nbarret.RemoveAt(0);
-            Nbarret.Add(ajoutarret);
-            ValNbArretLabel = Nbarret.Sum();
-            ValNbArretLabel = ValNbArretLabel / Nbarret.Count;
-            LabelNbVehiculesArret.Content = ValNbArretLabel + " véhicules";
-        }
-
-        //----------------PannelTempsPasseRoute-------------------------
-        
-        public void UpdateGraphTempsPasseRoute()
-        {
-            for (var i = 0; i < 19; i++) TempsPasseRoute[i].Value = TempsPasseRoute[i + 1].Value;
-            TempsPasseRoute[19].Value = GaugeTempsPasseRoute.Value; //On prend la valeur que l'on a déjà calculé précédement
-        }
-        public void UpdateLabelTempsPasseRoute(int ajouttemps)
-        {
-            MoyLabelTempsPasseRoute.RemoveAt(0);
-            MoyLabelTempsPasseRoute.Add(ajouttemps);
-            ValTempsPasseRouteLabel = MoyLabelTempsPasseRoute.Sum();
-            ValTempsPasseRouteLabel = ValTempsPasseRouteLabel / MoyLabelTempsPasseRoute.Count;
-            LabelTempsPasseRoute.Content = ValTempsPasseRouteLabel + " secondes";
-        }
-
-        //----------------PannelTempsPasseArret-------------------------
-        public void UpdateGraphTempsPasseArret()
-        {
-            for (var i = 0; i < 19; i++) TempsPasseArret[i].Value = TempsPasseArret[i + 1].Value;
-            TempsPasseArret[19].Value = GaugeTempsPasseArret.Value;
-        }
-        public double TempsPasseBouchon()
-        {
-            if (CarsCopie.Count != 0)
-            {
-                double tp = 0;
-                for (int i = 0; i < CarsCopie.Count; i++)
-                {
-                    tp += CarsCopie[i].TempsPasseBouchon;
-                }
-                for (int i = 0; i < Cars2Copie.Count; i++)
-                {
-                    tp += Cars2Copie[i].TempsPasseBouchon;
-                }
-
-                tp = tp / (Cars2Copie.Count + CarsCopie.Count);
-                return Math.Round(tp, 1); // On passe de millisecondes à secondes
-            }
-            else return 0;
-        }
-        public void UpdateLabelTempsPasseArret(int ajouttemps)
-        {
-            MoyLabelTempsPasseArret.RemoveAt(0);
-            MoyLabelTempsPasseArret.Add(ajouttemps);
-            ValTempsPasseArretLabel = MoyLabelTempsPasseArret.Sum();
-            ValTempsPasseArretLabel = ValTempsPasseArretLabel / MoyLabelTempsPasseArret.Count;
-            LabelTempsPasseArret.Content = ValTempsPasseArretLabel + " secondes";
-        }
-
         //----------------Affichage et mouvement----------------------
         public void Avance_ligne1()
         {
@@ -353,9 +226,10 @@ namespace Simulateur_0._0._2
         public void Avance_ligne2()
         {
             for (var i = 0; i < Cars2.Count; i++)
-                if (i == 0) //Voiture de tête
+                if (i == 0) //CAS PARTICULIR Voiture de tête
                 {
                     //Pour la première voiture on vérifie seulement si elle est dans zone d'analyse
+                    //On avance tout le temps comme il n'y a pas de voiture devant
                     if (Cars2[0].Xposition <= _pointCritique - distanceAnalyse)
                     {
                         Canvas.SetLeft(Cars2[0], Cars2[0].Move(vitessemax, acceleration, deceleration));
@@ -366,11 +240,11 @@ namespace Simulateur_0._0._2
                         var force = false;
                         //On freine si on est dans la zone critique
                         if (Cars2[0].Xposition > _pointCritique - distancePtcritique
-                        ) //On regarde si on est dans la zone critique
+                        ) //On regarde si on est dans la ZONE CRITIQUE 
                         {
                             //Si c'est le cas, on cherche une postion ou on freine
                             force = true;
-                            var position = Champ_libre(Cars2[0].Xposition, force);
+                            var position = Champ_libre_voiture_tete(Cars2[0].Xposition, force);
                             if (position != -1) //On peut changer de voie en forcant
                             {
                                 Changement_ligne(position, i);
@@ -386,7 +260,7 @@ namespace Simulateur_0._0._2
                         else //on n'est pas dans la zone critique
                         {
                             force = false; //On recherchera une position sans forcer
-                            var position = Champ_libre(Cars2[i].Xposition, force);
+                            var position = Champ_libre_voiture_tete(Cars2[i].Xposition, force);
                             if (position != -1)
                             {
                                 Changement_ligne(position, i); //On change sans forcer
@@ -470,16 +344,58 @@ namespace Simulateur_0._0._2
                     }
                 }
         }
+        
+        public int Champ_libre_voiture_tete(double xposition, bool force)
+        {
+            var autoriseChampLibre = -1;
+            if (!Verifblocage()) //Si la valeur est true, la voiture de droite a la priorité
+            {
+                double
+                    distancesecu =
+                        distancesecuriteDepassementNonForce; //cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
+                if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
+                    distancesecu = ChoixDistanceEntreVehicules.Value;
+                for (var i = 0;
+                    i < Cars.Count;
+                    i++) //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
+                    if (Cars[i].Xposition >= xposition - distancesecu &&
+                        Cars[i].Xposition <= xposition + distancesecu)
+                    {
+                        autoriseChampLibre = -1;
+                        break; //On peut arreter de chercher il y a deja un vehicule
+                    }
+                    else
+                    {
+                        autoriseChampLibre = i;
+                    }
 
+                if (autoriseChampLibre != -1
+                ) //Personne, alors on prend la place de la voiture jsute derriere celle qui avait la position de cars2
+                    for (var i = Cars.Count - 1; i != 0; i--)
+                        if (Cars[i].Xposition < xposition)
+                        {
+                            autoriseChampLibre = 0; //On prend la tête 
+                        }
+                        else
+                        {
+                            autoriseChampLibre = i; //On se place derriere la derniere voiture 
+                            break;
+                        }
+
+                return autoriseChampLibre;
+            }
+            else
+            {
+                return autoriseChampLibre ; //on ne peut pas changer de voie
+            }
+        }
         public int Champ_libre(double xposition, bool force)
         {
             var autoriseChampLibre = -1;
-            double distancesecu = distancesecuriteDepassementNonForce;
+            double distancesecu = distancesecuriteDepassementNonForce;//cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
             if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
-                distancesecu = ChoixDistanceEntreVehicules.Value *2 ;
-            for (var i = 0;
-                i < Cars.Count;
-                i++) //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
+                distancesecu = ChoixDistanceEntreVehicules.Value;
+            for (var i = 0; i < Cars.Count; i++) //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
                 if (Cars[i].Xposition >= xposition - distancesecu &&
                     Cars[i].Xposition <= xposition + distancesecu)
                 {
@@ -491,16 +407,15 @@ namespace Simulateur_0._0._2
                     autoriseChampLibre = i;
                 }
 
-            if (autoriseChampLibre != -1
-            ) //Personne, alors on prend la place de la voiture jsute derriere celle qui avait la position de cars2
+            if (autoriseChampLibre != -1) //Personne, alors on prend la place de la voiture jsute derriere celle qui avait la position de cars2
                 for (var i = Cars.Count - 1; i != 0; i--)
                     if (Cars[i].Xposition < xposition)
                     {
-                        autoriseChampLibre = 0;
+                        autoriseChampLibre = 0; //On prend la tête 
                     }
                     else
                     {
-                        autoriseChampLibre = i;
+                        autoriseChampLibre = i; //On se place derriere la derniere voiture 
                         break;
                     }
 
@@ -531,12 +446,21 @@ namespace Simulateur_0._0._2
                     
                     if (EnSimulation)
                     {
-                        TempsPasseMoyenne.Add(Cars[0].ChronoTempsPasse.ElapsedMilliseconds);
+                        if (SimulationTempsPasseRoute)
+                        {
+                            TempsPasseMoyenne.Add(Cars[0].ChronoTempsPasse.ElapsedMilliseconds);
+                        }
+                        else
+                        {
+                            TempsPasseMoyenne.Add(Cars[0].TempsPasseBouchon);
+                        }
                     }
-                    GaugeTempsPasseRoute.Value = Cars[0].ChronoTempsPasse.ElapsedMilliseconds / 1000;
+                    GaugeTempsPasseRoute.Value = Math.Round((double)(Cars[0].ChronoTempsPasse.ElapsedMilliseconds / 1000), 1 );
+                    GaugeTempsPasseArret.Value = Math.Round((Cars[0].TempsPasseBouchon / 1000),1);
                     Cars[0].ChronoTempsPasse.Reset();
                     //ATTTTTEEENTION A BIEN REMETTRE LES VALEURS INCREMENTEES A ZERO !!!!!
                     Cars[0].TempsPasseBouchon = 0;
+                    Cars[0].nombredarret = 0;
 
                     //--------------------------
                     var temp = Cars[0]; //on crée une nouvelle voiture temporaire qui va être rajoutée à la fin de la liste
@@ -654,7 +578,7 @@ namespace Simulateur_0._0._2
                     if (Cars2.Count == 0) //Il n'y a pas assez de vehicules à enlever sur cette voie
                     {
                         nbajoutVoiedroite =
-                            nbajoutVoiedroite - nbajoutVoiegauche; //On enlève les voitures sur l'autre voie
+                            nbajoutVoiedroite + nbajoutVoiegauche; //On enlève les voitures sur l'autre voie
                         break;
                     }
 
