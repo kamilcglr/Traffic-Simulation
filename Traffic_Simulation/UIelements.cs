@@ -69,30 +69,24 @@ namespace Simulateur_0._0._2
                 _timerGauges.Start();
                 pause = false;
             }
-
         }
+
         //----------------PannelVitesse-------------------------
         public double Vitessemoyenne()
         {
-            double vitessemoy = 0.1;
+            var vitessemoy = 0.1;
             var i = 0;
             if (CarsCopie.Count != 0)
-            {
                 if (CarsCopie[0].Xposition > 0)
-                {
                     while (CarsCopie[i].Xposition > 0)
                     {
                         vitessemoy += CarsCopie[i].Vitesse;
                         i++;
                         if (i == CarsCopie.Count) break;
                     }
-                }
                 else
-                {
                     i = 1; //Eviter division par zero
-                }
 
-            }
             var j = 0;
             if (Cars2Copie.Count != 0)
                 while (Cars2Copie[j].Xposition > 0)
@@ -101,10 +95,12 @@ namespace Simulateur_0._0._2
                     j++;
                     if (j == Cars2Copie.Count) break;
                 }
+
             vitessemoy = vitessemoy / (i + j);
-            vitessemoy = (((vitessemoy * 0.25) / 0.02) * 3.6);
+            vitessemoy = vitessemoy * 0.25 / 0.02 * 3.6;
             return vitessemoy;
         }
+
         public void UpdateLabelVitesseMoyenne(double ajoutvitesse)
         {
             Vmoy.RemoveAt(0);
@@ -113,6 +109,7 @@ namespace Simulateur_0._0._2
             ValVmoyLabel = ValVmoyLabel / Vmoy.Count;
             LabelVitesseMoyenne.Content = Math.Round(ValVmoyLabel, 0) + " km/h";
         }
+
         public void UpdateGraphVitesseMoy()
         {
             for (var i = 0; i < 19; i++) VitesseValeurs[i].Value = VitesseValeurs[i + 1].Value;
@@ -128,10 +125,7 @@ namespace Simulateur_0._0._2
                 var i = 0;
                 while (CarsCopie[i].Xposition >= 0)
                 {
-                    if (CarsCopie[i].Vitesse < 0.2)
-                    {
-                        n++; //0,2 vaut moins de dix km/h
-                    }
+                    if (CarsCopie[i].Vitesse < 0.2) n++; //0,2 vaut moins de dix km/h
                     i++;
                     if (i == CarsCopie.Count) break;
                 }
@@ -142,10 +136,7 @@ namespace Simulateur_0._0._2
                 var j = 0;
                 while (Cars2Copie[j].Xposition > 0)
                 {
-                    if (Cars2Copie[j].Vitesse < 0.2)
-                    {
-                        n++;
-                    }
+                    if (Cars2Copie[j].Vitesse < 0.2) n++;
                     j++;
                     if (j == Cars2Copie.Count) break;
                 }
@@ -153,12 +144,14 @@ namespace Simulateur_0._0._2
 
             return n;
         }
+
         public void UpdateGraphNbVehiculesArret()
         {
             for (var i = 0; i < 19; i++) NbVehiculesArretValeurs[i].Value = NbVehiculesArretValeurs[i + 1].Value;
             NbVehiculesArretValeurs[19].Value =
                 GaugeNbvehiculesArret.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
+
         public void UpdateLabelNbVehiculesArret(int ajoutarret)
         {
             Nbarret.RemoveAt(0);
@@ -173,8 +166,10 @@ namespace Simulateur_0._0._2
         public void UpdateGraphTempsPasseRoute()
         {
             for (var i = 0; i < 19; i++) TempsPasseRoute[i].Value = TempsPasseRoute[i + 1].Value;
-            TempsPasseRoute[19].Value = GaugeTempsPasseRoute.Value; //On prend la valeur que l'on a déjà calculé précédement
+            TempsPasseRoute[19].Value =
+                GaugeTempsPasseRoute.Value; //On prend la valeur que l'on a déjà calculé précédement
         }
+
         public void UpdateLabelTempsPasseRoute(int ajouttemps)
         {
             MoyLabelTempsPasseRoute.RemoveAt(0);
@@ -223,6 +218,7 @@ namespace Simulateur_0._0._2
             ValTempsPasseArretLabel = ValTempsPasseArretLabel / MoyLabelTempsPasseArret.Count;
             LabelTempsPasseArret.Content = ValTempsPasseArretLabel + " secondes";
         }
+
         //----------------------------------GRAPHES----------------------------------------------
         public void InitialiserGraphVitesse()
         {
@@ -265,6 +261,7 @@ namespace Simulateur_0._0._2
             Graphtest.DataTooltip = null;
             Graphtest.Hoverable = false;
         }
+
         public void InitialiserGraphTempsPasseRoute()
         {
             for (var i = 0; i < 20; i++) //Creation de 20 Points
@@ -306,11 +303,12 @@ namespace Simulateur_0._0._2
             GraphTempsPasseRoute.DataTooltip = null;
             GraphTempsPasseRoute.Hoverable = false;
         }
+
         public void InitialiserGaugeTempsPasseRoute()
         {
             GaugeTempsPasseRoute.ToValue = 60;
         }
-        
+
         public void InitialiserGraphNbVehiculesArret()
         {
             for (var i = 0; i < 20; i++) //Creation de 20 Points
@@ -350,6 +348,7 @@ namespace Simulateur_0._0._2
             GraphNbVehiculesArret.DataTooltip = null;
             GraphNbVehiculesArret.Hoverable = false;
         }
+
         public void InitialiserGraphTempsPasseArret()
         {
             for (var i = 0; i < 20; i++) //Creation de 20 Points
@@ -395,6 +394,7 @@ namespace Simulateur_0._0._2
             GaugeNbvehiculesArret.To = ChoixNombrevoitures.Value;
             GaugeNbvehiculesArret.GaugeActiveFill = new SolidColorBrush(Color.FromRgb(77, 111, 150));
         }
+
         public void InitialiserGaugeTempsPasseArret()
         {
             GaugeTempsPasseArret.To = 60;
@@ -497,11 +497,12 @@ namespace Simulateur_0._0._2
         {
             for (var i = 0; i < 120; i++) MoyLabelTempsPasseRoute.Add(0);
         }
+
         public void InitialiserLabelTempsPasseArret()
         {
             for (var i = 0; i < 120; i++) MoyLabelTempsPasseArret.Add(0);
         }
-        
+
         private void Ajoutcamion(Voiture voiture)
         {
             voiture.Vehiculelent = true;
@@ -536,7 +537,7 @@ namespace Simulateur_0._0._2
             RoutedPropertyChangedEventArgs<double> e)
         {
             DistanceSecuriteAffichage.Content =
-                (ChoixDistanceEntreVehicules.Value).ToString("F0") + " pixels";
+                ChoixDistanceEntreVehicules.Value.ToString("F0") + " pixels";
         }
 
         private void Choix_deceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -554,9 +555,10 @@ namespace Simulateur_0._0._2
             NombrevehiculesChoixAffichage.Content = ChoixNombrevoitures.Value.ToString("F0");
             InitialiserGaugeNbvehiculesArret();
         }
-        private void Choix_Vitesse_Simulation_Changed(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
+
+        private void Choix_Vitesse_Simulation_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            VitesseSimulationChoixAffichage.Content = Math.Round(ChoixVitesseSimulation.Value,1) + " ms";
+            VitesseSimulationChoixAffichage.Content = Math.Round(ChoixVitesseSimulation.Value, 1) + " ms";
         }
     }
 }
