@@ -110,7 +110,7 @@ namespace Simulateur_0._0._2
                 //Trouver l'indice de la voiture qui est bloquée 
                 for (int i = 0; i < Cars.Count; i++)
                 {
-                    if (Cars[i].Xposition <= _pointCritique && Cars[i].Xposition > _pointCritique - 150)
+                    if (Cars[i].Xposition <= _pointCritique && Cars[i].Xposition > _pointCritique - 100)
                     {
                         indice = i;
                         break; //On a trouvé la voiture qui est potentiellement bloquée
@@ -131,8 +131,8 @@ namespace Simulateur_0._0._2
             {
                 return true; //il n'y a aucue voiture sur la voie de droite
             }
-            
-         }
+
+        }
         private void timer1_Tick(object sender, EventArgs e)
         {
            
@@ -249,12 +249,12 @@ namespace Simulateur_0._0._2
                         if (Cars2[0].Xposition > _pointCritique - distancePtcritique
                         ) //On regarde si on est dans la ZONE CRITIQUE 
                         {
-                            if (Verifblocage())
+                            if (true) //On met ici verif blocage, cause de bug enlevé (à corriger)
                             {
                                 //Si c'est le cas, on cherche une postion ou on freine
                                 force = true;
                                 var position = Champ_libre_voiture_tete(Cars2[0].Xposition, force);
-                                if (position != -1 ) //On peut changer de voie en forcant 
+                                if (position != -1 ) //On peut changer de voie en forcant
                                 {
                                     Changement_ligne(position, i);
                                 }

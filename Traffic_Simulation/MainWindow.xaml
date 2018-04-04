@@ -47,7 +47,7 @@
                     <lvc:AngularGauge x:Name="GaugeVitesse" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                                       LabelsStep="20" TicksStep="10" Wedge="280"
                                       TicksForeground="White" Foreground="White" FontSize="10"
-                                      SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="0,5,0,0" Width="90" AnimationsSpeed="0:0:1" NeedleFill="#FFE6E8E6" FontFamily="Roboto Light" Height="90" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                      SectionsInnerRadius=".5" RenderTransformOrigin="-1.367,0.913" Margin="0,5,0,0" Width="90" AnimationsSpeed="0:0:0.5" NeedleFill="#FFE6E8E6" FontFamily="Roboto Light" Height="90" HorizontalAlignment="Left" VerticalAlignment="Top">
 
                         <lvc:AngularGauge.Sections>
                             <lvc:AngularSection x:Name="Sec1" FromValue="{Binding Value}" ToValue="{Binding Value}" Fill="DarkGreen"/>
@@ -63,11 +63,11 @@
                 </StackPanel>
                 <StackPanel Margin="50,0,0,0">
                     <TextBlock Background="{x:Null}"   
-                               Text="Graphique Vitesse Moyenne "
+                               Text="Vitesse Moyenne"
                                FontSize="12" Foreground="#FFFDAD00" 
                                FontFamily="Roboto Light" 
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />
-                    <lvc:CartesianChart x:Name="Graphtest" Margin="0" ScrollBarFill="{x:Null}" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3" Hoverable="False" Width="700" Height="90" MinWidth="0" MinHeight="0" >
+                    <lvc:CartesianChart x:Name="Graphtest" Margin="0" ScrollBarFill="{x:Null}" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.1" Hoverable="False" Width="700" Height="90" MinWidth="0" MinHeight="0" >
                         <lvc:CartesianChart.Series >
                             <lvc:StepLineSeries x:Name="Serie1" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                         </lvc:CartesianChart.Series>
@@ -102,7 +102,7 @@
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />
                     <lvc:Gauge x:Name="GaugeNbvehiculesArret" 
                                From ="0" Value="{Binding Value}" To="{Binding Value}" 
-                               HorizontalAlignment="Left" Width="90" Foreground="White" Margin="0,2,0,0" Stroke="{x:Null}" FontFamily="Roboto Light" Height="90" >
+                               HorizontalAlignment="Left" Width="90" Foreground="White" Margin="0,2,0,0" Stroke="{x:Null}" FontFamily="Roboto Light" Height="90" AnimationsSpeed="0:0:0.5" >
                         <lvc:Gauge.GaugeBackground>
                             <SolidColorBrush Color="#FF4D6F96" Opacity="0.1"/>
                         </lvc:Gauge.GaugeBackground>
@@ -111,11 +111,11 @@
                 </StackPanel>
                 <StackPanel Margin="50,0,0,0">
                     <TextBlock Background="{x:Null}"   
-                               Text="Graphique Nombre de véhcules à l'arrêt "
+                               Text="Nombre de véhicules à l'arrêt"
                                FontSize="12" Foreground="#FFFDAD00" 
                                FontFamily="Roboto Light" 
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />
-                    <lvc:CartesianChart Name="GraphNbVehiculesArret" Width="700" Margin="0" BorderBrush="#FFFFAE42" BorderThickness="1" ScrollBarFill="{x:Null}" Foreground="#FF4D6F96" Hoverable="False" FontFamily="Roboto Light" Height="100" >
+                    <lvc:CartesianChart Name="GraphNbVehiculesArret" Width="700" Margin="0" BorderBrush="#FFFFAE42" BorderThickness="1" ScrollBarFill="{x:Null}" Foreground="#FF4D6F96" Hoverable="False" FontFamily="Roboto Light" Height="100" AnimationsSpeed="0:0:0.1" >
                         <lvc:CartesianChart.Series>
                             <lvc:StackedColumnSeries Values="{Binding Values}" ColumnPadding="10" Stroke="#FF1D92F0" Foreground="#FF2195F2" />
                         </lvc:CartesianChart.Series>
@@ -151,17 +151,17 @@
                     <lvc:AngularGauge x:Name="GaugeTempsPasseRoute" Value="{Binding Value}" FromValue="0" ToValue="{Binding Value, ElementName=ChoixVitessemax+20}" 
                                   LabelsStep="10" TicksStep="1" Wedge="280"
                                   TicksForeground="White" Foreground="White" FontSize="10"
-                                  SectionsInnerRadius="0.5" RenderTransformOrigin="-1.367,0.913" Margin="0,5,0,0" Width="90" HorizontalAlignment="Left" AnimationsSpeed="0:0:1" NeedleFill="#FFE6E8E6" FontFamily="Roboto Thin" TicksStrokeThickness="1" Height="90">
+                                  SectionsInnerRadius="0.5" RenderTransformOrigin="-1.367,0.913" Margin="0,5,0,0" Width="90" HorizontalAlignment="Left" AnimationsSpeed="0:0:0.5" NeedleFill="#FFE6E8E6" FontFamily="Roboto Thin" TicksStrokeThickness="1" Height="90">
 
                     </lvc:AngularGauge>
                 </StackPanel>
                 <StackPanel Margin="50,0,0,0">
                     <TextBlock Background="{x:Null}"   
-                               Text="Graphique Temps de parcours "
+                               Text="Temps de parcours"
                                FontSize="12" Foreground="#FFFDAD00" 
                                FontFamily="Roboto Light" 
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />
-                    <lvc:CartesianChart x:Name="GraphTempsPasseRoute" Margin="0" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.3" HorizontalAlignment="Left" Hoverable="False" FontFamily="Roboto Light" Height="100" >
+                    <lvc:CartesianChart x:Name="GraphTempsPasseRoute" Margin="0" ScrollBarFill="{x:Null}" Width="700" BorderBrush="#FFFFAE42" BorderThickness="1" AnimationsSpeed="0:0:0.1" HorizontalAlignment="Left" Hoverable="False" FontFamily="Roboto Light" Height="100" >
                         <lvc:CartesianChart.Series >
                             <lvc:StepLineSeries x:Name="SerieTempsPasse" Values="{Binding Values}" StrokeThickness="1" AlternativeStroke="#FF2293EE" Stroke="#FF1D92F0" />
                         </lvc:CartesianChart.Series>
@@ -197,7 +197,7 @@
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />
                     <lvc:Gauge x:Name="GaugeTempsPasseArret" 
                            From ="0" Value="{Binding Value}" To="{Binding Value}" 
-                           HorizontalAlignment="Left" Width="90" Foreground="White" Margin="0" Stroke="{x:Null}" FontFamily="Roboto Light" Height="90"  >
+                           HorizontalAlignment="Left" Width="90" Foreground="White" Margin="0" Stroke="{x:Null}" FontFamily="Roboto Light" Height="90" AnimationsSpeed="0:0:0.5"  >
                         <lvc:Gauge.GaugeBackground>
                             <SolidColorBrush Color="#FF4D6F96" Opacity="0.1"/>
                         </lvc:Gauge.GaugeBackground>
@@ -205,11 +205,11 @@
                 </StackPanel>
                 <StackPanel Margin="50,0,0,0">
                     <TextBlock Background="{x:Null}"   
-                               Text="Graphique Temps passé à l'arrêt"
+                               Text="Temps passé à l'arrêt"
                                FontSize="12" Foreground="#FFFDAD00" 
                                FontFamily="Roboto Light" 
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />
-                    <lvc:CartesianChart Name="GraphTempsPasseArret" Width="700" Margin="0" BorderBrush="#FFFFAE42" BorderThickness="1" ScrollBarFill="{x:Null}" Foreground="#FF4D6F96" Hoverable="False" FontFamily="Roboto Light" Height="100" >
+                    <lvc:CartesianChart Name="GraphTempsPasseArret" Width="700" Margin="0" BorderBrush="#FFFFAE42" BorderThickness="1" ScrollBarFill="{x:Null}" Foreground="#FF4D6F96" Hoverable="False" FontFamily="Roboto Light" Height="100" AnimationsSpeed="0:0:0.1" >
                         <lvc:CartesianChart.Series>
                             <lvc:StackedColumnSeries Values="{Binding Values}" ColumnPadding="10" Stroke="#FF1D92F0" Foreground="#FF2195F2" Margin="0" FontFamily="Roboto Light" />
                         </lvc:CartesianChart.Series>
