@@ -4,7 +4,7 @@
           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
           xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-          mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" Icon="Images/traffic-sign.png" ResizeMode="CanMinimize">
+          mc:Ignorable="d" Height="720" Width="1200" WindowStartupLocation="CenterScreen" Title="MainWindow" BorderThickness="0" FontFamily="Roboto" Visibility="Visible" Background="#FF403F4C" BorderBrush="#FF4D6F96" Foreground="{x:Null}" WindowStyle="None" Icon="Images/traffic-sign.png" ResizeMode="CanMinimize" MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
     <Grid x:Name="Grille">
         <Grid.ColumnDefinitions>
@@ -111,7 +111,7 @@
                 </StackPanel>
                 <StackPanel Margin="50,0,0,0">
                     <TextBlock Background="{x:Null}"   
-                               Text="Grpahique Nombre de véhcules à l'arrêt "
+                               Text="Graphique Nombre de véhcules à l'arrêt "
                                FontSize="12" Foreground="#FFFDAD00" 
                                FontFamily="Roboto Light" 
                                TextWrapping="Wrap" TextAlignment="Center" Margin="0"  />

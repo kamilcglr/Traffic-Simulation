@@ -20,6 +20,7 @@ namespace Simulateur_0._0._2
         public bool SimulationTempsPasseRoute = true;
         public bool SimulationVitesseMoyenne = false;
         public bool SimulationTempsPasseArret = false;
+        public bool SimulationNombreArret = false;
         //-------------------------------------------
 
         private readonly DispatcherTimer _simuTimer = new DispatcherTimer();
@@ -71,6 +72,19 @@ namespace Simulateur_0._0._2
                 VitesseMoyenneSimulateur.Clear(); //On vide le tableau
                 Suivant();
             }
+
+            if (SimulationNombreArret)
+            {
+                if (VitesseMoyenneSimulateur.Count > 35)
+                {
+                    Tableau[ligneVitesse - 2][colonneNbVehicules - 2] =
+                        VitesseMoyenneSimulateur.Sum() / VitesseMoyenneSimulateur.Count;
+                    TableauMediane[ligneVitesse - 2][colonneNbVehicules - 2] =
+                        VitesseMoyenneSimulateur[VitesseMoyenneSimulateur.Count / 2];
+                    VitesseMoyenneSimulateur.Clear(); //On vide le tableau
+                    Suivant();
+                }
+            }
            
             if(SimulationTempsPasseRoute || SimulationTempsPasseArret){
                 if (TempsPasseMoyenne.Count > 35)//On prend au moins dix valeurs
@@ -87,7 +101,8 @@ namespace Simulateur_0._0._2
         public void Editer_Excell_VmaxetNbArret()
         {
             Application excel = new Microsoft.Office.Interop.Excel.Application();
-            Workbook sheet = excel.Workbooks.Open("C:\\Users\\Kamil\\Downloads\\TempsPasse.xlsx");
+            System.IO.File.Copy("C:\\Users\\Kamil\\Downloads\\TempsPasse.xlsx", "C:\\Users\\Kamil\\Downloads\\TempsPasse1.xlsx", true);
+            Workbook sheet = excel.Workbooks.Open("C:\\Users\\Kamil\\Downloads\\TempsPasse1.xlsx");
             Worksheet x = excel.ActiveSheet as Worksheet;
             if (SimulationTempsPasseRoute || SimulationTempsPasseArret)
             {
@@ -108,7 +123,7 @@ namespace Simulateur_0._0._2
                 }
             }
 
-            if (SimulationVitesseMoyenne)
+            if (SimulationVitesseMoyenne || SimulationNombreArret)
             {
                 for (int colonne = 2; colonne < 33; colonne++)
                 {
@@ -129,6 +144,7 @@ namespace Simulateur_0._0._2
             sheet.Save();
             sheet.Close(true, Type.Missing, Type.Missing);
             excel.Quit();
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(excel);
         }
         public void Suivant()
         {
@@ -204,9 +220,10 @@ namespace Simulateur_0._0._2
 
             //InitVitessetableau();
             if(SimulationTempsPasseRoute || SimulationTempsPasseArret )InitTempsPasseTableau();
-            if(SimulationVitesseMoyenne)InitVitessetableau();
+            if(SimulationVitesseMoyenne || SimulationNombreArret)InitVitessetableau();
             ChoixNombrevoitures.Value = 5;
             ChoixVitessemax.Value = 30;
+            Editer_Excell_VmaxetNbArret();
 
             if (!pause)
             {
@@ -239,6 +256,7 @@ namespace Simulateur_0._0._2
                 InitTimerSimu();
                 pause = false;
             }
+            
         }
     }
 }

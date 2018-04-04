@@ -76,6 +76,7 @@ namespace Simulateur_0._0._2
         public int PositionL2 = 110;
 
         public bool isKeyPressed = false;
+        public Stopwatch ChronoBlocage = new Stopwatch();
 
         public MainWindow()
         {
@@ -101,24 +102,37 @@ namespace Simulateur_0._0._2
             _timerGauges.Interval = TimeSpan.FromSeconds(VitesseTimerGauge);
         }
 
-        public bool Verifblocage()
+        private bool Verifblocage() //Renvoie true si la voiture de gauche peut changer de voie
         {
-            if (Cars[0].Xposition > _pointCritique - 16 && Cars[0].Xposition < _pointCritique + 16)
+            if (Cars.Count != 0)
             {
-                if (Cars[0].ChronoTempsPasseArret.ElapsedMilliseconds > Cars2[0].ChronoTempsPasseArret.ElapsedMilliseconds)
+                int indice = 0;
+                //Trouver l'indice de la voiture qui est bloquée 
+                for (int i = 0; i < Cars.Count; i++)
                 {
-                    return true; //la voiture de droite etait à l'arret depuis plus longtemps
+                    if (Cars[i].Xposition <= _pointCritique && Cars[i].Xposition > _pointCritique - 150)
+                    {
+                        indice = i;
+                        break; //On a trouvé la voiture qui est potentiellement bloquée
+                    }
+                }
+                //On vérifie si cette voiture est à l'arret depuis combien de temps elle est bloquée par rapport
+                //à la voiture de tête de la ligne de gauche
+                if (Cars[indice].ChronoTempsPasseArret.ElapsedMilliseconds> Cars2[0].ChronoTempsPasseArret.ElapsedMilliseconds)
+                {
+                    return false; //La voiture de droite etait à l'arret depuis plus longtemps
                 }
                 else
                 {
-                    return false; //Elle est à l'arret depuis moins longtemps, elle va donc laisser passer celle de gauche 
+                    return true; //Elle est à l'arret depuis moins longtemps, elle va donc laisser passer celle de gauche 
                 }
             }
             else
             {
-                return false;
+                return true; //il n'y a aucue voiture sur la voie de droite
             }
-        }
+            
+         }
         private void timer1_Tick(object sender, EventArgs e)
         {
            
@@ -133,7 +147,6 @@ namespace Simulateur_0._0._2
             if (Cars.Count + Cars2.Count != (int) ChoixNombrevoitures.Value) ModificationNbVehicules();
             NbVoitures1.Content = "Voie gauche : " + Cars.Count;
             NbVoitures2.Content = "Voie droite : " + Cars2.Count;
-            
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -203,22 +216,17 @@ namespace Simulateur_0._0._2
             for (var i = 0; i < Cars.Count; i++)
                 if (i == 0) // Pour la première voiture on la fait avancer dans tous les cas
                 {
-                    Canvas.SetLeft(Cars[0], Cars[0].Move(vitessemax, acceleration, deceleration));
-                    Canvas.SetBottom(Cars[0], Cars[0].Yposition);
+                    AvanceL1(0);
                 }
                 else // Pour les autre on vérifie devant pour freiner ou avancer
                 {
                     if (Cars[i].Xposition + Cars[i].Width < Cars[i - 1].Xposition - _distanceEntreVehicule)
                     {
-                        Canvas.SetLeft(Cars[i], Cars[i].Move(vitessemax, acceleration, deceleration));
-                        Canvas.SetBottom(Cars[i], Cars[i].Yposition);
+                        AvanceL1(i);
                     }
                     else
                     {
-                        Cars[i].Frein = true;
-                        Canvas.SetLeft(Cars[i], Cars[i].Move(vitessemax, acceleration, deceleration));
-                        Canvas.SetBottom(Cars[i], Cars[i].Yposition);
-                        Cars[i].Frein = false;
+                        FreiangeL1(i);
                     }
                 }
         }
@@ -232,8 +240,7 @@ namespace Simulateur_0._0._2
                     //On avance tout le temps comme il n'y a pas de voiture devant
                     if (Cars2[0].Xposition <= _pointCritique - distanceAnalyse)
                     {
-                        Canvas.SetLeft(Cars2[0], Cars2[0].Move(vitessemax, acceleration, deceleration));
-                        Canvas.SetBottom(Cars2[0], Cars2[0].Yposition);
+                        AvanceL2(0);
                     }
                     else //La voiture est dans la zone d'analyse
                     {
@@ -242,25 +249,29 @@ namespace Simulateur_0._0._2
                         if (Cars2[0].Xposition > _pointCritique - distancePtcritique
                         ) //On regarde si on est dans la ZONE CRITIQUE 
                         {
-                            //Si c'est le cas, on cherche une postion ou on freine
-                            force = true;
-                            var position = Champ_libre_voiture_tete(Cars2[0].Xposition, force);
-                            if (position != -1) //On peut changer de voie en forcant
+                            if (Verifblocage())
                             {
-                                Changement_ligne(position, i);
+                                //Si c'est le cas, on cherche une postion ou on freine
+                                force = true;
+                                var position = Champ_libre_voiture_tete(Cars2[0].Xposition, force);
+                                if (position != -1 ) //On peut changer de voie en forcant 
+                                {
+                                    Changement_ligne(position, i);
+                                }
+                                else
+                                {
+                                    FreinageL2(0);
+                                }
                             }
                             else //pas de place même en forçant, donc on freine
-                            {
-                                Cars2[0].Frein = true;
-                                Canvas.SetLeft(Cars2[0], Cars2[0].Move(vitessemax, acceleration, deceleration));
-                                Canvas.SetBottom(Cars2[0], Cars2[0].Yposition);
-                                Cars2[0].Frein = false;
-                            }
+                                {
+                                FreinageL2(0);
+                                }
                         }
                         else //on n'est pas dans la zone critique
                         {
                             force = false; //On recherchera une position sans forcer
-                            var position = Champ_libre_voiture_tete(Cars2[i].Xposition, force);
+                            var position = Champ_libre(Cars2[i].Xposition, force);
                             if (position != -1)
                             {
                                 Changement_ligne(position, i); //On change sans forcer
@@ -268,8 +279,7 @@ namespace Simulateur_0._0._2
                             else
                             {
                                 //si on est pas dans la distance critique on peut continuer à avancer
-                                Canvas.SetLeft(Cars2[0], Cars2[0].Move(vitessemax, acceleration, deceleration));
-                                Canvas.SetBottom(Cars2[0], Cars2[0].Yposition);
+                                AvanceL2(0);
                             }
                         }
                     }
@@ -281,15 +291,11 @@ namespace Simulateur_0._0._2
                         //Avance normalement
                         if (Cars2[i].Xposition + Cars2[i].Width < Cars2[i - 1].Xposition - _distanceEntreVehicule)
                         {
-                            Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                            Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
+                            AvanceL2(i);
                         }
                         else
                         {
-                            Cars2[i].Frein = true;
-                            Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                            Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
-                            Cars2[i].Frein = false;
+                            FreinageL2(i);
                         }
                     }
                     //Sinon le vehicule est dans la zone d'analyse
@@ -309,10 +315,7 @@ namespace Simulateur_0._0._2
                             }
                             else //pas de place même en forçant, donc on freine
                             {
-                                Cars2[i].Frein = true;
-                                Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                                Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
-                                Cars2[i].Frein = false;
+                                FreinageL2(i);
                                 
                             }
                         }
@@ -329,32 +332,103 @@ namespace Simulateur_0._0._2
                                 //Avance normalement
                                 if (Cars2[i].Xposition + Cars2[i].Width < Cars2[i - 1].Xposition - _distanceEntreVehicule)
                                 {
-                                    Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                                    Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
+                                   AvanceL2(i);
                                 }
                                 else
                                 {
-                                    Cars2[i].Frein = true;
-                                    Canvas.SetLeft(Cars2[i], Cars2[i].Move(vitessemax, acceleration, deceleration));
-                                    Canvas.SetBottom(Cars2[i], Cars2[i].Yposition);
-                                    Cars2[i].Frein = false;
+                                    FreinageL2(i);
                                 }
                             }
                         }
                     }
                 }
         }
-        
+
+        public void AvanceL1(int numVoiture)
+        {
+            Canvas.SetLeft(Cars[numVoiture], Cars[numVoiture].Move(vitessemax, acceleration, deceleration));
+            Canvas.SetBottom(Cars[numVoiture], Cars[numVoiture].Yposition);
+        }
+        public void FreiangeL1(int numVoiture)
+        {
+            Cars[numVoiture].Frein = true;
+            Canvas.SetLeft(Cars[numVoiture], Cars[numVoiture].Move(vitessemax, acceleration, deceleration));
+            Canvas.SetBottom(Cars[numVoiture], Cars[numVoiture].Yposition);
+            Cars[numVoiture].Frein = false;
+        }
+        public void AvanceL2(int numVoiture)
+        {
+            Canvas.SetLeft(Cars2[numVoiture], Cars2[numVoiture].Move(vitessemax, acceleration, deceleration));
+            Canvas.SetBottom(Cars2[numVoiture], Cars2[numVoiture].Yposition);
+        }
+        public void FreinageL2(int numVoiture)
+        {
+            Cars2[numVoiture].Frein = true;
+            Canvas.SetLeft(Cars2[numVoiture], Cars2[numVoiture].Move(vitessemax, acceleration, deceleration));
+            Canvas.SetBottom(Cars2[numVoiture], Cars2[numVoiture].Yposition);
+            Cars2[numVoiture].Frein = false;
+        }
         public int Champ_libre_voiture_tete(double xposition, bool force)
         {
-            var autoriseChampLibre = -1;
-            if (!Verifblocage()) //Si la valeur est true, la voiture de droite a la priorité
-            {
+                var autoriseChampLibre = -1;
                 double
-                    distancesecu =
-                        distancesecuriteDepassementNonForce; //cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
+                distancesecu = distancesecuriteDepassementNonForce; 
+                //cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
                 if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
-                    distancesecu = ChoixDistanceEntreVehicules.Value;
+                    distancesecu = ChoixDistanceEntreVehicules.Value *2;
+            if (Cars.Count != 0)
+            {
+                for (var i = 0;
+                        i < Cars.Count;
+                        i++)
+                    //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
+                    if (Cars[i].Xposition >= xposition - distancesecu &&
+                        Cars[i].Xposition <= xposition + distancesecu)
+                    {
+                        autoriseChampLibre = -1;
+                        break; //On peut arreter de chercher il y a deja un vehicule
+                    }
+                    else
+                    {
+                        autoriseChampLibre = i;
+                    }
+
+                if (autoriseChampLibre != -1)
+                    //Personne, alors on prend la place de la voiture jsute derriere celle qui avait la position de cars2
+                {
+                    for (var i = Cars.Count - 1; i != 0; i--)
+                    {
+                        if (Cars[i].Xposition < xposition)
+                        {
+                            autoriseChampLibre = 0; //On prend la tête 
+                        }
+                        else
+                        {
+                            autoriseChampLibre = i; //On se place derriere la derniere voiture 
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                
+                    autoriseChampLibre = 0;
+                 //Pas de voiture sur la ligne 1
+            }
+
+            return autoriseChampLibre;
+           
+
+        }
+        public int Champ_libre(double xposition, bool force)
+        {
+            var autoriseChampLibre = -1;
+            double distancesecu = distancesecuriteDepassementNonForce;//cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
+            if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
+                distancesecu = ChoixDistanceEntreVehicules.Value;
+            if (Cars.Count != 0)
+            {
                 for (var i = 0;
                     i < Cars.Count;
                     i++) //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
@@ -381,43 +455,11 @@ namespace Simulateur_0._0._2
                             autoriseChampLibre = i; //On se place derriere la derniere voiture 
                             break;
                         }
-
-                return autoriseChampLibre;
             }
             else
             {
-                return autoriseChampLibre ; //on ne peut pas changer de voie
-            }
-        }
-        public int Champ_libre(double xposition, bool force)
-        {
-            var autoriseChampLibre = -1;
-            double distancesecu = distancesecuriteDepassementNonForce;//cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
-            if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
-                distancesecu = ChoixDistanceEntreVehicules.Value;
-            for (var i = 0; i < Cars.Count; i++) //Quelqu'un sur la voie voie opposée à cette voiture sur l'autre partie de la route
-                if (Cars[i].Xposition >= xposition - distancesecu &&
-                    Cars[i].Xposition <= xposition + distancesecu)
-                {
-                    autoriseChampLibre = -1;
-                    break; //On peut arreter de chercher il y a deja un vehicule
-                }
-                else
-                {
-                    autoriseChampLibre = i;
-                }
-
-            if (autoriseChampLibre != -1) //Personne, alors on prend la place de la voiture jsute derriere celle qui avait la position de cars2
-                for (var i = Cars.Count - 1; i != 0; i--)
-                    if (Cars[i].Xposition < xposition)
-                    {
-                        autoriseChampLibre = 0; //On prend la tête 
-                    }
-                    else
-                    {
-                        autoriseChampLibre = i; //On se place derriere la derniere voiture 
-                        break;
-                    }
+                autoriseChampLibre = 0;
+            } //Pas de voiture sur la ligne 1
 
             return autoriseChampLibre;
         }
@@ -432,9 +474,18 @@ namespace Simulateur_0._0._2
                 Cars.Insert(position + 1, temp);
 
             //On affiche cette voiture et on la fait avancer
-            Cars[position + 1].ChangementL = true; //On active le dépacement en Y
-            Canvas.SetLeft(Cars[position + 1], Cars[position + 1].Move(vitessemax, acceleration, deceleration));
-            Canvas.SetBottom(Cars[position + 1], Cars[position + 1].Yposition);
+            if(Cars.Count == 1) {
+                Cars[0].ChangementL = true; //On active le dépacement en Y
+                Canvas.SetLeft(Cars[0], Cars[0].Move(vitessemax, acceleration, deceleration));
+                Canvas.SetBottom(Cars[0], Cars[0].Yposition);
+            }
+            else{
+                Cars[position + 1].ChangementL = true; //On active le dépacement en Y
+                Canvas.SetLeft(Cars[position + 1], Cars[position + 1].Move(vitessemax, acceleration, deceleration));
+                Canvas.SetBottom(Cars[position + 1], Cars[position + 1].Yposition);
+            }
+
+
         }
 
         public void Retour_vehicules()
@@ -452,7 +503,12 @@ namespace Simulateur_0._0._2
                         }
                         else
                         {
+                            if(SimulationTempsPasseArret)
                             TempsPasseMoyenne.Add(Cars[0].TempsPasseBouchon);
+                            else
+                            {
+                                VitesseMoyenneSimulateur.Add(Cars[0].nombredarret);
+                            }
                         }
                     }
                     GaugeTempsPasseRoute.Value = Math.Round((double)(Cars[0].ChronoTempsPasse.ElapsedMilliseconds / 1000), 1 );
@@ -465,7 +521,7 @@ namespace Simulateur_0._0._2
                     //--------------------------
                     var temp = Cars[0]; //on crée une nouvelle voiture temporaire qui va être rajoutée à la fin de la liste
                     Cars.RemoveAt(0);
-                    temp.Xposition = -100; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
+                    temp.Xposition = -200; //On place les voitures hors cadre pour éviter les voitures entassées à gauche
                     temp.Vitesse = vitessemax;
                     temp.Vehiculelent = false;
                     var relativeUri = new Uri("Images/automobile.png", UriKind.Relative);
@@ -614,6 +670,17 @@ namespace Simulateur_0._0._2
             _timer2.Stop();
             _timer3.Stop();
             _timerGauges.Stop();
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+            try
+            {
+                this.DragMove();
+            }
+            catch{ }
+
         }
     }
 }

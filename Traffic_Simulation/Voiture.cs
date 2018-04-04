@@ -36,7 +36,7 @@ namespace Simulateur_0._0._2
             Height = 10;
             Xposition = 0;
             Yposition = 0;
-            Vitesse = 1;
+            Vitesse = 2; 
             Vitessemax = 0;
             Acceleration = 0;
             Lane = 1;
