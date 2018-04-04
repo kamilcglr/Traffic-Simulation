@@ -278,10 +278,10 @@
             <Slider x:Name="ChoixDensitecamion" Height="18" SmallChange="1" Maximum="100" ValueChanged="Choix_densitecamion_ValueChanged" Value="10" Foreground="{x:Null}" RenderTransformOrigin="0.503,0.536" BorderBrush="{x:Null}" LargeChange="0" Margin="5,0"/>
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Vitesse Maximale Autorisée" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0"/>
             <Label x:Name="VitessemaxChoixAffichage" VerticalAlignment="Center" FontSize="14" FontFamily="Roboto Light" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6" HorizontalAlignment="Center" Margin="0"/>
-            <Slider x:Name="ChoixVitessemax" Height="18" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="130" Value="90" SmallChange="1" Margin="5,0"/>
+            <Slider x:Name="ChoixVitessemax" Height="18" HorizontalContentAlignment="Center" ValueChanged="Choix_vitesse_ValueChanged" Background="{x:Null}" Maximum="130" Value="90" SmallChange="1" Margin="5,0" Minimum="20"/>
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Décélération :" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0"/>
             <Label x:Name="DecelerationChoixAffichage"  VerticalAlignment="Center" FontSize="14" FontFamily="Roboto Light" HorizontalAlignment="Center" Background="{x:Null}" Foreground="#FFE6E8E6" Margin="0"/>
-            <Slider x:Name="ChoixDeceleration"  Height="22" Maximum="2" Value="1.25" ValueChanged="Choix_deceleration_ValueChanged" SmallChange="0.01" Minimum="1" Margin="5,0"/>
+            <Slider x:Name="ChoixDeceleration"  Height="22" Maximum="2" Value="1.2" ValueChanged="Choix_deceleration_ValueChanged" SmallChange="0.01" Minimum="1" Margin="5,0"/>
             <TextBlock Foreground="#FFE6E8E6" FontFamily="Roboto Light" TextWrapping="Wrap" Text="Accélération Maximale :" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
             <Label x:Name="AccelerationmaxChoixAffichage"  HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="14" FontFamily="Roboto Light" RenderTransformOrigin="-0.127,0.547" Background="{x:Null}" Foreground="#FFE6E8E6" Margin="0,0,20,0"/>
             <Slider x:Name="ChoixAcceleration"  Height="20" ValueChanged="Choix_acceleration_ValueChanged" Maximum="25" Value="11" SmallChange="0.001" Minimum="5" Margin="5,0"/>

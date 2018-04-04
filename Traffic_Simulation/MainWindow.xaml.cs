@@ -249,8 +249,9 @@ namespace Simulateur_0._0._2
                         if (Cars2[0].Xposition > _pointCritique - distancePtcritique
                         ) //On regarde si on est dans la ZONE CRITIQUE 
                         {
-                            if (true) //On met ici verif blocage, cause de bug enlevé (à corriger)
-                            {
+                            /*
+                             * if (true) //On met ici verif blocage, cause de bug enlevé (à corriger)
+                             * {
                                 //Si c'est le cas, on cherche une postion ou on freine
                                 force = true;
                                 var position = Champ_libre_voiture_tete(Cars2[0].Xposition, force);
@@ -267,6 +268,17 @@ namespace Simulateur_0._0._2
                                 {
                                 FreinageL2(0);
                                 }
+                             */
+                            force = true;
+                            var position = Champ_libre_voiture_tete(Cars2[0].Xposition, force);
+                            if (position != -1) //On peut changer de voie en forcant
+                            {
+                                Changement_ligne(position, i);
+                            }
+                            else
+                            {
+                                FreinageL2(0);
+                            }
                         }
                         else //on n'est pas dans la zone critique
                         {
@@ -375,7 +387,7 @@ namespace Simulateur_0._0._2
                 distancesecu = distancesecuriteDepassementNonForce; 
                 //cette distance est plus elevee que la securite normale, on la choisit dans timer1tick
                 if (force) //la distance de securite sera plus elevee si on ne force pas, on augmente donc la distance
-                    distancesecu = ChoixDistanceEntreVehicules.Value *2;
+                    distancesecu = ChoixDistanceEntreVehicules.Value *2; 
             if (Cars.Count != 0)
             {
                 for (var i = 0;
